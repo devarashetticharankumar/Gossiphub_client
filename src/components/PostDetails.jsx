@@ -114,7 +114,6 @@
 //       toast.error("Please sign in to comment");
 //       return;
 //     }
-//     // Check if the comment is empty or only whitespace
 //     if (!comment.trim()) {
 //       toast.error("Comment cannot be empty");
 //       return;
@@ -135,7 +134,6 @@
 //     setIsDarkMode(!isDarkMode);
 //   };
 
-//   // Share functionality
 //   const postUrl = `${window.location.origin}/posts/${postId}`;
 //   const postTitle = post?.title || "Check out this post on GossipHub!";
 
@@ -237,7 +235,6 @@
 //         isDarkMode ? "bg-gray-950" : "bg-gray-100"
 //       } transition-colors duration-500 font-poppins`}
 //     >
-//       {/* Sticky Header */}
 //       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-lg">
 //         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
 //           <Link
@@ -270,32 +267,25 @@
 //         </div>
 //       </header>
 
-//       {/* Main Content */}
 //       <div className="max-w-7xl mx-auto px-4 pt-20 pb-12 flex flex-col md:flex-row gap-6">
-//         {/* Article Section */}
 //         <div className="md:w-2/3">
 //           <div
 //             initial={{ opacity: 0, y: 30 }}
 //             animate={{ opacity: 1, y: 0 }}
 //             transition={{ duration: 0.6, ease: "easeOut" }}
 //           >
-//             {/* Media */}
 //             {post.media && (
 //               <div className="relative rounded-t-lg overflow-hidden shadow-xl">
 //                 {post.media.endsWith(".mp4") ? (
 //                   <video
-//                     src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${
-//                       post.media
-//                     }`}
+//                     src={post.media}
 //                     controls
 //                     className="w-full h-[400px] md:h-[500px] object-contain bg-black"
 //                     aria-label="Post video"
 //                   />
 //                 ) : (
 //                   <img
-//                     src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${
-//                       post.media
-//                     }`}
+//                     src={post.media}
 //                     alt="Post media"
 //                     className="w-full h-[400px] md:h-[500px] object-cover"
 //                   />
@@ -305,7 +295,6 @@
 //                 </div>
 //               </div>
 //             )}
-//             {/* Article Content */}
 //             <div className="bg-white dark:bg-gray-900 p-6 mt-0 shadow-lg">
 //               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
 //                 {post.title}
@@ -340,7 +329,6 @@
 //                 ))}
 //               </div>
 
-//               {/* Tags */}
 //               <div className="flex flex-wrap gap-2 mb-6">
 //                 {(post.category ? [post.category] : []).map((tag, index) => (
 //                   <span
@@ -351,7 +339,6 @@
 //                   </span>
 //                 ))}
 //               </div>
-//               {/* Reaction and Share Buttons */}
 //               <div className="flex gap-3 mb-8 flex-wrap">
 //                 <button
 //                   whileHover={{ scale: 1.15 }}
@@ -387,7 +374,6 @@
 //                 >
 //                   <span className="text-xl">😡</span>({post.downvotes.length})
 //                 </button>
-//                 {/* Share Button */}
 //                 <button
 //                   whileHover={{ scale: 1.15 }}
 //                   whileTap={{ scale: 0.9 }}
@@ -398,7 +384,6 @@
 //                   <FaShareAlt className="text-xl" />
 //                   <span>Share</span>
 //                 </button>
-//                 {/* Share Options */}
 //                 <div
 //                   className="flex gap-2"
 //                   initial={{ opacity: 0, scale: 0.9 }}
@@ -469,7 +454,6 @@
 //             </div>
 //           </div>
 
-//           {/* Comments Section */}
 //           <div
 //             initial={{ opacity: 0, y: 20 }}
 //             animate={{ opacity: 1, y: 0 }}
@@ -558,7 +542,6 @@
 //             </AnimatePresence>
 //           </div>
 
-//           {/* Related Posts Section */}
 //           <div
 //             initial={{ opacity: 0, y: 20 }}
 //             animate={{ opacity: 1, y: 0 }}
@@ -588,10 +571,7 @@
 //                     >
 //                       {story.media && (
 //                         <img
-//                           src={`${import.meta.env.VITE_API_URL.replace(
-//                             "/api",
-//                             ""
-//                           )}${story.media}`}
+//                           src={story.media}
 //                           alt="Related post thumbnail"
 //                           className="w-16 h-16 object-cover rounded"
 //                         />
@@ -612,9 +592,7 @@
 //           </div>
 //         </div>
 
-//         {/* Sidebar */}
 //         <div className="md:w-1/3 space-y-6">
-//           {/* Latest Stories */}
 //           <div className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow-lg">
 //             <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
 //               Latest Stories
@@ -628,10 +606,7 @@
 //                 >
 //                   {story.media && (
 //                     <img
-//                       src={`${import.meta.env.VITE_API_URL.replace(
-//                         "/api",
-//                         ""
-//                       )}${story.media}`}
+//                       src={story.media}
 //                       alt="Story thumbnail"
 //                       className="w-16 h-16 object-cover rounded"
 //                     />
@@ -649,7 +624,6 @@
 //             </div>
 //           </div>
 
-//           {/* Most Viewed */}
 //           <div className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow-lg">
 //             <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
 //               Most Viewed
@@ -663,10 +637,7 @@
 //                 >
 //                   {story.media && (
 //                     <img
-//                       src={`${import.meta.env.VITE_API_URL.replace(
-//                         "/api",
-//                         ""
-//                       )}${story.media}`}
+//                       src={story.media}
 //                       alt="Story thumbnail"
 //                       className="w-16 h-16 object-cover rounded"
 //                     />
@@ -686,7 +657,6 @@
 //         </div>
 //       </div>
 
-//       {/* Footer */}
 //       <footer className="bg-red-600 text-white py-6">
 //         <div className="max-w-7xl mx-auto px-4 text-center">
 //           <div className="flex justify-center space-x-4 mb-4">
@@ -704,7 +674,6 @@
 //         </div>
 //       </footer>
 
-//       {/* Inline Styles for Embedded Videos */}
 //       <style>
 //         {`
 //           .post-description iframe,
@@ -743,6 +712,7 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { Helmet } from "react-helmet";
 
 const PostDetails = () => {
   const { postId } = useParams();
@@ -867,15 +837,90 @@ const PostDetails = () => {
 
   const postUrl = `${window.location.origin}/posts/${postId}`;
   const postTitle = post?.title || "Check out this post on GossipHub!";
+  // Truncate title for SEO (under 60 characters)
+  const seoTitle =
+    postTitle.length > 60 ? `${postTitle.slice(0, 57)}...` : postTitle;
+  const postDescription = post?.description || "";
+  // Truncate description for SEO (under 160 characters)
+  const seoDescription =
+    postDescription.length > 160
+      ? `${postDescription.slice(0, 157)}...`
+      : postDescription;
+  const postMedia = post?.media || "";
+  const isVideo = postMedia && postMedia.endsWith(".mp4");
+  // For videos, we need a thumbnail for Twitter cards and SEO
+  const videoThumbnail = isVideo
+    ? `${postMedia.replace(".mp4", "-thumbnail.jpg")}`
+    : postMedia;
+  // Keywords for SEO (using category and some words from title/description)
+  const keywords = post?.category
+    ? `${post.category}, ${postTitle.split(" ").slice(0, 3).join(", ")}`
+    : "GossipHub, Social Media, News";
+  const authorName = post?.isAnonymous
+    ? "Anonymous"
+    : post?.author?.username || "Unknown";
+  const datePublished = post?.createdAt
+    ? new Date(post.createdAt).toISOString()
+    : new Date().toISOString();
+  const publisherName = "GossipHub";
+
+  // Structured Data (JSON-LD) for BlogPosting schema
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: seoTitle,
+    description: seoDescription,
+    author: {
+      "@type": "Person",
+      name: authorName,
+    },
+    datePublished: datePublished,
+    image: postMedia || "https://gossipphub.netlify.app/default-image.jpg",
+    publisher: {
+      "@type": "Organization",
+      name: publisherName,
+      logo: {
+        "@type": "ImageObject",
+        url: "https://gossipphub.netlify.app/logo.png",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": postUrl,
+    },
+  };
 
   const handleNativeShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: postTitle,
-          text: post.description.slice(0, 100) + "...",
-          url: postUrl,
-        });
+        // Check if the media is an image and attempt to share it as a file
+        if (postMedia && !isVideo) {
+          const response = await fetch(postMedia);
+          const blob = await response.blob();
+          const file = new File([blob], "shared-image.jpg", {
+            type: "image/jpeg",
+          });
+
+          await navigator.share({
+            files: [file],
+            title: postTitle,
+            text: `${postTitle}\n${postDescription.slice(
+              0,
+              100
+            )}...\n${postUrl}`,
+            url: postUrl,
+          });
+        } else {
+          // For videos or if file sharing isn't supported, share the URL
+          await navigator.share({
+            title: postTitle,
+            text: `${postTitle}\n${postDescription.slice(
+              0,
+              100
+            )}...\n${postUrl}`,
+            url: postUrl,
+          });
+        }
         toast.success("Shared successfully!");
       } catch (err) {
         toast.error("Failed to share post");
@@ -899,15 +944,15 @@ const PostDetails = () => {
   };
 
   const handleShareTwitter = () => {
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      postTitle
-    )}&url=${encodeURIComponent(postUrl)}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+      postUrl
+    )}&text=${encodeURIComponent(postTitle)}`;
     window.open(twitterUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleShareWhatsapp = () => {
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-      `${postTitle} ${postUrl}`
+      `${postTitle}\n${postUrl}`
     )}`;
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
@@ -915,7 +960,7 @@ const PostDetails = () => {
   const handleShareFacebook = () => {
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
       postUrl
-    )}`;
+    )}"e=${encodeURIComponent(postTitle)}`;
     window.open(facebookUrl, "_blank", "noopener,noreferrer");
   };
 
@@ -930,7 +975,7 @@ const PostDetails = () => {
     const linkedinUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
       postUrl
     )}&title=${encodeURIComponent(postTitle)}&summary=${encodeURIComponent(
-      post.description.slice(0, 200) + "..."
+      postDescription.slice(0, 200) + "..."
     )}`;
     window.open(linkedinUrl, "_blank", "noopener,noreferrer");
   };
@@ -966,6 +1011,56 @@ const PostDetails = () => {
         isDarkMode ? "bg-gray-950" : "bg-gray-100"
       } transition-colors duration-500 font-poppins`}
     >
+      {/* Add Helmet to set meta tags for SEO, Open Graph, and Twitter Cards */}
+      <Helmet>
+        <meta charSet="utf-8" />
+        {/* SEO: Page Title (under 60 characters) */}
+        <title>{seoTitle}</title>
+        {/* SEO: Meta Description (under 160 characters) */}
+        <meta name="description" content={seoDescription} />
+        {/* SEO: Keywords */}
+        <meta name="keywords" content={keywords} />
+        {/* SEO: Author */}
+        <meta name="author" content={authorName} />
+        {/* SEO: Publisher (custom tag) */}
+        <meta name="publisher" content={publisherName} />
+        {/* SEO: Robots */}
+        <meta name="robots" content="index, follow" />
+        {/* SEO: Canonical URL */}
+        <link rel="canonical" href={postUrl} />
+
+        {/* Open Graph Tags (also helps with SEO) */}
+        <meta property="og:title" content={postTitle} />
+        <meta property="og:description" content={postDescription} />
+        <meta property="og:url" content={postUrl} />
+        <meta property="og:type" content="article" />
+        {isVideo ? (
+          <>
+            <meta property="og:video" content={postMedia} />
+            <meta property="og:video:type" content="video/mp4" />
+            {/* Optional: Add a thumbnail for videos */}
+            <meta property="og:image" content={videoThumbnail} />
+          </>
+        ) : (
+          postMedia && <meta property="og:image" content={postMedia} />
+        )}
+
+        {/* Twitter Card Tags (also helps with SEO) */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={postTitle} />
+        <meta name="twitter:description" content={postDescription} />
+        {/* Use thumbnail for videos on Twitter */}
+        <meta
+          name="twitter:image"
+          content={isVideo ? videoThumbnail : postMedia}
+        />
+
+        {/* Structured Data (JSON-LD) for SEO */}
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
+
       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <Link
@@ -1300,13 +1395,26 @@ const PostDetails = () => {
                       to={`/posts/${story._id}`}
                       className="flex gap-3"
                     >
-                      {story.media && (
-                        <img
-                          src={story.media}
-                          alt="Related post thumbnail"
-                          className="w-16 h-16 object-cover rounded"
-                        />
-                      )}
+                      {story.media &&
+                        (story.media.endsWith(".mp4") ? (
+                          <video
+                            src={story.media}
+                            className="w-16 h-16 object-cover rounded"
+                            muted
+                            onError={(e) =>
+                              (e.target.src = "https://via.placeholder.com/50")
+                            }
+                          />
+                        ) : (
+                          <img
+                            src={story.media}
+                            alt="Related post thumbnail"
+                            className="w-16 h-16 object-cover rounded"
+                            onError={(e) =>
+                              (e.target.src = "https://via.placeholder.com/50")
+                            }
+                          />
+                        ))}
                       <div>
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-red-600">
                           {story.title}
@@ -1335,13 +1443,26 @@ const PostDetails = () => {
                   to={`/posts/${story._id}`}
                   className="flex gap-3"
                 >
-                  {story.media && (
-                    <img
-                      src={story.media}
-                      alt="Story thumbnail"
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                  )}
+                  {story.media &&
+                    (story.media.endsWith(".mp4") ? (
+                      <video
+                        src={story.media}
+                        className="w-16 h-16 object-cover rounded"
+                        muted
+                        onError={(e) =>
+                          (e.target.src = "https://via.placeholder.com/50")
+                        }
+                      />
+                    ) : (
+                      <img
+                        src={story.media}
+                        alt="Story thumbnail"
+                        className="w-16 h-16 object-cover rounded"
+                        onError={(e) =>
+                          (e.target.src = "https://via.placeholder.com/50")
+                        }
+                      />
+                    ))}
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-red-600">
                       {story.title}
@@ -1366,13 +1487,26 @@ const PostDetails = () => {
                   to={`/posts/${story._id}`}
                   className="flex gap-3"
                 >
-                  {story.media && (
-                    <img
-                      src={story.media}
-                      alt="Story thumbnail"
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                  )}
+                  {story.media &&
+                    (story.media.endsWith(".mp4") ? (
+                      <video
+                        src={story.media}
+                        className="w-16 h-16 object-cover rounded"
+                        muted
+                        onError={(e) =>
+                          (e.target.src = "https://via.placeholder.com/50")
+                        }
+                      />
+                    ) : (
+                      <img
+                        src={story.media}
+                        alt="Story thumbnail"
+                        className="w-16 h-16 object-cover rounded"
+                        onError={(e) =>
+                          (e.target.src = "https://via.placeholder.com/50")
+                        }
+                      />
+                    ))}
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-red-600">
                       {story.title}
