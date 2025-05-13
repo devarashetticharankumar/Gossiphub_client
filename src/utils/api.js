@@ -213,3 +213,19 @@ export const getPublicUserProfile = async (userId) => {
   });
   return handleResponse(response);
 };
+
+// New function to add reactions to comments
+export const addCommentReaction = async (postId, commentId, data) => {
+  const response = await fetch(
+    `${API_URL}/posts/${postId}/comment/${commentId}/reaction`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  return handleResponse(response);
+};
