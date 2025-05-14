@@ -2901,9 +2901,14 @@ import confetti from "canvas-confetti";
 
 // Utility function to calculate time difference and return "time ago" format
 const timeAgo = (date) => {
-  const now = new Date("2025-05-14T09:28:00+05:30"); // Current date: May 14, 2025, 09:28 AM IST
+  const now = new Date(); // Use dynamic current time
   const past = new Date(date);
   const diffInSeconds = Math.floor((now - past) / 1000);
+
+  // Handle future dates or very recent times
+  if (diffInSeconds < 0 || diffInSeconds < 10) {
+    return "Just now";
+  }
 
   if (diffInSeconds < 60) {
     return `${diffInSeconds} second${diffInSeconds !== 1 ? "s" : ""} ago`;
