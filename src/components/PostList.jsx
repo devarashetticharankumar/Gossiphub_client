@@ -3350,8 +3350,16 @@ const PostList = () => {
   const handleQuickShare = (post) => {
     const shareUrl = `${window.location.origin}/posts/${post._id}`;
 
-    // Truncate description to roughly 2 lines (~150 characters)
-    const truncateDescription = (text, maxLength = 150) => {
+    // Function to strip HTML tags from the description
+    const stripHtmlTags = (text) => {
+      return text
+        .replace(/<[^>]+>/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    };
+
+    // Truncate description to roughly 2 lines (~100 characters)
+    const truncateDescription = (text, maxLength = 100) => {
       if (text.length <= maxLength) return text;
       // Find the last space before maxLength to avoid cutting words
       const lastSpace = text.lastIndexOf(" ", maxLength);
@@ -3360,7 +3368,9 @@ const PostList = () => {
       return text.substring(0, truncateAt) + "...";
     };
 
-    const truncatedDescription = truncateDescription(post.description);
+    // Strip HTML tags and then truncate the description
+    const cleanDescription = stripHtmlTags(post.description);
+    const truncatedDescription = truncateDescription(cleanDescription);
 
     if (navigator.share) {
       navigator
@@ -3378,7 +3388,6 @@ const PostList = () => {
         .catch(() => toast.error("Failed to copy link"));
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-100 font-poppins">
       {/* Header */}
