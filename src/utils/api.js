@@ -229,3 +229,13 @@ export const addCommentReaction = async (postId, commentId, data) => {
   );
   return handleResponse(response);
 };
+
+// New function to fetch a list of users (for suggested users)
+export const getUsers = async () => {
+  const response = await fetch(`${API_URL}/users`, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  return handleResponse(response);
+};
