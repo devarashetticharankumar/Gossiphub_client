@@ -7,3 +7,25 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.post-description iframe,
+.post-description video {
+  width: 100% !important;
+  height: 400px !important;
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+@media (min-width: 640px) {
+  .post-description iframe,
+  .post-description video {
+    height: 500px !important;
+  }
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

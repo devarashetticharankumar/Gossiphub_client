@@ -1126,6 +1126,7 @@
 
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet"; // Import react-helmet
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -1161,20 +1162,10 @@ const PostList = () => {
   const [displayedCount, setDisplayedCount] = useState(6);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestedUsers, setSuggestedUsers] = useState([]);
-  const [followedUsers, setFollowedUsers] = useState(() => {
-    // Load followed users from localStorage on initial render
-    const saved = localStorage.getItem("followedUsers");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [followedUsers, setFollowedUsers] = useState([]);
   const POSTS_PER_PAGE = 7;
   const isAuthenticated = !!localStorage.getItem("token");
 
-  // Save followedUsers to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem("followedUsers", JSON.stringify(followedUsers));
-  }, [followedUsers]);
-
-  // Fetch Posts, User Profile, and Suggested Users
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -1192,11 +1183,8 @@ const PostList = () => {
             const userRes = await getUserProfile();
             setUser(userRes);
 
-            // Retrieve shown streak rewards from localStorage
             const shownRewards =
               JSON.parse(localStorage.getItem("shownStreakRewards")) || [];
-
-            // Daily Streak Reward
             const dailyReward = `Day ${userRes.reactionStreak} Streak`;
             if (
               userRes.streakRewards.includes(dailyReward) &&
@@ -1209,7 +1197,6 @@ const PostList = () => {
               );
             }
 
-            // Weekly Milestone Reward
             if (userRes.reactionStreak % 7 === 0) {
               const weekNumber = userRes.reactionStreak / 7;
               const milestoneReward = `Week ${weekNumber} Milestone`;
@@ -1230,13 +1217,18 @@ const PostList = () => {
               }
             }
 
+            // Set followed users based on backend data
+            setFollowedUsers(userRes.following || []);
+
             // Fetch suggested users
             try {
-              // Fetch all users
               const allUsers = await getUsers();
-              // Exclude the current user and select up to 3 users as suggestions
               const suggestedUserIds = allUsers
-                .filter((u) => u._id !== userRes._id)
+                .filter(
+                  (u) =>
+                    u._id !== userRes._id &&
+                    !(userRes.following || []).includes(u._id)
+                )
                 .slice(0, 10)
                 .map((u) => u._id);
 
@@ -1245,7 +1237,6 @@ const PostList = () => {
                 return;
               }
 
-              // Fetch profiles for suggested users
               const suggestedUsersData = await Promise.all(
                 suggestedUserIds.map(async (userId) => {
                   try {
@@ -1351,21 +1342,18 @@ const PostList = () => {
 
   const handleQuickShare = (post) => {
     const shareUrl = `${window.location.origin}/posts/${post._id}`;
-
     const stripHtmlTags = (text) => {
       return text
         .replace(/<[^>]+>/g, "")
         .replace(/\s+/g, " ")
         .trim();
     };
-
     const truncateDescription = (text, maxLength = 100) => {
       if (text.length <= maxLength) return text;
       const lastSpace = text.lastIndexOf(" ", maxLength);
       const truncateAt = lastSpace === -1 ? maxLength : lastSpace;
       return text.substring(0, truncateAt) + "...";
     };
-
     const cleanDescription = stripHtmlTags(post.description);
     const truncatedDescription = truncateDescription(cleanDescription);
 
@@ -1393,13 +1381,14 @@ const PostList = () => {
     }
 
     try {
-      if (followedUsers.includes(userId)) {
+      const isCurrentlyFollowing = followedUsers.includes(userId);
+      if (isCurrentlyFollowing) {
         await unfollowUser(userId);
         setFollowedUsers((prev) => prev.filter((id) => id !== userId));
         setSuggestedUsers((prev) =>
           prev.map((user) =>
             user._id === userId
-              ? { ...user, followersCount: (user.followersCount || 0) - 1 }
+              ? { ...user, followersCount: (user.followersCount || 1) - 1 }
               : user
           )
         );
@@ -1416,6 +1405,15 @@ const PostList = () => {
         );
         toast.success("Followed user!");
       }
+
+      // Re-fetch the current user's profile to sync following list
+      const updatedUser = await getUserProfile();
+      setFollowedUsers(updatedUser.following || []);
+
+      // Filter out the user from suggested users if they are now followed
+      setSuggestedUsers((prev) =>
+        prev.filter((u) => !(updatedUser.following || []).includes(u._id))
+      );
     } catch (err) {
       const message = err.message || "Failed to update follow status";
       toast.error(message);
@@ -1427,13 +1425,87 @@ const PostList = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 font-poppins">
-      {/* Header */}
+      {/* Add SEO meta tags using react-helmet */}
+      <Helmet>
+        {/* Title */}
+        <title>GossipHub | Discover Trending Posts & Stories</title>
+
+        {/* Meta Tags */}
+        <meta
+          name="description"
+          content="Explore the latest posts, trending stories, and user suggestions on GossipHub. Join the conversation and share your own gossip today!"
+        />
+        <meta
+          name="keywords"
+          content="social media, posts, gossip, trending stories, user suggestions, GossipHub"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="GossipHub Team" />
+
+        {/* Open Graph Tags for Social Media */}
+        <meta
+          property="og:title"
+          content="GossipHub | Discover Trending Posts & Stories"
+        />
+        <meta
+          property="og:description"
+          content="Explore the latest posts, trending stories, and user suggestions on GossipHub. Join the conversation and share your own gossip today!"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://gossipphub.netlify.app/" />
+        <meta property="og:image" content={Logo} />
+        <meta property="og:image:alt" content="GossipHub Logo" />
+        <meta property="og:site_name" content="GossipHub" />
+
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="GossipHub | Discover Trending Posts & Stories"
+        />
+        <meta
+          name="twitter:description"
+          content="Explore the latest posts, trending stories, and user suggestions on GossipHub. Join the conversation and share your own gossip today!"
+        />
+        <meta name="twitter:image" content={Logo} />
+        <meta name="twitter:image:alt" content="GossipHub Logo" />
+
+        {/* Canonical URL */}
+        <link rel="canonical" href="https://gossipphub.netlify.app/" />
+
+        {/* Structured Data (JSON-LD) */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: "GossipHub | Discover Trending Posts & Stories",
+            description:
+              "Explore the latest posts, trending stories, and user suggestions on GossipHub. Join the conversation and share your own gossip today!",
+            url: "https://gossipphub.netlify.app/",
+            publisher: {
+              "@type": "Organization",
+              name: "GossipHub",
+              logo: {
+                "@type": "ImageObject",
+                url: Logo,
+              },
+            },
+            mainEntity: {
+              "@type": "CollectionPage",
+              name: "Trending Posts",
+              description:
+                "A collection of trending posts and stories on GossipHub.",
+            },
+          })}
+        </script>
+      </Helmet>
+
       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600/80 backdrop-blur-md text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <Link to="/" className="flex items-center">
             <motion.img
               src={Logo}
-              alt="GossippHub Logo"
+              alt="GossipHub Logo"
               className="h-10 md:h-12 rounded-md"
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3 }}
@@ -1536,9 +1608,7 @@ const PostList = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 pt-40 md:pt-36 pb-20 md:pb-12">
-        {/* Featured Post */}
         {featuredPost && (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -1661,7 +1731,6 @@ const PostList = () => {
           </motion.section>
         )}
 
-        {/* Trending Carousel */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1719,7 +1788,6 @@ const PostList = () => {
           </div>
         </motion.section>
 
-        {/* Main Content Grid */}
         <div className="flex flex-col md:flex-row gap-6">
           <div className="md:w-2/3">
             {loading ? (
@@ -1900,7 +1968,6 @@ const PostList = () => {
             )}
           </div>
 
-          {/* Sidebar */}
           <div className="md:w-1/3 space-y-6 md:sticky md:top-36 md:h-[calc(100vh-144px)] md:overflow-y-auto scrollbar-hide">
             {isAuthenticated && (
               <motion.section
@@ -2086,7 +2153,6 @@ const PostList = () => {
           </div>
         </div>
 
-        {/* Suggested for You Section */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -2108,34 +2174,31 @@ const PostList = () => {
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.05 }}
                 >
-                  {/* Profile Picture in Circle */}
                   <Link to={`/profile/${suggestedUser._id}`}>
                     <img
                       src={
                         suggestedUser.profilePicture ||
                         "https://via.placeholder.com/150"
                       }
-                      alt={`${suggestedUser.username}'s profile picture`}
+                      alt={`${
+                        suggestedUser.username || suggestedUser.email
+                      }'s profile picture`}
                       className="w-20 h-20 rounded-full object-cover border-2 border-gray-300"
                       onError={(e) =>
                         (e.target.src = "https://via.placeholder.com/150")
                       }
                     />
                   </Link>
-
-                  {/* Username */}
                   <Link to={`/profile/${suggestedUser._id}`}>
                     <p className="text-sm font-medium text-gray-900 mt-3 text-center">
-                      {suggestedUser.username}
+                      {suggestedUser.username && suggestedUser.username.trim()
+                        ? suggestedUser.username
+                        : suggestedUser.email}
                     </p>
                   </Link>
-
-                  {/* Followers Count */}
                   <p className="text-xs text-gray-500 mt-1">
                     {suggestedUser.followersCount || 0} followers
                   </p>
-
-                  {/* Follow/Unfollow Button */}
                   <motion.button
                     onClick={() => handleFollow(suggestedUser._id)}
                     className={`mt-3 px-4 py-1 text-sm font-medium rounded-full transition-colors ${
@@ -2147,8 +2210,12 @@ const PostList = () => {
                     whileTap={{ scale: 0.95 }}
                     aria-label={
                       followedUsers.includes(suggestedUser._id)
-                        ? `Unfollow ${suggestedUser.username}`
-                        : `Follow ${suggestedUser.username}`
+                        ? `Unfollow ${
+                            suggestedUser.username || suggestedUser.email
+                          }`
+                        : `Follow ${
+                            suggestedUser.username || suggestedUser.email
+                          }`
                     }
                   >
                     {followedUsers.includes(suggestedUser._id)
@@ -2163,7 +2230,6 @@ const PostList = () => {
           </div>
         </motion.section>
 
-        {/* Recommended for You */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -2218,7 +2284,6 @@ const PostList = () => {
           </div>
         </motion.section>
 
-        {/* Photos Section */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -2258,7 +2323,6 @@ const PostList = () => {
         </motion.section>
       </main>
 
-      {/* Footer */}
       <footer className="bg-red-600 text-white py-8">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="flex justify-center space-x-4 mb-4">
@@ -2341,7 +2405,6 @@ const PostList = () => {
         </div>
       </footer>
 
-      {/* Bottom Navigation (Mobile) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 w-full bg-white/90 backdrop-blur-md shadow-lg z-50 border-t border-gray-200">
         <div
           className="flex justify-around items-center py-0 px-4"
@@ -2396,7 +2459,6 @@ const PostList = () => {
         </div>
       </nav>
 
-      {/* Back to Top Button */}
       {displayedPosts.length > 5 && (
         <motion.button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
