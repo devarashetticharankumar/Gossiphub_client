@@ -33,6 +33,11 @@ export const getPosts = async () => {
   return handleResponse(response);
 };
 
+export const getPostById = async (postId) => {
+  const response = await fetch(`${API_URL}/posts/${postId}`);
+  return handleResponse(response);
+};
+
 export const createPost = async (data) => {
   const response = await fetch(`${API_URL}/posts`, {
     method: "POST",
