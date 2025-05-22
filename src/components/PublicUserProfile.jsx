@@ -1832,20 +1832,9 @@ const PublicUserProfile = () => {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
-
-  // Persistent dark mode
-  useEffect(() => {
-    const saved = localStorage.getItem("darkMode");
-    if (saved) setIsDarkMode(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
 
   // Fetch user profile, posts, followers, and following
   useEffect(() => {
@@ -1895,10 +1884,6 @@ const PublicUserProfile = () => {
     fetchData();
   }, [userId, navigate]);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
   const handleFollowToggle = async () => {
     try {
       if (isFollowing) {
@@ -1927,11 +1912,11 @@ const PublicUserProfile = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-white dark:bg-gray-950">
+      <div className="flex justify-center items-center h-screen bg-white">
         <motion.div
           animate={{ scale: [1, 1.1, 1] }}
           transition={{ repeat: Infinity, duration: 1 }}
-          className="text-2xl font-medium text-red-600 dark:text-teal-400"
+          className="text-2xl font-medium text-red-600"
         >
           Loading...
         </motion.div>
@@ -1940,17 +1925,13 @@ const PublicUserProfile = () => {
   }
 
   return (
-    <div
-      className={`min-h-screen ${
-        isDarkMode ? "bg-gray-950" : "bg-white"
-      } transition-colors duration-500 pt-20 pb-12 px-4 sm:px-6 lg:px-8 font-poppins`}
-    >
+    <div className="min-h-screen bg-white transition-colors duration-500 pt-20 pb-12 px-4 sm:px-6 lg:px-8 font-poppins">
       {/* Sticky Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 dark:bg-gray-900/80 backdrop-blur-md shadow-md py-4 px-4 sm:px-6 lg:px-8">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 backdrop-blur-md shadow-md py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto flex justify-between items-center">
           <Link
             to="/"
-            className="flex items-center gap-2 text-white dark:text-teal-400 dark:hover:text-teal-300 transition-colors"
+            className="flex items-center gap-2 text-white transition-colors"
             aria-label="Back to home"
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -1958,23 +1939,6 @@ const PublicUserProfile = () => {
             </svg>
             Back
           </Link>
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors"
-            aria-label={
-              isDarkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {isDarkMode ? (
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-            )}
-          </button>
         </div>
       </div>
 
@@ -1984,7 +1948,7 @@ const PublicUserProfile = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="bg-white dark:bg-gray-900 rounded-xl p-6 sm:p-8 shadow-lg mb-8"
+          className="bg-white rounded-xl p-6 sm:p-8 shadow-lg mb-8"
           role="region"
           aria-label="User profile"
         >
@@ -1993,7 +1957,7 @@ const PublicUserProfile = () => {
               <img
                 src={user?.profilePicture || "https://via.placeholder.com/150"}
                 alt="Profile picture"
-                className="w-24 h-24 rounded-full object-cover border-2 border-indigo-500 dark:border-teal-500"
+                className="w-24 h-24 rounded-full object-cover border-2 border-indigo-500"
                 onError={(e) =>
                   (e.target.src = "https://via.placeholder.com/150")
                 }
@@ -2007,29 +1971,27 @@ const PublicUserProfile = () => {
             </div>
             <div className="text-center sm:text-left">
               <div className="flex items-center justify-center sm:justify-start gap-4">
-                <h2 className="text-2xl sm:text-3xl font-bold text-indigo-900 dark:text-teal-300">
+                <h2 className="text-2xl sm:text-3xl font-bold text-indigo-900">
                   {user?.username || user?.email}
                 </h2>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setShowFollowers(true)}
-                    className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-teal-400"
+                    className="text-sm text-gray-500 hover:text-indigo-600"
                     aria-label="View followers"
                   >
                     {user?.followersCount || 0} Followers
                   </button>
                   <button
                     onClick={() => setShowFollowing(true)}
-                    className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-teal-400"
+                    className="text-sm text-gray-500 hover:text-indigo-600"
                     aria-label="View following"
                   >
                     {user?.followingCount || 0} Following
                   </button>
                 </div>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 mt-2">
-                {user?.bio || "No bio yet."}
-              </p>
+              <p className="text-gray-600 mt-2">{user?.bio || "No bio yet."}</p>
 
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -2038,7 +2000,7 @@ const PublicUserProfile = () => {
                 className={`mt-4 px-4 py-2 rounded-full transition-colors ${
                   isFollowing
                     ? "bg-red-500 hover:bg-red-600 text-white"
-                    : "bg-indigo-500 dark:bg-teal-500 hover:bg-indigo-600 dark:hover:bg-teal-600 text-white"
+                    : "bg-indigo-500 hover:bg-indigo-600 text-white"
                 }`}
                 aria-label={isFollowing ? "Unfollow user" : "Follow user"}
               >
@@ -2065,21 +2027,19 @@ const PublicUserProfile = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-sm shadow-lg"
+                className="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg"
               >
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Followers ({user?.followersCount || 0})
                 </h3>
                 <div className="max-h-60 overflow-y-auto">
                   {followers.length === 0 ? (
-                    <p className="text-gray-700 dark:text-gray-200">
-                      No followers yet.
-                    </p>
+                    <p className="text-gray-700">No followers yet.</p>
                   ) : (
                     followers.map((follower) => (
                       <div
                         key={follower._id}
-                        className="flex items-center gap-3 py-2 border-b border-gray-200 dark:border-gray-700"
+                        className="flex items-center gap-3 py-2 border-b border-gray-200"
                       >
                         <img
                           src={
@@ -2092,9 +2052,7 @@ const PublicUserProfile = () => {
                             (e.target.src = "https://via.placeholder.com/50")
                           }
                         />
-                        <p className="text-gray-900 dark:text-gray-100">
-                          {follower.username}
-                        </p>
+                        <p className="text-gray-900">{follower.username}</p>
                       </div>
                     ))
                   )}
@@ -2104,7 +2062,7 @@ const PublicUserProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowFollowers(false)}
-                    className="bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-4 py-2 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
+                    className="bg-gray-300 text-gray-900 px-4 py-2 rounded-full hover:bg-gray-400 transition-colors"
                     aria-label="Close followers modal"
                   >
                     Close
@@ -2132,21 +2090,19 @@ const PublicUserProfile = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-sm shadow-lg"
+                className="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg"
               >
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Following ({user?.followingCount || 0})
                 </h3>
                 <div className="max-h-60 overflow-y-auto">
                   {following.length === 0 ? (
-                    <p className="text-gray-700 dark:text-gray-200">
-                      Not following anyone yet.
-                    </p>
+                    <p className="text-gray-700">Not following anyone yet.</p>
                   ) : (
                     following.map((followedUser) => (
                       <div
                         key={followedUser._id}
-                        className="flex items-center gap-3 py-2 border-b border-gray-200 dark:border-gray-700"
+                        className="flex items-center gap-3 py-2 border-b border-gray-200"
                       >
                         <img
                           src={
@@ -2159,9 +2115,7 @@ const PublicUserProfile = () => {
                             (e.target.src = "https://via.placeholder.com/50")
                           }
                         />
-                        <p className="text-gray-900 dark:text-gray-100">
-                          {followedUser.username}
-                        </p>
+                        <p className="text-gray-900">{followedUser.username}</p>
                       </div>
                     ))
                   )}
@@ -2171,7 +2125,7 @@ const PublicUserProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowFollowing(false)}
-                    className="bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-4 py-2 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
+                    className="bg-gray-300 text-gray-900 px-4 py-2 rounded-full hover:bg-gray-400 transition-colors"
                     aria-label="Close following modal"
                   >
                     Close
@@ -2187,18 +2141,16 @@ const PublicUserProfile = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="bg-white dark:bg-gray-900 rounded-xl p-6 sm:p-8 shadow-lg"
+          className="bg-white rounded-xl p-6 sm:p-8 shadow-lg"
           role="region"
           aria-label="User posts history"
         >
-          <h3 className="text-2xl font-bold text-indigo-900 dark:text-teal-300 mb-6">
-            Posts
-          </h3>
+          <h3 className="text-2xl font-bold text-indigo-900 mb-6">Posts</h3>
           {posts.length === 0 ? (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center text-gray-500 dark:text-gray-400"
+              className="text-center text-gray-500"
             >
               No posts yet.
             </motion.p>
@@ -2239,7 +2191,7 @@ const PublicUserProfile = () => {
                         />
                       )
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
                         <span className="text-sm text-center p-2">
                           {post.title}
                         </span>

@@ -2565,7 +2565,6 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -2582,16 +2581,6 @@ const UserProfile = () => {
   const [showFollowing, setShowFollowing] = useState(false);
   const [menuOpen, setMenuOpen] = useState(null); // Track which post's menu is open
   const menuRef = useRef(null); // Ref for dropdown menu to detect outside clicks
-
-  // Persistent dark mode
-  useEffect(() => {
-    const saved = localStorage.getItem("darkMode");
-    if (saved) setIsDarkMode(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
 
   // Fetch user profile, posts, followers, and following
   useEffect(() => {
@@ -2653,10 +2642,6 @@ const UserProfile = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -2837,11 +2822,11 @@ const UserProfile = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-white dark:bg-gray-950">
+      <div className="flex justify-center items-center h-screen bg-white">
         <motion.div
           animate={{ scale: [1, 1.1, 1] }}
           transition={{ repeat: Infinity, duration: 1 }}
-          className="text-2xl font-medium text-red-600 dark:text-teal-400"
+          className="text-2xl font-medium text-red-600"
         >
           Loading...
         </motion.div>
@@ -2850,17 +2835,13 @@ const UserProfile = () => {
   }
 
   return (
-    <div
-      className={`min-h-screen ${
-        isDarkMode ? "bg-gray-950" : "bg-white"
-      } transition-colors duration-500 pt-20 pb-12 px-4 sm:px-6 lg:px-8 font-poppins`}
-    >
+    <div className="min-h-screen bg-white transition-colors duration-500 pt-20 pb-12 px-4 sm:px-6 lg:px-8 font-poppins">
       {/* Sticky Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 dark:bg-gray-900/80 backdrop-blur-md shadow-md py-4 px-4 sm:px-6 lg:px-8">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 backdrop-blur-md shadow-md py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto flex justify-between items-center">
           <Link
             to="/"
-            className="flex items-center gap-2 text-white dark:text-teal-400 dark:hover:text-teal-300 transition-colors"
+            className="flex items-center gap-2 text-white transition-colors"
             aria-label="Back to home"
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -2868,23 +2849,6 @@ const UserProfile = () => {
             </svg>
             Back
           </Link>
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors"
-            aria-label={
-              isDarkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {isDarkMode ? (
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-            )}
-          </button>
         </div>
       </div>
 
@@ -2894,7 +2858,7 @@ const UserProfile = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="bg-white dark:bg-gray-900 rounded-xl p-6 sm:p-8 shadow-lg mb-8"
+          className="bg-white rounded-xl p-6 sm:p-8 shadow-lg mb-8"
           role="region"
           aria-label="User profile"
         >
@@ -2908,7 +2872,7 @@ const UserProfile = () => {
                     : "https://via.placeholder.com/150")
                 }
                 alt="Profile picture"
-                className="w-24 h-24 rounded-full object-cover border-2 border-indigo-500 dark:border-teal-500"
+                className="w-24 h-24 rounded-full object-cover border-2 border-indigo-500"
                 onError={(e) =>
                   (e.target.src = "https://via.placeholder.com/150")
                 }
@@ -2922,41 +2886,39 @@ const UserProfile = () => {
             </div>
             <div className="text-center sm:text-left">
               <div className="flex items-center justify-center sm:justify-start gap-4">
-                <h2 className="text-2xl sm:text-3xl font-bold text-indigo-900 dark:text-teal-300">
+                <h2 className="text-2xl sm:text-3xl font-bold text-indigo-900">
                   {user?.username || user?.email}
                 </h2>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setShowFollowers(true)}
-                    className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-teal-400"
+                    className="text-sm text-gray-500 hover:text-indigo-600"
                     aria-label="View followers"
                   >
                     {user?.followersCount || 0} Followers
                   </button>
                   <button
                     onClick={() => setShowFollowing(true)}
-                    className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-teal-400"
+                    className="text-sm text-gray-500 hover:text-indigo-600"
                     aria-label="View following"
                   >
                     {user?.followingCount || 0} Following
                   </button>
                 </div>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 mt-2">
-                {user?.bio || "No bio yet."}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+              <p className="text-gray-600 mt-2">{user?.bio || "No bio yet."}</p>
+              <p className="text-sm text-gray-500 mt-1">
                 Joined:{" "}
                 {user ? new Date(user.createdAt).toLocaleDateString() : ""}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+              <p className="text-sm text-gray-500 mt-1">
                 Fun Meter: {user?.funMeter || 0}
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsEditing(!isEditing)}
-                className="mt-4 bg-indigo-500 dark:bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-indigo-600 dark:hover:bg-teal-600 transition-colors mr-2"
+                className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded-full hover:bg-indigo-600 transition-colors mr-2"
                 aria-label={isEditing ? "Cancel edit profile" : "Edit profile"}
               >
                 {isEditing ? "Cancel" : "Edit Profile"}
@@ -2987,7 +2949,7 @@ const UserProfile = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="username"
-                    className="block text-gray-700 dark:text-gray-200 mb-2"
+                    className="block text-gray-700 mb-2"
                   >
                     Username
                   </label>
@@ -2999,15 +2961,12 @@ const UserProfile = () => {
                     onChange={handleInputChange}
                     minLength={3}
                     maxLength={20}
-                    className="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-teal-500 focus:outline-none text-gray-900 dark:text-gray-100"
+                    className="w-full p-3 rounded-xl bg-gray-100 border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-gray-900"
                     aria-label="Username input"
                   />
                 </div>
                 <div className="mb-4">
-                  <label
-                    htmlFor="bio"
-                    className="block text-gray-700 dark:text-gray-200 mb-2"
-                  >
+                  <label htmlFor="bio" className="block text-gray-700 mb-2">
                     Bio
                   </label>
                   <textarea
@@ -3016,14 +2975,14 @@ const UserProfile = () => {
                     value={formData.bio}
                     onChange={handleInputChange}
                     maxLength={200}
-                    className="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-teal-500 focus:outline-none resize-none h-24 text-gray-900 dark:text-gray-100"
+                    className="w-full p-3 rounded-xl bg-gray-100 border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-none h-24 text-gray-900"
                     aria-label="Bio input"
                   />
                 </div>
                 <div className="mb-4">
                   <label
                     htmlFor="profilePicture"
-                    className="block text-gray-700 dark:text-gray-200 mb-2"
+                    className="block text-gray-700 mb-2"
                   >
                     Profile Picture
                   </label>
@@ -3034,20 +2993,18 @@ const UserProfile = () => {
                       name="profilePicture"
                       accept="image/jpeg,image/png"
                       onChange={handleInputChange}
-                      className="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-teal-500 focus:outline-none text-gray-900 dark:text-gray-100"
+                      className="w-full p-3 rounded-xl bg-gray-100 border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-gray-900"
                       aria-label="Profile picture upload"
                     />
                   </div>
                   {preview && (
                     <div className="mt-4">
                       <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Preview:
-                        </p>
+                        <p className="text-sm text-gray-600">Preview:</p>
                         <button
                           type="button"
                           onClick={clearProfilePicture}
-                          className="text-sm text-red-600 dark:text-red-400 hover:underline"
+                          className="text-sm text-red-600 hover:underline"
                           aria-label="Clear profile picture"
                         >
                           Clear
@@ -3068,7 +3025,7 @@ const UserProfile = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="submit"
-                  className="bg-indigo-500 dark:bg-teal-500 text-white px-6 py-2 rounded-full hover:bg-indigo-600 dark:hover:bg-teal-600 transition-colors"
+                  className="bg-indigo-500 text-white px-6 py-2 rounded-full hover:bg-indigo-600 transition-colors"
                   aria-label="Save profile changes"
                 >
                   Save Changes
@@ -3095,21 +3052,19 @@ const UserProfile = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-sm shadow-lg"
+                className="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg"
               >
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Followers ({user?.followersCount || 0})
                 </h3>
                 <div className="max-h-60 overflow-y-auto">
                   {followers.length === 0 ? (
-                    <p className="text-gray-700 dark:text-gray-200">
-                      No followers yet.
-                    </p>
+                    <p className="text-gray-700">No followers yet.</p>
                   ) : (
                     followers.map((follower) => (
                       <div
                         key={follower._id}
-                        className="flex items-center justify-between gap-3 py-2 border-b border-gray-200 dark:border-gray-700"
+                        className="flex items-center justify-between gap-3 py-2 border-b border-gray-200"
                       >
                         <div className="flex items-center gap-3">
                           <img
@@ -3123,9 +3078,7 @@ const UserProfile = () => {
                               (e.target.src = "https://via.placeholder.com/50")
                             }
                           />
-                          <p className="text-gray-900 dark:text-gray-100">
-                            {follower.username}
-                          </p>
+                          <p className="text-gray-900">{follower.username}</p>
                         </div>
                         {follower._id !== user?._id &&
                           !following.some((f) => f._id === follower._id) && (
@@ -3133,7 +3086,7 @@ const UserProfile = () => {
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => handleFollow(follower._id)}
-                              className="bg-indigo-500 dark:bg-teal-500 text-white px-3 py-1 rounded-full hover:bg-indigo-600 dark:hover:bg-teal-600 transition-colors text-sm"
+                              className="bg-indigo-500 text-white px-3 py-1 rounded-full hover:bg-indigo-600 transition-colors text-sm"
                               aria-label={`Follow ${follower.username}`}
                             >
                               Follow
@@ -3148,7 +3101,7 @@ const UserProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowFollowers(false)}
-                    className="bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-4 py-2 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
+                    className="bg-gray-300 text-gray-900 px-4 py-2 rounded-full hover:bg-gray-400 transition-colors"
                     aria-label="Close followers modal"
                   >
                     Close
@@ -3176,21 +3129,19 @@ const UserProfile = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-sm shadow-lg"
+                className="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg"
               >
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Following ({user?.followingCount || 0})
                 </h3>
                 <div className="max-h-60 overflow-y-auto">
                   {following.length === 0 ? (
-                    <p className="text-gray-700 dark:text-gray-200">
-                      Not following anyone yet.
-                    </p>
+                    <p className="text-gray-700">Not following anyone yet.</p>
                   ) : (
                     following.map((followedUser) => (
                       <div
                         key={followedUser._id}
-                        className="flex items-center justify-between gap-3 py-2 border-b border-gray-200 dark:border-gray-700"
+                        className="flex items-center justify-between gap-3 py-2 border-b border-gray-200"
                       >
                         <div className="flex items-center gap-3">
                           <img
@@ -3204,7 +3155,7 @@ const UserProfile = () => {
                               (e.target.src = "https://via.placeholder.com/50")
                             }
                           />
-                          <p className="text-gray-900 dark:text-gray-100">
+                          <p className="text-gray-900">
                             {followedUser.username}
                           </p>
                         </div>
@@ -3228,7 +3179,7 @@ const UserProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowFollowing(false)}
-                    className="bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-4 py-2 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
+                    className="bg-gray-300 text-gray-900 px-4 py-2 rounded-full hover:bg-gray-400 transition-colors"
                     aria-label="Close following modal"
                   >
                     Close
@@ -3244,11 +3195,11 @@ const UserProfile = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="bg-white dark:bg-gray-900 rounded-xl p-6 sm:p-8 shadow-lg mb-8"
+          className="bg-white rounded-xl p-6 sm:p-8 shadow-lg mb-8"
           role="region"
           aria-label="User achievements"
         >
-          <h3 className="text-2xl font-bold text-indigo-900 dark:text-teal-300 mb-6">
+          <h3 className="text-2xl font-bold text-indigo-900 mb-6">
             Achievements
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -3257,9 +3208,7 @@ const UserProfile = () => {
                 key={badge.name}
                 whileHover={{ scale: 1.05 }}
                 className={`p-4 rounded-xl ${
-                  badge.achieved
-                    ? "bg-indigo-100 dark:bg-teal-900"
-                    : "bg-gray-100 dark:bg-gray-800 opacity-50"
+                  badge.achieved ? "bg-indigo-100" : "bg-gray-100 opacity-50"
                 } flex items-center gap-4`}
                 role="button"
                 aria-label={`${badge.name} badge: ${badge.description}, ${
@@ -3269,12 +3218,8 @@ const UserProfile = () => {
               >
                 <span className="text-2xl">{badge.icon}</span>
                 <div>
-                  <p className="font-semibold text-indigo-900 dark:text-teal-300">
-                    {badge.name}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {badge.description}
-                  </p>
+                  <p className="font-semibold text-indigo-900">{badge.name}</p>
+                  <p className="text-sm text-gray-600">{badge.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -3286,11 +3231,11 @@ const UserProfile = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="bg-white dark:bg-gray-900 rounded-xl p-6 sm:p-8 shadow-lg"
+          className="bg-white rounded-xl p-6 sm:p-8 shadow-lg"
           role="region"
           aria-label="User posts history"
         >
-          <h3 className="text-2xl font-bold text-indigo-900 dark:text-teal-300 mb-6">
+          <h3 className="text-2xl font-bold text-indigo-900 mb-6">
             Your Posts
           </h3>
           <AnimatePresence>
@@ -3299,7 +3244,7 @@ const UserProfile = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-center text-gray-500 dark:text-gray-400"
+                className="text-center text-gray-500"
               >
                 No posts yet. Share your first gossip!
               </motion.p>
@@ -3341,7 +3286,7 @@ const UserProfile = () => {
                           />
                         )
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
                           <span className="text-sm text-center p-2">
                             {post.title}
                           </span>
@@ -3382,16 +3327,14 @@ const UserProfile = () => {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: -10 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute top-8 right-0 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 w-32 z-20"
+                            className="absolute top-8 right-0 bg-white rounded-lg shadow-lg py-1 w-32 z-20"
                           >
                             <motion.button
                               whileHover={{
-                                backgroundColor: isDarkMode
-                                  ? "#4b5563"
-                                  : "#e5e7eb",
+                                backgroundColor: "#e5e7eb",
                               }}
                               onClick={() => openDeleteModal(post)}
-                              className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                              className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-200"
                               aria-label={`Delete post ${post.title}`}
                             >
                               Delete
@@ -3424,12 +3367,12 @@ const UserProfile = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-sm shadow-lg"
+                className="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg"
               >
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Are you sure you want to delete this post?
                 </h3>
-                <p className="text-gray-700 dark:text-gray-200 mb-6">
+                <p className="text-gray-700 mb-6">
                   "{postToDelete?.title}" will be permanently deleted.
                 </p>
                 <div className="flex justify-end gap-3">
@@ -3437,7 +3380,7 @@ const UserProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={closeDeleteModal}
-                    className="bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-4 py-2 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
+                    className="bg-gray-300 text-gray-900 px-4 py-2 rounded-full hover:bg-gray-400 transition-colors"
                     aria-label="Cancel deletion"
                   >
                     Cancel
