@@ -2232,7 +2232,7 @@ const PostList = () => {
             isDarkMode ? "bg-gray-800" : "bg-white/90"
           } backdrop-blur-md text-gray-500 shadow-md transition-colors duration-500`}
         >
-          <div className="max-w-7xl mx-auto px-4 py-2 flex space-x-4 overflow-x-auto">
+          {/* <div className="max-w-7xl mx-auto px-4 py-2 flex space-x-4 overflow-x-auto scrollbar-hide">
             {categories.map((category) => (
               <motion.button
                 key={category}
@@ -2241,6 +2241,29 @@ const PostList = () => {
                   setDisplayedCount(POSTS_PER_PAGE);
                 }}
                 className={`px-3 py-1 text-sm font-medium uppercase tracking-wide rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                  selectedCategory === category
+                    ? "bg-red-600 text-white"
+                    : isDarkMode
+                    ? "hover:bg-gray-700 hover:text-white"
+                    : "hover:bg-red-100 hover:text-red-600"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label={`Filter by ${category}`}
+              >
+                {category}
+              </motion.button>
+            ))}
+          </div> */}
+          <div className="max-w-7xl mx-auto px-4 py-2 flex space-x-4 overflow-x-auto scrollbar-hide">
+            {categories.map((category) => (
+              <motion.button
+                key={category}
+                onClick={() => {
+                  setSelectedCategory(category);
+                  setDisplayedCount(POSTS_PER_PAGE);
+                }}
+                className={`px-3 py-1 text-sm font-medium uppercase tracking-wide rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 whitespace-nowrap ${
                   selectedCategory === category
                     ? "bg-red-600 text-white"
                     : isDarkMode
