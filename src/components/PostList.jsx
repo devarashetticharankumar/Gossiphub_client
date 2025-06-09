@@ -2630,7 +2630,7 @@ const PostList = () => {
                               <video
                                 src={post.media}
                                 controls
-                                className="w-full h-40 object-cover rounded-t-xl sm:rounded-l-xl sm:rounded-t-none"
+                                className="w-full h-45 object-cover rounded-t-xl sm:rounded-l-xl sm:rounded-t-none"
                                 onError={(e) =>
                                   (e.target.src =
                                     "https://via.placeholder.com/150")
@@ -2640,7 +2640,7 @@ const PostList = () => {
                               <img
                                 src={post.media}
                                 alt="Post media"
-                                className="w-full h-40 object-cover rounded-t-xl sm:rounded-l-xl sm:rounded-t-none"
+                                className="w-full h-45 object-cover rounded-t-xl sm:rounded-l-xl sm:rounded-t-none"
                                 onError={(e) =>
                                   (e.target.src =
                                     "https://via.placeholder.com/150")
