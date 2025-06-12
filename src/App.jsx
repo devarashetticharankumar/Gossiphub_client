@@ -17,6 +17,7 @@ import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PublicUserProfile from "./components/PublicUserProfile";
+// import ShortsFeed from "./components/ShortsFeed";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/profile/:userId" element={<PublicUserProfile />} />
+        {/* <Route path="/shorts" element={<ShortsFeed />} /> */}
 
         <Route
           path="/create-post"

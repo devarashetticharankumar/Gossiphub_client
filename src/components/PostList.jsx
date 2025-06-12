@@ -1682,6 +1682,7 @@ import {
 } from "../utils/api";
 import Logo from "../assets/GossippHublogo.svg";
 import confetti from "canvas-confetti";
+import { SiYoutubeshorts } from "react-icons/si";
 
 const PostList = () => {
   const navigate = useNavigate();
@@ -2176,6 +2177,12 @@ const PostList = () => {
               >
                 Create Post
               </Link>
+              {/* <Link
+                to="/shorts"
+                className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-full hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg"
+              >
+                Watch Shorts
+              </Link> */}
               <Link
                 to="/notifications"
                 className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-full hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg"
@@ -2281,7 +2288,7 @@ const PostList = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 pt-40 md:pt-36 pb-20 md:pb-12">
+      <main className="max-w-7xl mx-auto px-4 pt-30 md:pt-36 pb-20 md:pb-12">
         {loading ? (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -3522,6 +3529,16 @@ const PostList = () => {
               <HiPlus className="h-6 w-6 text-red-600 bg-red-100 rounded-full" />
             </Link>
           </motion.div>
+          {/* <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <Link
+              to="/shorts"
+              className="p-2 rounded-full transition-all duration-200"
+              aria-label="Create Post"
+              title="Create Post"
+            >
+              <SiYoutubeshorts className="h-6 w-6 text-red-600 bg-red-100 rounded-full" />
+            </Link>
+          </motion.div> */}
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
             <Link
               to="/notifications"

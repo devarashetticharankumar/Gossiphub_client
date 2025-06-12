@@ -277,30 +277,20 @@ export const getUsers = async () => {
 //   return handleResponse(response);
 // };
 
-// export const getPosts = async (hashtag = null) => {
-//   const url = hashtag
-//     ? `${API_URL}/posts?hashtag=${encodeURIComponent(hashtag)}`
-//     : `${API_URL}/posts`;
-//   const response = await fetch(url);
+// export const getPosts = async () => {
+//   const response = await fetch(`${API_URL}/posts`);
+//   return handleResponse(response);
+// };
+
+// export const getTrendingShorts = async () => {
+//   const response = await fetch(`${API_URL}/posts/trending-shorts`, {
+//     headers: { Authorization: `Bearer ${getToken()}` },
+//   });
 //   return handleResponse(response);
 // };
 
 // export const getPostById = async (postId) => {
 //   const response = await fetch(`${API_URL}/posts/${postId}`);
-//   return handleResponse(response);
-// };
-
-// export const getPostsByHashtag = async (hashtag) => {
-//   const response = await fetch(
-//     `${API_URL}/posts/hashtag/${encodeURIComponent(hashtag)}`
-//   );
-//   return handleResponse(response);
-// };
-
-// export const getTrendingHashtags = async () => {
-//   const response = await fetch(`${API_URL}/posts/trending-hashtags`, {
-//     headers: { Authorization: `Bearer ${getToken()}` },
-//   });
 //   return handleResponse(response);
 // };
 

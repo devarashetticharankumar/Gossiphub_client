@@ -8463,7 +8463,7 @@ const PostDetails = () => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 pt-20 pb-12 flex flex-col md:flex-row gap-6">
+      <div className="max-w-7xl mx-auto lg:px-4 px-1 pt-20 pb-12 flex flex-col md:flex-row gap-6">
         <div className="md:w-2/3">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -8494,7 +8494,7 @@ const PostDetails = () => {
             <div
               className={`mt-0 shadow-lg rounded-b-lg ${
                 isDarkMode ? "bg-gray-900" : "bg-white"
-              } p-6 transition-colors duration-500`}
+              } lg:p-6 p-3 transition-colors duration-500`}
             >
               <h1
                 className={`text-2xl sm:text-3xl font-bold mb-2 ${
@@ -8860,7 +8860,7 @@ const PostDetails = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className={`mt-0 rounded-lg p-6 shadow-lg ${
+            className={`mt-0 rounded-lg lg:p-6 p-3 shadow-lg ${
               isDarkMode ? "bg-gray-900" : "bg-white"
             } transition-colors duration-500`}
           >
@@ -9010,7 +9010,7 @@ const PostDetails = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className={`mt-6 rounded-lg p-6 shadow-lg ${
+            className={`mt-6 rounded-lg lg:p-6 p-3 shadow-lg ${
               isDarkMode ? "bg-gray-900" : "bg-white"
             } transition-colors duration-500`}
           >
@@ -9094,7 +9094,7 @@ const PostDetails = () => {
 
         <div className="md:w-1/3 space-y-6 md:sticky md:top-20 md:h-[calc(100vh-80px)] md:overflow-y-auto scrollbar-hide">
           <motion.div
-            className={`rounded-lg p-4 shadow-lg ${
+            className={`rounded-lg lg:p-4 p-3 shadow-lg ${
               isDarkMode ? "bg-gray-900" : "bg-white"
             } transition-colors duration-500`}
             initial={{ opacity: 0, x: 20 }}
@@ -9163,7 +9163,7 @@ const PostDetails = () => {
           </motion.div>
 
           <motion.div
-            className={`rounded-lg p-4 shadow-lg ${
+            className={`rounded-lg lg:p-4 p-3 shadow-lg ${
               isDarkMode ? "bg-gray-900" : "bg-white"
             } transition-colors duration-500`}
             initial={{ opacity: 0, x: 20 }}
