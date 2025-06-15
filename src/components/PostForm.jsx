@@ -1728,14 +1728,48 @@ Ensure the explanation is at least two sentences long and provides specific insi
       // Construct the prompt for generating a description in the detected language
       const prompt = `You are an AI content creator specializing in gossip posts. Based on the provided title, generate a detailed and engaging description for a gossip post in the language "${detectedLanguage}". The description should be well-structured, including subheadings (using HTML <h2> tags), paragraphs (using <p> tags), and bullet points (using <ul> and <li> tags) where appropriate. Ensure the content is suitable for a general audience, avoiding offensive or harmful elements, and aligns with the tone of a gossip post (lighthearted, intriguing, and conversational).
 
-Additionally, suggest at least one relevant image and one relevant video that would complement the gossip post. Include these suggestions as HTML comments within the description in the following format:
-<!-- Suggested Image: [Description of the image] -->
-<!-- Suggested Video: [Description of the video] -->
-Place these comments at appropriate locations within the description where the media would make sense contextually.
+      Additionally, suggest at least one relevant image and one relevant video that would complement the gossip post. Include these suggestions as HTML comments within the description in the following format:
+      <!-- Suggested Image: [Description of the image] -->
+      <!-- Suggested Video: [Description of the video] -->
+      Place these comments at appropriate locations within the description where the media would make sense contextually.
 
-Gossip Post Title: ${formData.title}
+      Gossip Post Title: ${formData.title}
 
-Respond with the description in HTML format, compatible with a rich text editor like ReactQuill. Do not include <html>, <body>, or other top-level tags, just the content with appropriate HTML tags (e.g., <h2>, <p>, <ul>, <li>, etc.). Ensure the content is at least 150 words long and includes at least one subheading and one bullet point list. The entire description must be in "${detectedLanguage}".`;
+      Respond with the description in HTML format, compatible with a rich text editor like ReactQuill. Do not include <html>, <body>, or other top-level tags, just the content with appropriate HTML tags (e.g., <h2>, <p>, <ul>, <li>, etc.). Ensure the content is at least 150 words long and includes at least one subheading and one bullet point list. The entire description must be in "${detectedLanguage}".`;
+
+      // Inside generateDescriptionWithGemini, replace the prompt assignment with:
+
+      // const prompt = `You are an expert AI gossip columnist. Using the provided title, generate a spicy, engaging, and informative post in the language "${detectedLanguage}".
+
+      // **Structure your post as follows:**
+
+      // <h2>1. Attention-Grabbing Headline & Introduction</h2>
+      // <p>Start with a bold, catchy headline and a lively introduction that hooks the reader and sets the tone for the post.</p>
+
+      // <h2>2. The Facts (Official Statements & Latest Updates)</h2>
+      // <p>Clearly present the main facts of the story, using direct quotes, official statements, and the latest updates from credible sources. Use bullet points for clarity:</p>
+      // <ul>
+      //   <li>Direct quotes from producers, actors, or official spokespeople (if available)</li>
+      //   <li>Specific events, dates, and actions from the latest news</li>
+      //   <li>Current status of the project or issue (confirmed, shelved, in development, etc.)</li>
+      //   <li>Any official denials, confirmations, or clarifications</li>
+      // </ul>
+      // <p>Only include information that is accurate, up-to-date, and from reliable sources. Make sure to reflect the most recent statements and developments.</p>
+
+      // <h2>3. The Juicy Speculation (Rumors & Wild Theories)</h2>
+      // <p>Add a section for spicy gossip, rumors, or wild theories. Clearly label this section as “Rumors & Wild Theories” or “Juicy Speculation” so readers know it is not confirmed. Keep it playful, entertaining, and conversation-sparking.</p>
+
+      // <h2>4. Reader Engagement</h2>
+      // <p>End with a question or call-to-action to encourage comments, sharing, and lively discussion.</p>
+
+      // <!-- Suggested Image: [Description of a relevant image, e.g., main actors or producers together] -->
+      // <!-- Suggested Video: [Description of a relevant video, e.g., interview or teaser footage] -->
+
+      // The description must be at least 150 words, with at least one subheading and one bullet list.
+
+      // Gossip Post Title: ${formData.title}
+
+      // Respond only with the HTML content, ready for use in a rich text editor. Do not include <html> or <body> tags. The entire description must be in "${detectedLanguage}".`;
 
       const result = await model.generateContent([prompt]);
       const generatedDescription = result.response.text().trim();
@@ -2253,6 +2287,7 @@ Respond with the description in HTML format, compatible with a rich text editor 
                 <option value="General">General</option>
                 <option value="Humor">Humor</option>
                 <option value="News">News</option>
+                <option value="Technology">Technology</option>
                 <option value="Jobs">Jobs</option>
                 <option value="Reviews">Reviews</option>
                 <option value="Movie Gossips">Movie</option>
