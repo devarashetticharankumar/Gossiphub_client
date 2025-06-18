@@ -29,3 +29,71 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.post-description {
+  line-height: 1.6;
+}
+
+.post-description h1 {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 700;
+}
+
+.post-description h2 {
+  font-size: 1.25rem; /* 24px */
+  font-weight: 600;
+}
+
+.post-description h3 {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 500;
+}
+
+.post-description ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.post-description li {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .post-description h1 {
+    font-size: 1.5rem; /* 24px */
+  }
+
+  .post-description h2 {
+    font-size: 1.125rem; /* 18px */
+  }
+
+  .post-description h3 {
+    font-size: 1rem; /* 16px */
+  }
+
+  .post-description ul {
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .post-description h1 {
+    font-size: 1.25rem; /* 20px */
+  }
+
+  .post-description h2 {
+    font-size: 1rem; /* 16px */
+  }
+
+  .post-description h3 {
+    font-size: 0.875rem; /* 14px */
+  }
+
+  .post-description ul {
+    padding-left: 0.75rem;
+  }
+
+  .post-description li {
+    margin-bottom: 0.25rem;
+  }
+}
