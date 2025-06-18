@@ -8214,8 +8214,8 @@ const PostDetails = () => {
     ? `${postMedia.replace(/\.(mp4|webm|ogg)$/i, "-thumbnail.jpg")}`
     : postMedia;
   const keywords = post?.category
-    ? `${post.category}, ${postTitle.split(" ").slice(0, 3).join(", ")}`
-    : "GossipHub, Social Media, News";
+    ? `${post.category}, ${postTitle.split(" ").slice(0, 10).join(", ")}`
+    : "GossipHub, Social Media, News, Gossips, Celebrity, Tollywood news, Bollywood news, hollywood news, Political news, Entertainment, Funny gossips, Technology";
   const authorName = post?.isAnonymous
     ? "Anonymous"
     : post?.author?.username || "Unknown";
@@ -8243,109 +8243,12 @@ const PostDetails = () => {
     mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
   };
 
-  // const handleNativeShare = async () => {
-  //   if (navigator.share) {
-  //     try {
-  //       const shareData = {
-  //         title: postTitle,
-  //         text: `${postTitle}\n${postDescription.slice(0, 100)}...`,
-  //         url: postUrl,
-  //       };
-
-  //       if (postMedia && !isVideo) {
-  //         try {
-  //           const response = await fetch(postMedia);
-  //           const blob = await response.blob();
-  //           const file = new File([blob], "shared-image.jpg", {
-  //             type: "image/jpeg",
-  //           });
-  //           shareData.files = [file];
-  //         } catch (err) {
-  //           console.error("Failed to fetch image for sharing:", err);
-  //           delete shareData.files;
-  //         }
-  //       }
-
-  //       await navigator.share(shareData);
-  //       toast.success("Shared successfully!");
-  //     } catch (err) {
-  //       console.error("Share error:", err);
-  //       try {
-  //         await navigator.share({
-  //           title: postTitle,
-  //           text: `${postTitle}\n${postDescription.slice(
-  //             0,
-  //             100
-  //           )}...\n${postUrl}`,
-  //           url: postUrl,
-  //         });
-  //         toast.success("Shared successfully (without image)!");
-  //       } catch (fallbackErr) {
-  //         toast.error("Failed to share post");
-  //         console.error("Fallback share error:", fallbackErr);
-  //       }
-  //     }
-  //   } else {
-  //     toast.info("Native sharing not supported. Use the share options below.");
-  //   }
-  // };
-
-  // const handleCopyLink = () => {
-  //   navigator.clipboard
-  //     .writeText(postUrl)
-  //     .then(() => {
-  //       setIsCopied(true);
-  //       toast.success("Link copied to clipboard!");
-  //       setTimeout(() => setIsCopied(false), 2000);
-  //     })
-  //     .catch(() => {
-  //       toast.error("Failed to copy link");
-  //     });
-  // };
-
-  // const handleShareTwitter = () => {
-  //   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-  //     postUrl
-  //   )}&text=${encodeURIComponent(postTitle)}`;
-  //   window.open(twitterUrl, "_blank", "noopener,noreferrer");
-  // };
-
-  // const handleShareWhatsapp = () => {
-  //   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-  //     `${postTitle}\n${postUrl}`
-  //   )}`;
-  //   window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-  // };
-
-  // const handleShareFacebook = () => {
-  //   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-  //     postUrl
-  //   )}&t=${encodeURIComponent(postTitle)}`;
-  //   window.open(facebookUrl, "_blank", "noopener,noreferrer");
-  // };
-
-  // const handleShareTelegram = () => {
-  //   const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
-  //     postUrl
-  //   )}&text=${encodeURIComponent(postTitle)}`;
-  //   window.open(telegramUrl, "_blank", "noopener,noreferrer");
-  // };
-
-  // const handleShareLinkedin = () => {
-  //   const linkedinUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-  //     postUrl
-  //   )}&title=${encodeURIComponent(postTitle)}&summary=${encodeURIComponent(
-  //     postDescription.slice(0, 200) + "..."
-  //   )}`;
-  //   window.open(linkedinUrl, "_blank", "noopener,noreferrer");
-  // };
-
   const handleNativeShare = async () => {
     if (navigator.share) {
       try {
         const shareData = {
           title: postTitle,
-          text: `${postTitle}\n${postDescription.slice(0, 100)}...\n${postUrl}`,
+          text: `${postTitle}\n${postDescription.slice(0, 100)}...`,
           url: postUrl,
         };
 
@@ -8361,8 +8264,6 @@ const PostDetails = () => {
             console.error("Failed to fetch image for sharing:", err);
             delete shareData.files;
           }
-        } else if (postMedia && isVideo) {
-          shareData.text += `\nWatch the video: ${postMedia}`;
         }
 
         await navigator.share(shareData);
@@ -8375,10 +8276,10 @@ const PostDetails = () => {
             text: `${postTitle}\n${postDescription.slice(
               0,
               100
-            )}...\n${postUrl}${postMedia ? `\n${postMedia}` : ""}`,
+            )}...\n${postUrl}`,
             url: postUrl,
           });
-          toast.success("Shared successfully (without media file)!");
+          toast.success("Shared successfully (without image)!");
         } catch (fallbackErr) {
           toast.error("Failed to share post");
           console.error("Fallback share error:", fallbackErr);
@@ -8403,26 +8304,15 @@ const PostDetails = () => {
   };
 
   const handleShareTwitter = () => {
-    const maxTextLength = 280; // Twitter's character limit
-    const baseText = `${postTitle}\n${postDescription.slice(0, 200)}${
-      postMedia ? `\nMedia: ${postMedia}` : ""
-    }`;
-    const text =
-      baseText.length > maxTextLength - postUrl.length - 1
-        ? `${baseText.slice(0, maxTextLength - postUrl.length - 4)}...`
-        : baseText;
     const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
       postUrl
-    )}&text=${encodeURIComponent(text)}`;
+    )}&text=${encodeURIComponent(postTitle)}`;
     window.open(twitterUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleShareWhatsapp = () => {
-    const text = `${postTitle}\n${postDescription.slice(0, 200)}${
-      postMedia ? `\nMedia: ${postMedia}` : ""
-    }\n${postUrl}`;
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-      text
+      `${postTitle}\n${postUrl}`
     )}`;
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
@@ -8430,19 +8320,14 @@ const PostDetails = () => {
   const handleShareFacebook = () => {
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
       postUrl
-    )}&t=${encodeURIComponent(postTitle)}&description=${encodeURIComponent(
-      postDescription.slice(0, 200)
-    )}${postMedia ? `\nMedia: ${postMedia}` : ""}`;
+    )}&t=${encodeURIComponent(postTitle)}`;
     window.open(facebookUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleShareTelegram = () => {
-    const text = `${postTitle}\n${postDescription.slice(0, 200)}${
-      postMedia ? `\nMedia: ${postMedia}` : ""
-    }\n${postUrl}`;
     const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
       postUrl
-    )}&text=${encodeURIComponent(text)}`;
+    )}&text=${encodeURIComponent(postTitle)}`;
     window.open(telegramUrl, "_blank", "noopener,noreferrer");
   };
 
@@ -8450,9 +8335,7 @@ const PostDetails = () => {
     const linkedinUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
       postUrl
     )}&title=${encodeURIComponent(postTitle)}&summary=${encodeURIComponent(
-      postDescription.slice(0, 200)
-    )}${postMedia ? `\nMedia: ${postMedia}` : ""}&source=${encodeURIComponent(
-      publisherName
+      postDescription.slice(0, 200) + "..."
     )}`;
     window.open(linkedinUrl, "_blank", "noopener,noreferrer");
   };
