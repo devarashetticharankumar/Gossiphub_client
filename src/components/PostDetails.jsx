@@ -12108,14 +12108,77 @@ const PostDetails = () => {
     mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
   };
 
+  // const handleNativeShare = async () => {
+  //   if (navigator.share) {
+  //     try {
+  //       const shareData = {
+  //         title: postTitle,
+  //         text: `${postTitle}\n${postDescription.slice(0, 100)}...`,
+  //         url: postUrl,
+  //       };
+
+  //       if (postMedia && !isVideo) {
+  //         try {
+  //           const response = await fetch(postMedia);
+  //           const blob = await response.blob();
+  //           const file = new File([blob], "shared-image.jpg", {
+  //             type: "image/jpeg",
+  //           });
+  //           shareData.files = [file];
+  //         } catch (err) {
+  //           console.error("Failed to fetch image for sharing:", err);
+  //           delete shareData.files;
+  //         }
+  //       } else if (isVideo && videoThumbnail) {
+  //         try {
+  //           const response = await fetch(videoThumbnail);
+  //           const blob = await response.blob();
+  //           const file = new File([blob], "shared-video-thumbnail.jpg", {
+  //             type: "image/jpeg",
+  //           });
+  //           shareData.files = [file];
+  //         } catch (err) {
+  //           console.error("Failed to fetch video thumbnail for sharing:", err);
+  //           delete shareData.files;
+  //         }
+  //       }
+
+  //       await navigator.share(shareData);
+  //       toast.success("Shared successfully!");
+  //     } catch (err) {
+  //       console.error("Share error:", err);
+  //       try {
+  //         await navigator.share({
+  //           title: postTitle,
+  //           text: `${postTitle}\n${postDescription.slice(
+  //             0,
+  //             100
+  //           )}...\n${postUrl}`,
+  //           url: postUrl,
+  //         });
+  //         toast.success("Shared successfully (without media)!");
+  //       } catch (fallbackErr) {
+  //         toast.error("Failed to share post");
+  //         console.error("Fallback share error:", fallbackErr);
+  //       }
+  //     }
+  //   } else {
+  //     toast.info("Native sharing not supported. Use the share options below.");
+  //   }
+  // };
+
   const handleNativeShare = async () => {
     if (navigator.share) {
       try {
         const shareData = {
-          title: postTitle,
-          text: `${postTitle}\n${postDescription.slice(0, 100)}...`,
+          title: post?.title ? post.title : "Check out this post on GossipHub!",
+          text: `${
+            post?.title || "Check out this post"
+          }\n${postDescription.slice(0, 100)}...`,
           url: postUrl,
         };
+
+        console.log("Sharing data:", shareData); // Debug log
 
         if (postMedia && !isVideo) {
           try {
@@ -12149,11 +12212,12 @@ const PostDetails = () => {
         console.error("Share error:", err);
         try {
           await navigator.share({
-            title: postTitle,
-            text: `${postTitle}\n${postDescription.slice(
-              0,
-              100
-            )}...\n${postUrl}`,
+            title: post?.title
+              ? post.title
+              : "Check out this post on GossipHub!",
+            text: `${
+              post?.title || "Check out this post"
+            }\n${postDescription.slice(0, 100)}...\n${postUrl}`,
             url: postUrl,
           });
           toast.success("Shared successfully (without media)!");
