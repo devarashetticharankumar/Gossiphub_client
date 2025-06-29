@@ -2624,7 +2624,7 @@ const PostList = () => {
                       key={post._id}
                       className={`${
                         isDarkMode ? "bg-gray-800" : "bg-white"
-                      } rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transition-colors duration-500`}
+                      } lg:rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transition-colors duration-500`}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
@@ -2637,7 +2637,7 @@ const PostList = () => {
                               <video
                                 src={post.media}
                                 controls
-                                className="w-full lg:h-45 object-cover rounded-t-xl sm:rounded-l-xl sm:rounded-t-none"
+                                className="w-full lg:h-45 object-cover "
                                 onError={(e) =>
                                   (e.target.src =
                                     "https://via.placeholder.com/150")
@@ -2647,7 +2647,7 @@ const PostList = () => {
                               <img
                                 src={post.media}
                                 alt="Post media"
-                                className="w-full lg:h-45 object-cover rounded-t-xl sm:rounded-l-xl sm:rounded-t-none"
+                                className="w-full lg:h-45 object-cover "
                                 onError={(e) =>
                                   (e.target.src =
                                     "https://via.placeholder.com/150")
