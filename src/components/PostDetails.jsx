@@ -12096,13 +12096,13 @@ const PostDetails = () => {
     description: seoDescription,
     author: { "@type": "Person", name: authorName },
     datePublished: datePublished,
-    image: postMedia || "https://gossipphub.netlify.app/default-image.jpg",
+    image: postMedia || "https://gossiphub.in/default-image.jpg",
     publisher: {
       "@type": "Organization",
       name: publisherName,
       logo: {
         "@type": "ImageObject",
-        url: "https://gossipphub.netlify.app/logo.png",
+        url: "https://gossiphub.in/logo.png",
       },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },

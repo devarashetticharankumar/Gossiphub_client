@@ -2074,7 +2074,7 @@ const PostList = () => {
           content="Explore the latest posts, trending stories, and user suggestions on GossipHub. Join the conversation and share your own gossip today!"
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://gossipphub.netlify.app/" />
+        <meta property="og:url" content="https://gossiphub.in/" />
         <meta property="og:image" content={Logo} />
         <meta property="og:image:alt" content="GossipHub Logo" />
         <meta property="og:site_name" content="GossipHub" />
@@ -2089,7 +2089,7 @@ const PostList = () => {
         />
         <meta name="twitter:image" content={Logo} />
         <meta name="twitter:image:alt" content="GossipHub Logo" />
-        <link rel="canonical" href="https://gossipphub.netlify.app/" />
+        <link rel="canonical" href="https://gossiphub.in/" />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -2097,7 +2097,7 @@ const PostList = () => {
             name: "GossipHub | Discover Trending Posts & Stories",
             description:
               "Explore the latest posts, trending stories, and user suggestions on GossipHub. Join the conversation and share your own gossip today!",
-            url: "https://gossipphub.netlify.app/",
+            url: "https://gossiphub.in/",
             publisher: {
               "@type": "Organization",
               name: "GossipHub",
