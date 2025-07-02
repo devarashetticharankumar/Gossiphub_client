@@ -12501,7 +12501,7 @@ const PostDetails = () => {
                 </motion.button>
               </div>
               <div
-                className={`text-lg mb-6 leading-relaxed post-description ${
+                className={`text-base mb-6 leading-relaxed post-description ${
                   isDarkMode ? "text-gray-200" : "text-black"
                 }`}
                 role="region"
