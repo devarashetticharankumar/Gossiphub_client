@@ -2449,6 +2449,11 @@ const PostForm = () => {
   const [isRatingLoading, setIsRatingLoading] = useState(false); // State for loading rating
   const [isGeneratingDescription, setIsGeneratingDescription] = useState(false); // State for generating description
   const [mediaSuggestions, setMediaSuggestions] = useState([]); // State for media suggestions
+  const [isCapturing, setIsCapturing] = useState(false); // State for media capture mode
+  const [stream, setStream] = useState(null); // Media stream for camera
+  const videoRef = useRef(null); // Ref for video element
+  const [recording, setRecording] = useState(false); // State for video recording
+  const recorderRef = useRef(null); // Ref for MediaRecorder
   const navigate = useNavigate();
 
   // Persistent dark mode
@@ -2460,6 +2465,15 @@ const PostForm = () => {
   useEffect(() => {
     localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
   }, [isDarkMode]);
+
+  // Cleanup media stream on unmount
+  useEffect(() => {
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [stream]);
 
   // Debounce function to limit API calls
   const debounce = (func, delay) => {
@@ -2799,7 +2813,85 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
     setFile(null);
     setFilePreview(null);
     document.getElementById("media-upload").value = null;
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+      setIsCapturing(false);
+    }
     debouncedRateContent(formData.title, formData.description, null);
+  };
+
+  const startCapture = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setStream(stream);
+      setIsCapturing(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error("Error accessing media devices:", error);
+      toast.error(
+        "Failed to access camera/microphone. Please allow permissions."
+      );
+    }
+  };
+
+  const capturePhoto = () => {
+    if (!videoRef.current || !stream) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    const context = canvas.getContext("2d");
+    context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob((blob) => {
+      const file = new File([blob], `photo-${Date.now()}.jpg`, {
+        type: "image/jpeg",
+      });
+      setFile(file);
+      setFilePreview(URL.createObjectURL(blob));
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+      setIsCapturing(false);
+      debouncedRateContent(formData.title, formData.description, file);
+    }, "image/jpeg");
+  };
+
+  const startRecording = () => {
+    if (!stream) return;
+
+    const recorder = new MediaRecorder(stream);
+    const chunks = [];
+
+    recorder.ondataavailable = (e) => chunks.push(e.data);
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: "video/webm" });
+      const file = new File([blob], `video-${Date.now()}.webm`, {
+        type: "video/webm",
+      });
+      setFile(file);
+      setFilePreview(URL.createObjectURL(blob));
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+      setIsCapturing(false);
+      setRecording(false);
+      debouncedRateContent(formData.title, formData.description, file);
+    };
+
+    recorder.start();
+    recorderRef.current = recorder;
+    setRecording(true);
+  };
+
+  const stopRecording = () => {
+    if (recorderRef.current && recording) {
+      recorderRef.current.stop();
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -3207,66 +3299,134 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
               >
                 Media (Image or Video)
               </label>
-              <div className="relative">
-                <input
-                  id="media-upload"
-                  type="file"
-                  accept="image/jpeg,image/png,image/gif,video/mp4,video/webm"
-                  capture="environment" // Use "user" for front camera, "environment" for back camera
-                  onChange={handleFileChange}
-                  className={`w-full p-3 ${
-                    isDarkMode
-                      ? "bg-gray-800 text-gray-100"
-                      : "bg-gray-50 text-gray-900"
-                  } border ${
-                    isDarkMode ? "border-gray-700" : "border-gray-200"
-                  } rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold ${
-                    isDarkMode
-                      ? "file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600"
-                      : "file:bg-red-100 file:text-red-700 hover:file:bg-red-200"
-                  } transition-all duration-300`}
-                  aria-label="Upload or capture image or video"
-                />
-              </div>
-              {filePreview && (
-                <div className="mt-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <p
-                      className={`text-sm ${
-                        isDarkMode ? "text-gray-200" : "text-gray-600"
-                      }`}
-                    >
-                      Preview:
-                    </p>
-                    <button
-                      type="button"
-                      onClick={clearFile}
-                      className={`text-sm ${
-                        isDarkMode
-                          ? "text-red-400 hover:underline"
-                          : "text-red-600 hover:underline"
-                      }`}
-                      aria-label="Clear uploaded media"
-                    >
-                      Clear
-                    </button>
-                  </div>
-                  {file?.type.startsWith("image/") ? (
-                    <img
-                      src={filePreview}
-                      alt="Media preview"
-                      className="max-w-xs rounded-lg shadow-sm"
-                    />
-                  ) : (
-                    <video
-                      src={filePreview}
-                      controls
-                      className="max-w-xs rounded-lg shadow-sm"
-                      aria-label="Video preview"
-                    />
-                  )}
+              <div className="space-y-4">
+                <div className="relative">
+                  <input
+                    id="media-upload"
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif,video/mp4,video/webm"
+                    onChange={handleFileChange}
+                    className={`w-full p-3 ${
+                      isDarkMode
+                        ? "bg-gray-800 text-gray-100"
+                        : "bg-gray-50 text-gray-900"
+                    } border ${
+                      isDarkMode ? "border-gray-700" : "border-gray-200"
+                    } rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold ${
+                      isDarkMode
+                        ? "file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600"
+                        : "file:bg-red-100 file:text-red-700 hover:file:bg-red-200"
+                    } transition-all duration-300`}
+                    aria-label="Upload image or video"
+                  />
                 </div>
-              )}
+                <button
+                  type="button"
+                  onClick={startCapture}
+                  className={`w-full py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
+                    isCapturing
+                      ? "bg-gray-400 cursor-not-allowed text-gray-700"
+                      : isDarkMode
+                      ? "bg-red-600 text-white hover:bg-red-700"
+                      : "bg-red-500 text-white hover:bg-red-600"
+                  }`}
+                  disabled={isCapturing}
+                  aria-label="Start media capture"
+                >
+                  {isCapturing ? "Capturing..." : "Capture Photo/Video"}
+                </button>
+                {isCapturing && (
+                  <div className="space-y-4">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      muted
+                      className="w-full rounded-lg shadow-sm"
+                      aria-label="Live camera feed"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={capturePhoto}
+                        className={`flex-1 py-2 rounded-lg font-medium text-sm ${
+                          isDarkMode
+                            ? "bg-green-600 text-white hover:bg-green-700"
+                            : "bg-green-500 text-white hover:bg-green-600"
+                        } transition-all duration-300`}
+                        aria-label="Capture photo"
+                      >
+                        Take Photo
+                      </button>
+                      {!recording ? (
+                        <button
+                          type="button"
+                          onClick={startRecording}
+                          className={`flex-1 py-2 rounded-lg font-medium text-sm ${
+                            isDarkMode
+                              ? "bg-blue-600 text-white hover:bg-blue-700"
+                              : "bg-blue-500 text-white hover:bg-blue-600"
+                          } transition-all duration-300`}
+                          aria-label="Start video recording"
+                        >
+                          Start Recording
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={stopRecording}
+                          className={`flex-1 py-2 rounded-lg font-medium text-sm ${
+                            isDarkMode
+                              ? "bg-red-600 text-white hover:bg-red-700"
+                              : "bg-red-500 text-white hover:bg-red-600"
+                          } transition-all duration-300`}
+                          aria-label="Stop video recording"
+                        >
+                          Stop Recording
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {filePreview && (
+                  <div className="mt-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <p
+                        className={`text-sm ${
+                          isDarkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        Preview:
+                      </p>
+                      <button
+                        type="button"
+                        onClick={clearFile}
+                        className={`text-sm ${
+                          isDarkMode
+                            ? "text-red-400 hover:underline"
+                            : "text-red-600 hover:underline"
+                        }`}
+                        aria-label="Clear uploaded media"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                    {file?.type.startsWith("image/") ? (
+                      <img
+                        src={filePreview}
+                        alt="Media preview"
+                        className="max-w-xs rounded-lg shadow-sm"
+                      />
+                    ) : (
+                      <video
+                        src={filePreview}
+                        controls
+                        className="max-w-xs rounded-lg shadow-sm"
+                        aria-label="Video preview"
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
             <button
               whileHover={{ scale: 1.05 }}
