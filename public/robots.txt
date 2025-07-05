@@ -1,0 +1,7 @@
+User-agent: *
+Disallow:
+
+Allow: /
+
+Sitemap: https://gossiphub.in/sitemap.xml
+
