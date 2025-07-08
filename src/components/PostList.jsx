@@ -2376,14 +2376,14 @@ const PostList = () => {
                         <span className="text-xs font-medium text-white bg-red-600 rounded-full px-3 py-1 mb-2 w-fit">
                           {featuredPost.category || "General"}
                         </span>
-                        <motion.h2
+                        <motion.h1
                           className="text-2xl md:text-4xl font-bold text-white"
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.2 }}
                         >
                           {featuredPost.title}
-                        </motion.h2>
+                        </motion.h1>
                         <motion.p
                           className="text-gray-200 mt-2 line-clamp-2"
                           initial={{ opacity: 0, y: 10 }}
