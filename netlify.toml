@@ -1,15 +1,10 @@
+
+
 [build]
-command = "npm run build"
-publish = "dist"
+  publish = "build"
+  command = "npm run build"
 
 [[redirects]]
-from = "/sitemap.xml"
-to = "https://gossipphub-backend.onrender.com/sitemap.xml"
-status = 200
-force = true
-
-[[redirects]]
-from = "/api/*"
-to = "https://gossipphub-backend.onrender.com/api/:splat"
-status = 200
-force = true
+  from = "/*"
+  to = "/index.html"
+  status = 200
