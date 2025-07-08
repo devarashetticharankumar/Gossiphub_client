@@ -2054,24 +2054,32 @@ const PostList = () => {
       }`}
     >
       <Helmet>
-        <title>GossipHub | Discover Trending Posts & Stories</title>
+        <title>
+          Gossiphub – Latest Celebrity News, Trending Entertainment & Viral
+          Updates
+        </title>
         <meta
           name="description"
-          content="Explore the latest posts, trending stories, and user suggestions on GossipHub. Join the conversation and share your own gossip today!"
+          content="Stay updated with Gossiphub – your source for the latest celebrity news, trending entertainment stories, viral videos, and exclusive gossip. Join our community for real-time updates and inside scoops!
+"
         />
         <meta
           name="keywords"
-          content="social media, posts, gossip, trending stories, user suggestions, GossipHub"
+          content="celebrity news, entertainment news, trending gossip, viral updates, Bollywood news, Hollywood gossip, exclusive stories, celebrity rumors, film news, TV updates, star interviews, latest movies, entertainment buzz, breaking news, viral videos
+
+"
         />
         <meta name="robots" content="index, follow" />
         <meta name="author" content="GossipHub Team" />
         <meta
           property="og:title"
-          content="GossipHub | Discover Trending Posts & Stories"
+          content="Gossiphub – Latest Celebrity News, Trending Entertainment & Viral Updates
+"
         />
         <meta
           property="og:description"
-          content="Explore the latest posts, trending stories, and user suggestions on GossipHub. Join the conversation and share your own gossip today!"
+          content="Stay updated with Gossiphub – your source for the latest celebrity news, trending entertainment stories, viral videos, and exclusive gossip. Join our community for real-time updates and inside scoops!
+"
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://gossiphub.in/" />
@@ -2081,11 +2089,13 @@ const PostList = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="GossipHub | Discover Trending Posts & Stories"
+          content="Gossiphub – Latest Celebrity News, Trending Entertainment & Viral Updates
+"
         />
         <meta
           name="twitter:description"
-          content="Explore the latest posts, trending stories, and user suggestions on GossipHub. Join the conversation and share your own gossip today!"
+          content="Stay updated with Gossiphub – your source for the latest celebrity news, trending entertainment stories, viral videos, and exclusive gossip. Join our community for real-time updates and inside scoops!
+"
         />
         <meta name="twitter:image" content={Logo} />
         <meta name="twitter:image:alt" content="GossipHub Logo" />
