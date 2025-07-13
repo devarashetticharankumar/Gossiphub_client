@@ -605,13 +605,16 @@ const PublicUserProfile = () => {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <div className="relative">
               <img
-                src={user?.profilePicture || "https://via.placeholder.com/150"}
+                src={
+                  user?.profilePicture ||
+                  "https://avatar.iran.liara.run/public/49"
+                }
                 alt="Profile picture"
                 className={`w-24 h-24 rounded-full object-cover border-2 ${
                   isDarkMode ? "border-teal-500" : "border-indigo-500"
                 }`}
                 onError={(e) =>
-                  (e.target.src = "https://via.placeholder.com/150")
+                  (e.target.src = "https://avatar.iran.liara.run/public/49")
                 }
               />
               <div className="absolute -top-1 -right-1 bg-orange-500 rounded-full p-1 flex items-center">
@@ -732,12 +735,13 @@ const PublicUserProfile = () => {
                         <img
                           src={
                             follower.profilePicture ||
-                            "https://via.placeholder.com/50"
+                            "https://avatar.iran.liara.run/public/41"
                           }
                           alt={`${follower.username}'s profile picture`}
                           className="w-10 h-10 rounded-full object-cover"
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/50")
+                            (e.target.src =
+                              "https://avatar.iran.liara.run/public/41")
                           }
                         />
                         <p
@@ -819,12 +823,13 @@ const PublicUserProfile = () => {
                         <img
                           src={
                             followedUser.profilePicture ||
-                            "https://via.placeholder.com/50"
+                            "https://avatar.iran.liara.run/public/9"
                           }
                           alt={`${followedUser.username}'s profile picture`}
                           className="w-10 h-10 rounded-full object-cover"
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/50")
+                            (e.target.src =
+                              "https://avatar.iran.liara.run/public/9")
                           }
                         />
                         <p
@@ -909,7 +914,8 @@ const PublicUserProfile = () => {
                           muted
                           aria-label="Post video thumbnail"
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/150")
+                            (e.target.src =
+                              "https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif")
                           }
                         />
                       ) : (
@@ -918,7 +924,8 @@ const PublicUserProfile = () => {
                           alt="Post media"
                           className="w-full h-full object-cover"
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/150")
+                            (e.target.src =
+                              "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                           }
                         />
                       )

@@ -11335,7 +11335,7 @@ const PostMedia = ({
           onError={(e) => {
             console.error("Video failed to load:", media);
             e.target.src =
-              "https://via.placeholder.com/400x400?text=Video+Not+Available";
+              "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
           }}
         />
         <button
@@ -11364,7 +11364,7 @@ const PostMedia = ({
         onError={(e) => {
           console.error("Image failed to load:", media);
           e.target.src =
-            "https://via.placeholder.com/400x400?text=Image+Not+Available";
+            "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png";
         }}
       />
     )}
@@ -13003,7 +13003,7 @@ const PostDetails = () => {
                               muted
                               onError={(e) =>
                                 (e.target.src =
-                                  "https://via.placeholder.com/50")
+                                  "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
                               }
                             />
                           ) : (
@@ -13014,7 +13014,7 @@ const PostDetails = () => {
                               loading="lazy"
                               onError={(e) =>
                                 (e.target.src =
-                                  "https://via.placeholder.com/50")
+                                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                               }
                             />
                           ))}
@@ -13083,7 +13083,8 @@ const PostDetails = () => {
                           className="w-16 h-16 object-cover rounded"
                           muted
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/50")
+                            (e.target.src =
+                              "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
                           }
                         />
                       ) : (
@@ -13093,7 +13094,8 @@ const PostDetails = () => {
                           className="w-16 h-16 object-cover rounded"
                           loading="lazy"
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/50")
+                            (e.target.src =
+                              "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                           }
                         />
                       ))}
@@ -13158,7 +13160,8 @@ const PostDetails = () => {
                           className="w-16 h-16 object-cover rounded"
                           muted
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/50")
+                            (e.target.src =
+                              "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
                           }
                         />
                       ) : (
@@ -13168,7 +13171,8 @@ const PostDetails = () => {
                           className="w-16 h-16 object-cover rounded"
                           loading="lazy"
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/50")
+                            (e.target.src =
+                              "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                           }
                         />
                       ))}
