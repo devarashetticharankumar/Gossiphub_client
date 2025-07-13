@@ -1878,7 +1878,7 @@ const PostList = () => {
   };
 
   const profileImage = isAuthenticated
-    ? user?.profilePicture || "https://via.placeholder.com/150"
+    ? user?.profilePicture || "https://avatar.iran.liara.run/public/26"
     : null;
 
   const featuredPost = displayedPosts.length > 0 ? displayedPosts[0] : null;
@@ -2221,7 +2221,8 @@ const PostList = () => {
                       className="h-8 w-8 rounded-full object-cover border-2 border-white hover:border-gray-200 transition-all duration-200"
                       whileHover={{ scale: 1.1 }}
                       onError={(e) =>
-                        (e.target.src = "https://via.placeholder.com/150")
+                        (e.target.src =
+                          "https://avatar.iran.liara.run/public/4")
                       }
                     />
                   </Link>
@@ -2234,7 +2235,7 @@ const PostList = () => {
                   aria-label="Login"
                 >
                   <motion.img
-                    src="https://via.placeholder.com/150"
+                    src="https://avatar.iran.liara.run/public/3"
                     alt="Login"
                     className="h-8 w-8 rounded-full object-cover border-2 border-white hover:border-gray-200 transition-all duration-200"
                     whileHover={{ scale: 1.1 }}
@@ -2359,7 +2360,8 @@ const PostList = () => {
                             autoPlay
                             loop
                             onError={(e) =>
-                              (e.target.src = "https://via.placeholder.com/300")
+                              (e.target.src =
+                                "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                             }
                           />
                         ) : (
@@ -2368,7 +2370,8 @@ const PostList = () => {
                             alt="Featured post"
                             className="w-full h-64 md:h-96 object-cover"
                             onError={(e) =>
-                              (e.target.src = "https://via.placeholder.com/300")
+                              (e.target.src =
+                                "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                             }
                           />
                         ))}
@@ -2540,7 +2543,8 @@ const PostList = () => {
                           autoPlay
                           loop
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/150")
+                            (e.target.src =
+                              "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                           }
                         />
                       ) : (
@@ -2548,9 +2552,7 @@ const PostList = () => {
                           src={trend.media}
                           alt="Trending post"
                           className="w-full h-32 object-cover"
-                          onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/150")
-                          }
+                          onError={(e) => (e.target.src = { Logo })}
                         />
                       ))}
                     <div className="p-3">
@@ -2650,7 +2652,7 @@ const PostList = () => {
                                 className="w-full lg:h-45 object-cover "
                                 onError={(e) =>
                                   (e.target.src =
-                                    "https://via.placeholder.com/150")
+                                    "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                                 }
                               />
                             ) : (
@@ -2660,7 +2662,7 @@ const PostList = () => {
                                 className="w-full lg:h-45 object-cover "
                                 onError={(e) =>
                                   (e.target.src =
-                                    "https://via.placeholder.com/150")
+                                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                                 }
                               />
                             )}
@@ -2938,7 +2940,7 @@ const PostList = () => {
                                 muted
                                 onError={(e) =>
                                   (e.target.src =
-                                    "https://via.placeholder.com/50")
+                                    "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                                 }
                               />
                             ) : (
@@ -2948,7 +2950,7 @@ const PostList = () => {
                                 className="w-16 h-16 object-cover rounded-lg"
                                 onError={(e) =>
                                   (e.target.src =
-                                    "https://via.placeholder.com/50")
+                                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                                 }
                               />
                             ))}
@@ -3035,7 +3037,8 @@ const PostList = () => {
                             className="w-16 h-16 object-cover rounded-lg"
                             muted
                             onError={(e) =>
-                              (e.target.src = "https://via.placeholder.com/50")
+                              (e.target.src =
+                                "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                             }
                           />
                         ) : (
@@ -3044,7 +3047,8 @@ const PostList = () => {
                             alt="Most viewed post"
                             className="w-16 h-16 object-cover rounded-lg"
                             onError={(e) =>
-                              (e.target.src = "https://via.placeholder.com/50")
+                              (e.target.src =
+                                "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                             }
                           />
                         ))}
@@ -3127,7 +3131,7 @@ const PostList = () => {
                       <img
                         src={
                           suggestedUser.profilePicture ||
-                          "https://via.placeholder.com/150"
+                          "https://avatar.iran.liara.run/public/40"
                         }
                         alt={`${
                           suggestedUser.username || suggestedUser.email
@@ -3136,7 +3140,8 @@ const PostList = () => {
                           isDarkMode ? "border-gray-600" : "border-gray-300"
                         }`}
                         onError={(e) =>
-                          (e.target.src = "https://via.placeholder.com/150")
+                          (e.target.src =
+                            "https://avatar.iran.liara.run/public/40")
                         }
                       />
                     </Link>
@@ -3255,7 +3260,8 @@ const PostList = () => {
                           className="w-full h-40 object-cover"
                           muted
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/150")
+                            (e.target.src =
+                              "https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif")
                           }
                         />
                       ) : (
@@ -3264,7 +3270,8 @@ const PostList = () => {
                           alt="Recommended post"
                           className="w-full h-40 object-cover"
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/150")
+                            (e.target.src =
+                              "https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif")
                           }
                         />
                       ))}
@@ -3342,7 +3349,8 @@ const PostList = () => {
                           alt="Photo post"
                           className="w-full h-32 object-cover"
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/150")
+                            (e.target.src =
+                              "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                           }
                         />
                         <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2">
@@ -3418,7 +3426,8 @@ const PostList = () => {
                           loop
                           autoPlay
                           onError={(e) =>
-                            (e.target.src = "https://via.placeholder.com/150")
+                            (e.target.src =
+                              "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                           }
                         />
                         <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2">
@@ -3573,7 +3582,7 @@ const PostList = () => {
                     alt="User profile picture"
                     className="h-7 w-7 rounded-full object-cover border-2 border-gray-500 hover:border-gray-600 transition-all duration-200"
                     onError={(e) =>
-                      (e.target.src = "https://via.placeholder.com/150")
+                      (e.target.src = "https://avatar.iran.liara.run/public/9")
                     }
                   />
                   <div className="absolute -top-0.5 -right-0.5 bg-orange-500 rounded-full p-1">
