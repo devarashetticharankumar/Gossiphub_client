@@ -18,6 +18,7 @@ import ContactUs from "./pages/ContactUs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PublicUserProfile from "./components/PublicUserProfile";
 // import ShortsFeed from "./components/ShortsFeed";
+import ChatContainer from "./components/ChatContainer";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route path="/posts/:postId" element={<PostDetails />} />
         <Route
           path="/admin"
@@ -61,6 +63,14 @@ function App() {
           }
         />
         <Route path="/logout" element={<Logout />} />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <ChatContainer />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

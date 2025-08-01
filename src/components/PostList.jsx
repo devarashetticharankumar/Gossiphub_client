@@ -2187,6 +2187,7 @@ const PostList = () => {
               >
                 Create Post
               </Link>
+
               {/* <Link
                 to="/shorts"
                 className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-full hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg"
