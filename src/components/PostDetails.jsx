@@ -2061,7 +2061,7 @@
 // const ShareBar = lazy(() => import("./ShareBar"));
 
 // // Utility function to calculate time difference and return "time ago" format
-// const timeAgo = (date) => {
+// export const timeAgo = (date) => {
 //   const now = new Date();
 //   const past = new Date(date);
 //   const diffInSeconds = Math.floor((now - past) / 1000);
@@ -2583,7 +2583,7 @@
 //       name: publisherName,
 //       logo: {
 //         "@type": "ImageObject",
-//         url: "https://gossiphub.in/logo.png",
+//         url: postMedia,
 //         width: 1200,
 //         height: 400,
 //       },
@@ -2630,7 +2630,7 @@
 //     },
 //   };
 
-//   const handleNativeShare = async () => {
+//   const handleNativeShare = async (postMedia) => {
 //     if (navigator.share) {
 //       try {
 //         const shareData = {
@@ -2701,21 +2701,23 @@
 //       });
 //   };
 
-//   const handleShareTwitter = () => {
+//   const handleShareTwitter = (postMedia) => {
 //     const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
 //       postUrl
-//     )}&text=${encodeURIComponent(postTitle)}`;
+//     )}&text=${encodeURIComponent(postTitle)}&image=${encodeURIComponent(
+//       postMedia || videoThumbnail || ""
+//     )}`;
 //     window.open(twitterUrl, "_blank", "noopener,noreferrer");
 //   };
 
-//   const handleShareWhatsapp = () => {
+//   const handleShareWhatsapp = (postMedia) => {
 //     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-//       `${postTitle}\n${postUrl}`
+//       `${postTitle}\n${postUrl}\n${postMedia || videoThumbnail || ""}`
 //     )}`;
 //     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
 //   };
 
-//   const handleShareFacebook = () => {
+//   const handleShareFacebook = (postMedia) => {
 //     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
 //       postUrl
 //     )}&t=${encodeURIComponent(postTitle)}&picture=${encodeURIComponent(
@@ -2724,19 +2726,23 @@
 //     window.open(facebookUrl, "_blank", "noopener,noreferrer");
 //   };
 
-//   const handleShareTelegram = () => {
+//   const handleShareTelegram = (postMedia) => {
 //     const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
 //       postUrl
-//     )}&text=${encodeURIComponent(postTitle)}`;
+//     )}&text=${encodeURIComponent(
+//       `${postTitle}\n${postMedia || videoThumbnail || ""}`
+//     )}`;
 //     window.open(telegramUrl, "_blank", "noopener,noreferrer");
 //   };
 
-//   const handleShareLinkedin = () => {
+//   const handleShareLinkedin = (postMedia) => {
 //     const linkedinUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
 //       postUrl
 //     )}&title=${encodeURIComponent(postTitle)}&summary=${encodeURIComponent(
 //       postDescription.slice(0, 200) + "..."
-//     )}&source=GossipHub`;
+//     )}&source=GossipHub&image=${encodeURIComponent(
+//       postMedia || videoThumbnail || ""
+//     )}`;
 //     window.open(linkedinUrl, "_blank", "noopener,noreferrer");
 //   };
 
@@ -3709,6 +3715,7 @@
 //           handleCopyLink={handleCopyLink}
 //           isCopied={isCopied}
 //           isDarkMode={isDarkMode}
+//           postMedia={postMedia}
 //         />
 //       </Suspense>
 
@@ -4288,6 +4295,7 @@ const PostDetails = () => {
   const videoThumbnail = isVideo
     ? `${postMedia.replace(/\.(mp4|webm|ogg)$/i, "-thumbnail.jpg")}`
     : postMedia;
+  const shareImage = isVideo ? videoThumbnail : postMedia;
   const keywords = post?.category
     ? `${post.category}, ${postTitle
         .split(" ")
@@ -4313,13 +4321,13 @@ const PostDetails = () => {
     author: { "@type": "Person", name: authorName },
     datePublished: datePublished,
     dateModified: dateModified,
-    image: postMedia,
+    image: shareImage,
     publisher: {
       "@type": "Organization",
       name: publisherName,
       logo: {
         "@type": "ImageObject",
-        url: postMedia,
+        url: shareImage,
         width: 1200,
         height: 400,
       },
@@ -4371,13 +4379,14 @@ const PostDetails = () => {
       try {
         const shareData = {
           title: postTitle,
-          text: `${postTitle}\n${postDescription.slice(0, 100)}...`,
+          text: `${postTitle}\n${postDescription.slice(0, 100)}...\n${postUrl}`,
           url: postUrl,
         };
 
         if (postMedia && !isVideo) {
           try {
             const response = await fetch(postMedia);
+            if (!response.ok) throw new Error("Failed to fetch image");
             const blob = await response.blob();
             const file = new File([blob], "shared-image.jpg", {
               type: "image/jpeg",
@@ -4390,6 +4399,8 @@ const PostDetails = () => {
         } else if (isVideo && videoThumbnail) {
           try {
             const response = await fetch(videoThumbnail);
+            if (!response.ok)
+              throw new Error("Failed to fetch video thumbnail");
             const blob = await response.blob();
             const file = new File([blob], "shared-video-thumbnail.jpg", {
               type: "image/jpeg",
@@ -4440,15 +4451,15 @@ const PostDetails = () => {
   const handleShareTwitter = (postMedia) => {
     const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
       postUrl
-    )}&text=${encodeURIComponent(postTitle)}&image=${encodeURIComponent(
-      postMedia || videoThumbnail || ""
-    )}`;
+    )}&text=${encodeURIComponent(
+      `${postTitle}\n${postDescription.slice(0, 100)}...`
+    )}&via=GossipHub`;
     window.open(twitterUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleShareWhatsapp = (postMedia) => {
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-      `${postTitle}\n${postUrl}\n${postMedia || videoThumbnail || ""}`
+      `${postTitle}\n${postDescription.slice(0, 100)}...\n${postUrl}`
     )}`;
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
@@ -4456,9 +4467,7 @@ const PostDetails = () => {
   const handleShareFacebook = (postMedia) => {
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
       postUrl
-    )}&t=${encodeURIComponent(postTitle)}&picture=${encodeURIComponent(
-      postMedia || videoThumbnail || ""
-    )}`;
+    )}&quote=${encodeURIComponent(postTitle)}`;
     window.open(facebookUrl, "_blank", "noopener,noreferrer");
   };
 
@@ -4466,7 +4475,7 @@ const PostDetails = () => {
     const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
       postUrl
     )}&text=${encodeURIComponent(
-      `${postTitle}\n${postMedia || videoThumbnail || ""}`
+      `${postTitle}\n${postDescription.slice(0, 100)}...`
     )}`;
     window.open(telegramUrl, "_blank", "noopener,noreferrer");
   };
@@ -4476,9 +4485,7 @@ const PostDetails = () => {
       postUrl
     )}&title=${encodeURIComponent(postTitle)}&summary=${encodeURIComponent(
       postDescription.slice(0, 200) + "..."
-    )}&source=GossipHub&image=${encodeURIComponent(
-      postMedia || videoThumbnail || ""
-    )}`;
+    )}&source=GossipHub`;
     window.open(linkedinUrl, "_blank", "noopener,noreferrer");
   };
 
@@ -4523,7 +4530,6 @@ const PostDetails = () => {
   const relatedPosts = allPosts
     .filter((p) => p.category === post.category && p._id !== post._id)
     .slice(0, showMoreRelated ? relatedPostsCount : 5);
-
   const currentIndex = allPosts.findIndex((p) => p._id === postId);
   const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
   const nextPost =
@@ -4568,18 +4574,12 @@ const PostDetails = () => {
         <meta property="og:site_name" content="GossipHub" />
         {isVideo && <meta property="og:video" content={postMedia} />}
         {isVideo && <meta property="og:video:type" content="video/mp4" />}
-        {isVideo && <meta property="og:image" content={videoThumbnail} />}
-        {!isVideo && postMedia && (
-          <meta property="og:image" content={postMedia} />
-        )}
+        <meta property="og:image" content={shareImage} />
         <meta property="og:image:alt" content={postTitle} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={postTitle} />
         <meta name="twitter:description" content={seoDescription} />
-        <meta
-          name="twitter:image"
-          content={isVideo ? videoThumbnail : postMedia}
-        />
+        <meta name="twitter:image" content={shareImage} />
         <meta name="twitter:image:alt" content={postTitle} />
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
@@ -5451,7 +5451,7 @@ const PostDetails = () => {
           handleCopyLink={handleCopyLink}
           isCopied={isCopied}
           isDarkMode={isDarkMode}
-          postMedia={postMedia}
+          postMedia={shareImage}
         />
       </Suspense>
 
