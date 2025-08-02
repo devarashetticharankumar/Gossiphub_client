@@ -257,7 +257,7 @@ const PrivacyPolicy = () => {
                 isDarkMode ? "text-gray-200" : "text-gray-700"
               } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              At <span className="font-semibold text-red-600">GossippHub</span>,
+              At <span className="font-semibold text-red-600">GossipHub</span>,
               we are committed to protecting your privacy. This Privacy Policy
               explains how we collect, use, and safeguard your information when
               you use our platform.
@@ -324,7 +324,7 @@ const PrivacyPolicy = () => {
                 isDarkMode ? "text-gray-200" : "text-gray-700"
               } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              You can choose to post anonymously on GossippHub. When you select
+              You can choose to post anonymously on GossipHub. When you select
               this option, your username and identifiable information will not
               be displayed publicly.
             </p>
@@ -382,7 +382,7 @@ const PrivacyPolicy = () => {
                     : "text-red-600 hover:text-red-700"
                 } hover:underline transition-colors duration-200`}
               >
-                support@gossipphub.com
+                support@gossiphub.com
               </a>
               .
             </p>
@@ -417,7 +417,7 @@ const PrivacyPolicy = () => {
                     : "text-red-600 hover:text-red-700"
                 } hover:underline transition-colors duration-200`}
               >
-                support@gossipphub.com
+                support@gossiphub.com
               </a>
               .
             </p>

@@ -208,19 +208,19 @@ const AboutUs = () => {
               } mb-4 leading-relaxed transition-colors duration-500`}
             >
               Welcome to{" "}
-              <span className="font-semibold text-red-600">GossippHub</span>,
-              the ultimate platform for sharing and discovering the juiciest
-              gossip, stories, and conversations! We are a vibrant community
-              where users can spill the tea, engage in lively discussions, and
-              stay updated on trending topics.
+              <span className="font-semibold text-red-600">GossipHub</span>, the
+              ultimate platform for sharing and discovering the juiciest gossip,
+              stories, and conversations! We are a vibrant community where users
+              can spill the tea, engage in lively discussions, and stay updated
+              on trending topics.
             </p>
             <p
               className={`text-base ${
                 isDarkMode ? "text-gray-200" : "text-gray-700"
               } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              Founded in 2024, GossippHub was created to provide a fun, safe,
-              and engaging space for people to connect over shared interests and
+              Founded in 2024, GossipHub was created to provide a fun, safe, and
+              engaging space for people to connect over shared interests and
               stories. Whether you're here to share a hot rumor, read about the
               latest buzz, or simply enjoy some entertaining content, we've got
               you covered.
@@ -233,7 +233,7 @@ const AboutUs = () => {
               Our mission is to foster a community where everyone can express
               themselves freely while maintaining respect and authenticity. We
               value user privacy and ensure that you can share anonymously if
-              you choose to. Join us today and become part of the GossippHub
+              you choose to. Join us today and become part of the GossipHub
               family!
             </p>
             <div className="mt-6">

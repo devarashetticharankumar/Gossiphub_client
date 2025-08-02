@@ -379,7 +379,7 @@ const ContactUs = () => {
                   href="mailto:support@gossipphub.com"
                   className="text-red-600 hover:underline"
                 >
-                  support@gossipphub.com
+                  support@gossiphub.com
                 </a>
               </p>
             </div>
