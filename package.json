@@ -17,6 +17,7 @@
     "font-awesome": "^4.7.0",
     "framer-motion": "^12.10.0",
     "franc": "^6.2.0",
+    "html-react-parser": "^5.2.6",
     "lodash": "^4.17.21",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
