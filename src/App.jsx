@@ -17,8 +17,8 @@ import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PublicUserProfile from "./components/PublicUserProfile";
-// import ShortsFeed from "./components/ShortsFeed";
 import ChatContainer from "./components/ChatContainer";
+import UpdatePostForm from "./components/UpdatePostForm";
 
 function App() {
   return (
@@ -41,6 +41,14 @@ function App() {
           element={
             <ProtectedRoute>
               <PostForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/posts/:postId/edit"
+          element={
+            <ProtectedRoute>
+              <UpdatePostForm />
             </ProtectedRoute>
           }
         />

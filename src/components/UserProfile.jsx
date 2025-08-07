@@ -1959,6 +1959,7 @@ import {
   getFollowing,
   followUser,
   unfollowUser,
+  updatePost,
 } from "../utils/api";
 
 const UserProfile = () => {
@@ -2167,9 +2168,9 @@ const UserProfile = () => {
     setMenuOpen(null);
   };
 
-  const closeDeleteModal = () => {
-    setShowDeleteModal(false);
-    setPostToDelete(null);
+  const openEditPost = (postId) => {
+    navigate(`/posts/${postId}/edit`);
+    setMenuOpen(null);
   };
 
   const handleFollow = async (userId) => {
@@ -2787,6 +2788,22 @@ const UserProfile = () => {
                                 isDarkMode ? "bg-gray-800/90" : "bg-white/90"
                               } backdrop-blur-md rounded-lg shadow-lg py-1 w-28 z-20 transition-colors duration-200`}
                             >
+                              <motion.button
+                                whileHover={{
+                                  backgroundColor: isDarkMode
+                                    ? "#4b5563"
+                                    : "#fee2e2",
+                                }}
+                                onClick={() => openEditPost(post._id)}
+                                className={`w-full text-left px-3 py-1.5 text-xs font-medium ${
+                                  isDarkMode
+                                    ? "text-blue-400 hover:bg-gray-700"
+                                    : "text-blue-600 hover:bg-blue-100"
+                                }`}
+                                aria-label={`Edit post ${post.title}`}
+                              >
+                                Edit
+                              </motion.button>
                               <motion.button
                                 whileHover={{
                                   backgroundColor: isDarkMode

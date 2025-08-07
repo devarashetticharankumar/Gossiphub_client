@@ -382,6 +382,15 @@ export const createPost = async (data) => {
   return handleResponse(response);
 };
 
+export const updatePost = async (postId, data) => {
+  const response = await fetch(`${API_URL}/posts/${postId}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${getToken()}` },
+    body: data,
+  });
+  return handleResponse(response);
+};
+
 export const addReaction = async (postId, data) => {
   const response = await fetch(`${API_URL}/posts/${postId}/reaction`, {
     method: "POST",
