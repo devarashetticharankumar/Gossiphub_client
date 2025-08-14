@@ -2162,6 +2162,11 @@ const UserProfile = () => {
     }
   };
 
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setPostToDelete(null);
+  };
+
   const openDeleteModal = (post) => {
     setPostToDelete(post);
     setShowDeleteModal(true);
