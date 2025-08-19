@@ -19,6 +19,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PublicUserProfile from "./components/PublicUserProfile";
 import ChatContainer from "./components/ChatContainer";
 import UpdatePostForm from "./components/UpdatePostForm";
+import StoryZone from "./components/StoryZone"; // Import the new component
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/stories" element={<StoryZone />} />
         <Route
           path="/posts/:postId/edit"
           element={

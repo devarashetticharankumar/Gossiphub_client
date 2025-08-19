@@ -691,6 +691,47 @@ export const starMessage = async (messageId) => {
   return handleResponse(response);
 };
 
+// Story APIs
+export const createStory = async (data) => {
+  const response = await fetch(`${API_URL}/stories`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
+export const getUserStories = async (userId) => {
+  const response = await fetch(`${API_URL}/stories/${userId}`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return handleResponse(response);
+};
+
+export const viewStory = async (storyId, viewerId) => {
+  const response = await fetch(`${API_URL}/stories/${storyId}/view`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify({ viewerId }),
+  });
+  return handleResponse(response);
+};
+
+export const reactToStory = async (storyId) => {
+  const response = await fetch(`${API_URL}/stories/${storyId}/react`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return handleResponse(response);
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////04-06-2025 # hastag implemented code
 
 // const API_URL = import.meta.env.VITE_API_URL;
