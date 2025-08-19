@@ -280,7 +280,7 @@ const ReactionStreakSection = ({ user, isDarkMode, posts = [] }) => {
           Achievements
         </h4>
         {badges.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
             {badges.map((badge, index) => (
               <motion.div
                 key={badge.name}
