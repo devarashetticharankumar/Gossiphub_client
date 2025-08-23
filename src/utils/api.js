@@ -732,6 +732,20 @@ export const reactToStory = async (storyId) => {
   return handleResponse(response);
 };
 
+// Hashtag APIs
+export const getHashtags = async () => {
+  const response = await fetch(`${API_URL}/posts/hashtags`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return handleResponse(response);
+};
+
+export const getPostsByHashtag = async (hashtag) => {
+  const response = await fetch(`${API_URL}/posts/hashtag/${hashtag}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return handleResponse(response);
+};
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////04-06-2025 # hastag implemented code
 
 // const API_URL = import.meta.env.VITE_API_URL;

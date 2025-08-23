@@ -9228,7 +9228,7 @@
 
 // export default PostDetails;
 
-// PostDetails.jsx (Updated with Ads)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import {
   useState,
   useEffect,
@@ -9244,7 +9244,6 @@ import { Helmet } from "react-helmet";
 import confetti from "canvas-confetti";
 import debounce from "lodash/debounce";
 import { franc } from "franc";
-import parse from "html-react-parser";
 import {
   HiArrowLeft,
   HiArrowRight,
@@ -9265,7 +9264,6 @@ import {
 const PostMedia = lazy(() => import("./PostMedia"));
 const Comment = lazy(() => import("./Comment"));
 const ShareBar = lazy(() => import("./ShareBar"));
-import AdsComponent from "./AdsComponent"; // Import the new AdsComponent
 
 // Utility function to calculate time difference and return "time ago" format
 export const timeAgo = (date) => {
@@ -9391,12 +9389,24 @@ const ImageCarousel = ({ images, isDarkMode }) => {
   );
 };
 
+// Spinning Loader Component
+const SpinningLoader = ({ isDarkMode }) => (
+  <div className="flex justify-center items-center min-h-screen">
+    <div
+      className={`animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 ${
+        isDarkMode ? "border-red-500" : "border-red-600"
+      }`}
+    ></div>
+  </div>
+);
+
 const PostDetails = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
   const [comment, setComment] = useState("");
   const [categories, setCategories] = useState(["All"]);
+  const [loading, setLoading] = useState(true); // Added for spinning loader
   const isAuthenticated = !!localStorage.getItem("token");
   const [userReaction, setUserReaction] = useState({
     like: false,
@@ -9463,24 +9473,15 @@ const PostDetails = () => {
     return () => clearInterval(typingInterval);
   }, []);
 
-  // Fetch User Profile (for reaction streak)
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (!isAuthenticated) return;
-      try {
-        const user = await getUserProfile();
-        setReactionStreak(user.reactionStreak || 0);
-        setStreakRewards(user.streakRewards || []);
-      } catch (err) {
-        toast.error("Failed to fetch user profile");
-      }
-    };
-    fetchUserProfile();
-  }, [isAuthenticated]);
-
-  // Fetch Posts and Extract Images
+  // Validate postId and Fetch Data
   useEffect(() => {
     const fetchData = async () => {
+      if (!/^[0-9a-fA-F]{24}$/.test(postId)) {
+        toast.error("Invalid post ID");
+        setLoading(false);
+        return;
+      }
+
       try {
         const [foundPostRes, allPostsRes] = await Promise.all([
           getPostById(postId),
@@ -9531,10 +9532,27 @@ const PostDetails = () => {
         }
       } catch (err) {
         toast.error("Failed to fetch posts");
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, [postId, isAuthenticated]);
+
+  // Fetch User Profile (for reaction streak)
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!isAuthenticated) return;
+      try {
+        const user = await getUserProfile();
+        setReactionStreak(user.reactionStreak || 0);
+        setStreakRewards(user.streakRewards || []);
+      } catch (err) {
+        toast.error("Failed to fetch user profile");
+      }
+    };
+    fetchUserProfile();
+  }, [isAuthenticated]);
 
   // Load available voices for speech synthesis
   useEffect(() => {
@@ -9880,10 +9898,9 @@ const PostDetails = () => {
     : postMedia;
   const shareImage = isVideo ? videoThumbnail : postMedia;
   const keywords = post?.category
-    ? `${post.category}, ${postTitle
-        .split(" ")
-        .slice(0, 10)
-        .join(", ")}, gossip, social media, entertainment`
+    ? `${post.category}, ${postTitle.split(" ").slice(0, 10).join(", ")}, ${
+        post?.hashtags?.join(", ") || ""
+      }, gossip, social media, entertainment`
     : "GossipHub, Social Media, News, Gossips, Celebrity, Tollywood, Bollywood, Hollywood, Politics, Entertainment, Technology";
   const authorName = post?.isAnonymous
     ? "Anonymous"
@@ -10079,27 +10096,20 @@ const PostDetails = () => {
     </div>
   );
 
+  if (loading) {
+    return <SpinningLoader isDarkMode={isDarkMode} />;
+  }
+
   if (!post) {
     return (
       <div
-        className={`flex flex-col gap-4 max-w-7xl mx-auto px-4 pt-20 pb-12 ${
+        className={`flex justify-center items-center min-h-screen ${
           isDarkMode ? "bg-gray-950" : "bg-gray-100"
         }`}
       >
-        <div className="w-full h-96 bg-gray-200 animate-pulse rounded-lg"></div>
-        <div
-          className={`p-6 shadow-lg rounded-lg ${
-            isDarkMode ? "bg-gray-900" : "bg-white"
-          }`}
-        >
-          <div className="h-8 bg-gray-200 animate-pulse rounded w-3/4 mb-4"></div>
-          <div className="h-4 bg-gray-200 animate-pulse rounded w-1/4 mb-4"></div>
-          <div className="space-y-2">
-            <div className="h-4 bg-gray-200 animate-pulse rounded w-full"></div>
-            <div className="h-4 bg-gray-200 animate-pulse rounded w-5/6"></div>
-            <div className="h-4 bg-gray-200 animate-pulse rounded w-3/4"></div>
-          </div>
-        </div>
+        <p className={isDarkMode ? "text-gray-400" : "text-gray-500"}>
+          Post not found
+        </p>
       </div>
     );
   }
@@ -10323,10 +10333,26 @@ const PostDetails = () => {
                   />
                 )}
               </div>
-              {post && (
-                <AdsComponent adSlot="3345221432" /> // Add ad after description if post exists
-              )}
 
+              {/* Hashtags Section */}
+              {post.hashtags?.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {post.hashtags.map((tag, index) => (
+                    <Link
+                      key={index}
+                      to={`/posts/hashtag/${encodeURIComponent(tag)}`}
+                      className={`px-3 py-1 text-xs font-medium ${
+                        isDarkMode
+                          ? "text-gray-300 bg-red-800 hover:bg-red-700"
+                          : "text-red-700 bg-red-200 hover:bg-red-300"
+                      } rounded-full transition-colors`}
+                      aria-label={`View posts with hashtag ${tag}`}
+                    >
+                      #{tag}
+                    </Link>
+                  ))}
+                </div>
+              )}
               <div className="flex flex-wrap gap-2 mb-6">
                 {(post.category ? [post.category] : []).map((tag, index) => (
                   <span

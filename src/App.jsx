@@ -20,6 +20,7 @@ import PublicUserProfile from "./components/PublicUserProfile";
 import ChatContainer from "./components/ChatContainer";
 import UpdatePostForm from "./components/UpdatePostForm";
 import StoryZone from "./components/StoryZone"; // Import the new component
+import HashtagPosts from "./components/HashtagPosts";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/profile/:userId" element={<PublicUserProfile />} />
+
         {/* <Route path="/shorts" element={<ShortsFeed />} /> */}
 
         <Route
@@ -56,6 +58,8 @@ function App() {
         />
 
         <Route path="/posts/:postId" element={<PostDetails />} />
+        <Route path="/posts/hashtag/:hashtag" element={<HashtagPosts />} />
+
         <Route
           path="/admin"
           element={
