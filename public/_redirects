@@ -1,1 +1,3 @@
-/sitemap.xml https://gossipphub-backend.onrender.com/sitemap.xml 200
+<!-- /sitemap.xml https://gossipphub-backend.onrender.com/sitemap.xml 200 -->
+
+/sitemap.xml https://api.gossiphub.in/sitemap.xml 200
