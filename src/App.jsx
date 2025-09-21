@@ -17,7 +17,8 @@ import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PublicUserProfile from "./components/PublicUserProfile";
-import ChatContainer from "./components/ChatContainer";
+// import ChatContainer from "./components/ChatContainer";
+// import ChatClient from "./components/ChatClient";
 import UpdatePostForm from "./components/UpdatePostForm";
 import StoryZone from "./components/StoryZone"; // Import the new component
 import HashtagPosts from "./components/HashtagPosts";
@@ -77,14 +78,10 @@ function App() {
           }
         />
         <Route path="/logout" element={<Logout />} />
-        <Route
+        {/* <Route
           path="/chat"
-          element={
-            <ProtectedRoute>
-              <ChatContainer />
-            </ProtectedRoute>
-          }
-        />
+          element={<ProtectedRoute>{<ChatClient />}</ProtectedRoute>}
+        /> */}
       </Routes>
     </Router>
   );
