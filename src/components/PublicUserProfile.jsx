@@ -2354,7 +2354,7 @@ const PublicUserProfile = () => {
         // Fetch initial posts authored by the user
         const postsRes = await getPosts({
           page: 1,
-          limit: 20,
+          limit: 10,
           authorId: userId,
         });
         const postsArray = Array.isArray(postsRes.posts || postsRes)
@@ -2364,7 +2364,7 @@ const PublicUserProfile = () => {
           (p) => p.author._id === userData._id && !p.isAnonymous
         );
         setPosts(userPosts);
-        setHasMore(postsArray.length === 20); // Assume more posts if we get the full limit
+        setHasMore(postsArray.length === 10); // Assume more posts if we get the full limit
         setPostsLoading(false);
 
         // Fetch followers and following
@@ -2400,7 +2400,7 @@ const PublicUserProfile = () => {
       const nextPage = page + 1;
       const postsRes = await getPosts({
         page: nextPage,
-        limit: 20,
+        limit: 10,
         authorId: userId,
       });
       const postsArray = Array.isArray(postsRes.posts || postsRes)
@@ -2416,7 +2416,7 @@ const PublicUserProfile = () => {
         setPosts((prevPosts) => [...prevPosts, ...newPosts]);
         setPage(nextPage);
       }
-      setHasMore(postsArray.length === 20);
+      setHasMore(postsArray.length === 10);
     } catch (err) {
       toast.error("Failed to load more posts");
     } finally {

@@ -4462,7 +4462,7 @@ const UserProfile = () => {
         setPostsLoading(true);
         const userRes = await getUserProfile();
         const [postsRes, followersData, followingData] = await Promise.all([
-          getPosts({ page: 1, limit: 20, authorId: userRes._id }),
+          getPosts({ page: 1, limit: 10, authorId: userRes._id }),
           getFollowers(userRes._id).catch(() => []),
           getFollowing(userRes._id).catch(() => []),
         ]);
@@ -4474,7 +4474,7 @@ const UserProfile = () => {
         );
         setUser(userRes);
         setPosts(shuffleArray(userPosts));
-        setHasMore(postsArray.length === 20); // Assume more posts if full limit returned
+        setHasMore(postsArray.length === 10); // Assume more posts if full limit returned
         setFormData({
           username: userRes.username || "",
           bio: userRes.bio || "",
@@ -4507,7 +4507,7 @@ const UserProfile = () => {
       const nextPage = page + 1;
       const postsRes = await getPosts({
         page: nextPage,
-        limit: 20,
+        limit: 10,
         authorId: user._id,
       });
       const postsArray = Array.isArray(postsRes.posts || postsRes)
@@ -4523,7 +4523,7 @@ const UserProfile = () => {
         setPosts((prevPosts) => [...prevPosts, ...newPosts]); // Append without shuffling
         setPage(nextPage);
       }
-      setHasMore(postsArray.length === 20);
+      setHasMore(postsArray.length === 10);
     } catch (err) {
       toast.error("Failed to load more posts");
     } finally {
@@ -4588,9 +4588,9 @@ const UserProfile = () => {
         setFormData((prev) => ({ ...prev, profilePicture: null }));
         return;
       }
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 2 * 1024 * 1024; // 2MB
       if (file.size > maxSize) {
-        toast.error("File size exceeds 5MB");
+        toast.error("File size exceeds 2MB");
         e.target.value = null;
         setFormData((prev) => ({ ...prev, profilePicture: null }));
         return;
@@ -4613,7 +4613,7 @@ const UserProfile = () => {
         toast.error("Username cannot be empty");
         return;
       }
-      if (formData.username.length < 3 || formData.username.length > 20) {
+      if (formData.username.length < 3 || formData.username.length > 10) {
         toast.error("Username must be between 3 and 20 characters");
         return;
       }

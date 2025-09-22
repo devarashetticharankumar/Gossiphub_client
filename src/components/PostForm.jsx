@@ -1309,7 +1309,7 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
 
     const maxSize = selectedFile.type.startsWith("image/")
       ? 10 * 1024 * 1024
-      : 500 * 1024 * 1024;
+      : 200 * 1024 * 1024;
     if (selectedFile.size > maxSize) {
       toast.error(
         `File size exceeds the limit (${

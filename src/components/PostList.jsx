@@ -3663,7 +3663,6 @@
 import {
   useState,
   useEffect,
-  useMemo,
   lazy,
   Suspense,
   useRef,
@@ -3686,6 +3685,7 @@ import {
 } from "react-icons/hi";
 import { BsFacebook, BsTwitterX } from "react-icons/bs";
 import { AiFillInstagram } from "react-icons/ai";
+import { debounce } from "lodash";
 import {
   getPosts,
   getPostsByHashtag,
@@ -3711,14 +3711,15 @@ const ReactionStreakSection = lazy(() => import("./ReactionStreakSection"));
 const PostList = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
-  const [loading, setLoading] = useState(false); // Changed to false initially
+  const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedHashtag, setSelectedHashtag] = useState("");
   const [categories, setCategories] = useState(["All"]);
   const [page, setPage] = useState(1);
-  const [limit] = useState(10); // Matches backend default
+  const [limit] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestedUsers, setSuggestedUsers] = useState([]);
@@ -3730,22 +3731,15 @@ const PostList = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const isAuthenticated = !!localStorage.getItem("token");
   const headerRef = useRef(null);
-  const loaderRef = useRef(null); // Reference for the load more trigger
 
-  // Generate or retrieve session seed for randomization
-  const sessionSeed = useMemo(() => {
-    if (isAuthenticated) {
-      return localStorage.getItem("userId") || "anonymous";
-    }
-    let sessionId = sessionStorage.getItem("sessionId");
-    if (!sessionId) {
-      sessionId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      sessionStorage.setItem("sessionId", sessionId);
-    }
-    return sessionId;
-  }, [isAuthenticated]);
+  // Debounced fetchPosts to reduce server load
+  const debouncedFetchPosts = useCallback(
+    debounce((pageToFetch, search) => {
+      fetchPosts(pageToFetch, search);
+    }, 300),
+    []
+  );
 
-  // Persistent dark mode
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
     if (saved) setIsDarkMode(JSON.parse(saved));
@@ -3755,7 +3749,6 @@ const PostList = () => {
     localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
   }, [isDarkMode]);
 
-  // Update header height and isMobile
   useEffect(() => {
     const updateDimensions = () => {
       setIsMobile(window.innerWidth < 768);
@@ -3768,20 +3761,8 @@ const PostList = () => {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  // Utility function to shuffle an array
-  const shuffleArray = (array) => {
-    const shuffled = [...array];
-    let m = shuffled.length;
-    while (m) {
-      const i = Math.floor(Math.random() * m--);
-      [shuffled[m], shuffled[i]] = [shuffled[i], shuffled[m]];
-    }
-    return shuffled;
-  };
-
-  // Fetch posts and user data
   const fetchPosts = useCallback(
-    async (pageToFetch, append = false) => {
+    async (pageToFetch, search = "") => {
       setLoading(true);
       try {
         let postsRes, userRes, allUsersRes;
@@ -3793,6 +3774,7 @@ const PostList = () => {
                   page: pageToFetch,
                   limit,
                   hashtag: selectedHashtag,
+                  search,
                 }),
             getUserProfile(),
             getUsers(),
@@ -3802,10 +3784,13 @@ const PostList = () => {
         } else {
           postsRes = await (selectedHashtag
             ? getPostsByHashtag(selectedHashtag, { page: pageToFetch, limit })
-            : getPosts({ page: pageToFetch, limit, hashtag: selectedHashtag }));
+            : getPosts({
+                page: pageToFetch,
+                limit,
+                hashtag: selectedHashtag,
+                search,
+              }));
         }
-
-        // Update posts and pagination data
         const sanitizedPosts = (postsRes.posts || []).map((post) => ({
           ...post,
           media:
@@ -3813,19 +3798,21 @@ const PostList = () => {
               ? post.media
               : null,
         }));
-
-        setPosts((prevPosts) =>
-          append ? [...prevPosts, ...sanitizedPosts] : sanitizedPosts
-        );
+        setPosts(sanitizedPosts);
+        setAllPosts((prevAllPosts) => {
+          const existingIds = new Set(prevAllPosts.map((post) => post._id));
+          const newPosts = sanitizedPosts.filter(
+            (post) => !existingIds.has(post._id)
+          );
+          return [...prevAllPosts, ...newPosts];
+        });
         setTotalPages(postsRes.totalPages || 1);
         const uniqueCategories = [
           "All",
           ...new Set(sanitizedPosts.map((post) => post.category || "General")),
         ];
         setCategories(uniqueCategories);
-
         if (isAuthenticated) {
-          // Initialize userReactions based on posts and user ID
           const userId = localStorage.getItem("userId");
           const reactions = {};
           sanitizedPosts.forEach((post) => {
@@ -3896,8 +3883,7 @@ const PostList = () => {
           const filteredUsers = suggestedUsersData.filter(
             (user) => user !== null
           );
-          const shuffledUsers = shuffleArray(filteredUsers);
-          setSuggestedUsers(shuffledUsers);
+          setSuggestedUsers(filteredUsers);
         }
       } catch (err) {
         const message = err.response?.data?.message || "Failed to fetch posts";
@@ -3909,42 +3895,10 @@ const PostList = () => {
     [isAuthenticated, selectedHashtag, limit]
   );
 
-  // Initial fetch
   useEffect(() => {
-    fetchPosts(1);
+    fetchPosts(1, searchQuery);
   }, [fetchPosts, selectedHashtag]);
 
-  // Intersection Observer for infinite scroll
-  useEffect(() => {
-    if (loading || page >= totalPages) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setPage((prevPage) => {
-            const nextPage = prevPage + 1;
-            if (nextPage <= totalPages) {
-              fetchPosts(nextPage, true);
-            }
-            return nextPage;
-          });
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (loaderRef.current) {
-      observer.observe(loaderRef.current);
-    }
-
-    return () => {
-      if (loaderRef.current) {
-        observer.unobserve(loaderRef.current);
-      }
-    };
-  }, [loading, page, totalPages, fetchPosts]);
-
-  // Handle reaction click
   const handleReaction = async (postId, type) => {
     if (!isAuthenticated) {
       toast.error("Please sign in to add a reaction");
@@ -3965,6 +3919,19 @@ const PostList = () => {
       const updatedReactions = await addReaction(postId, { type });
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: updatedReactions.likes || [],
+                loves: updatedReactions.loves || [],
+                laughs: updatedReactions.laughs || [],
+                sads: updatedReactions.sads || [],
+              }
+            : post
+        )
+      );
+      setAllPosts((prevAllPosts) =>
+        prevAllPosts.map((post) =>
           post._id === postId
             ? {
                 ...post,
@@ -4009,127 +3976,72 @@ const PostList = () => {
     }
   };
 
-  // Filter and search posts
-  const filteredPosts = useMemo(
-    () =>
-      selectedCategory === "All"
-        ? posts
-        : posts.filter(
-            (post) => (post.category || "General") === selectedCategory
-          ),
-    [posts, selectedCategory]
-  );
+  const filteredPosts =
+    selectedCategory === "All"
+      ? posts
+      : posts.filter(
+          (post) => (post.category || "General") === selectedCategory
+        );
 
-  const searchedPosts = useMemo(
-    () =>
-      searchQuery
-        ? filteredPosts.filter(
-            (post) =>
-              post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              post.description.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        : filteredPosts,
-    [filteredPosts, searchQuery]
-  );
+  const videoPosts = filteredPosts
+    .filter(
+      (post) =>
+        post.media &&
+        typeof post.media === "string" &&
+        post.media.endsWith(".mp4")
+    )
+    .slice(0, 5);
 
-  // Randomize displayed posts for main list
-  const displayedPosts = useMemo(
-    () => shuffleArray(searchedPosts),
-    [searchedPosts, sessionSeed]
-  );
+  const photoPosts = filteredPosts
+    .filter(
+      (post) =>
+        post.media &&
+        typeof post.media === "string" &&
+        !post.media.endsWith(".mp4")
+    )
+    .slice(0, 5);
 
-  // Prepare data for sections with randomization from all filtered posts
-  const videoPosts = useMemo(
-    () =>
-      shuffleArray(
-        searchedPosts
-          .filter(
-            (post) =>
-              post.media &&
-              typeof post.media === "string" &&
-              post.media.endsWith(".mp4")
-          )
-          .slice(0, 5)
-      ),
-    [searchedPosts, sessionSeed]
-  );
+  const recommendedPosts = filteredPosts
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 3);
 
-  const photoPosts = useMemo(
-    () =>
-      shuffleArray(
-        searchedPosts
-          .filter(
-            (post) =>
-              post.media &&
-              typeof post.media === "string" &&
-              !post.media.endsWith(".mp4")
-          )
-          .slice(0, 5)
-      ),
-    [searchedPosts, sessionSeed]
-  );
+  const mostViewedPosts = filteredPosts
+    .sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
+    .slice(0, 3);
 
-  const recommendedPosts = useMemo(
-    () =>
-      shuffleArray(
-        searchedPosts
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          .slice(0, 3)
-      ),
-    [searchedPosts, sessionSeed]
-  );
+  const latestStories = allPosts
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 5);
 
-  const mostViewedPosts = useMemo(
-    () =>
-      searchedPosts
-        .sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
-        .slice(0, 3),
-    [searchedPosts]
-  );
-
-  const latestStories = useMemo(
-    () =>
-      posts
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 5),
-    [posts]
-  );
-
-  const trends = useMemo(() => {
-    const postsWithReactions = posts.map((post) => ({
+  const trends = posts
+    .map((post) => ({
       ...post,
       totalReactions:
         (post.likes?.length || 0) +
         (post.loves?.length || 0) +
         (post.laughs?.length || 0) +
         (post.sads?.length || 0),
-    }));
-    return postsWithReactions
-      .sort((a, b) => b.totalReactions - a.totalReactions)
-      .slice(0, 5);
-  }, [posts]);
+    }))
+    .sort((a, b) => b.totalReactions - a.totalReactions)
+    .slice(0, 5);
 
-  const recentComments = useMemo(
-    () =>
-      posts
-        .flatMap((post) =>
-          (post.comments || []).map((comment) => ({
-            postId: post._id,
-            postTitle: post.title,
-            commentText: comment.text,
-            commentDate: comment.createdAt,
-          }))
-        )
-        .sort((a, b) => new Date(b.commentDate) - new Date(a.commentDate))
-        .slice(0, 4),
-    [posts]
-  );
+  const recentComments = posts
+    .flatMap((post) =>
+      (post.comments || []).map((comment) => ({
+        postId: post._id,
+        postTitle: post.title,
+        commentText: comment.text,
+        commentDate: comment.createdAt,
+      }))
+    )
+    .sort((a, b) => new Date(b.commentDate) - new Date(a.commentDate))
+    .slice(0, 4);
 
   const profileImage = isAuthenticated
     ? user?.profilePicture || "https://avatar.iran.liara.run/public/26"
     : null;
 
-  const featuredPost = displayedPosts.length > 0 ? displayedPosts[0] : null;
+  const featuredPost = filteredPosts.length > 0 ? filteredPosts[0] : null;
 
   const handleQuickShare = (post) => {
     const shareUrl = `${window.location.origin}/posts/${post._id}`;
@@ -4223,8 +4135,7 @@ const PostList = () => {
       const filteredNewUsers = newSuggestedUsersData.filter(
         (user) => user !== null
       );
-      const shuffledNewUsers = shuffleArray(filteredNewUsers);
-      setSuggestedUsers(shuffledNewUsers);
+      setSuggestedUsers(filteredNewUsers);
     } catch (err) {
       const message = err.message || "Failed to update follow status";
       toast.error(message);
@@ -4238,38 +4149,31 @@ const PostList = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  // Fallback UI for lazy-loaded components
   const LoadingFallback = () => (
     <div className="flex justify-center items-center py-8">
       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-600"></div>
     </div>
   );
 
-  const postSuggestions = useMemo(() => {
-    if (!searchQuery) return [];
-    const query = searchQuery.toLowerCase();
-    return posts
-      .filter(
-        (post) =>
-          post.title.toLowerCase().includes(query) ||
-          post.description.toLowerCase().includes(query)
-      )
-      .sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
-      .slice(0, 10);
-  }, [searchQuery, posts]);
+  const userSuggestions =
+    isAuthenticated && searchQuery
+      ? allUsers
+          .filter(
+            (u) =>
+              u._id !== user?._id &&
+              (u.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                u.name?.toLowerCase().includes(searchQuery.toLowerCase()))
+          )
+          .slice(0, 10)
+      : [];
 
-  const userSuggestions = useMemo(() => {
-    if (!isAuthenticated || !searchQuery) return [];
-    const query = searchQuery.toLowerCase();
-    return allUsers
-      .filter(
-        (u) =>
-          u._id !== user?._id &&
-          (u.username?.toLowerCase().includes(query) ||
-            u.name?.toLowerCase().includes(query))
-      )
-      .slice(0, 10);
-  }, [searchQuery, allUsers, isAuthenticated, user]);
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+      debouncedFetchPosts(newPage, searchQuery);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <div
@@ -4309,7 +4213,7 @@ const PostList = () => {
           property="og:description"
           content={
             selectedCategory === "All"
-              ? "Get the latest celebrity gossips,movie updates,film news,trending entertainment, and viral videos on Gossiphub. Join for exclusive gossip and updates!"
+              ? "Get the latest celebrity gossips, trending entertainment, and viral videos on Gossiphub. Join for exclusive gossip and updates!"
               : `Explore the latest ${selectedCategory} news, gossip, and viral updates on Gossiphub. Stay updated with exclusive stories!`
           }
         />
@@ -4401,7 +4305,6 @@ const PostList = () => {
           })}
         </script>
       </Helmet>
-      {/* Header (Eager-loaded) */}
       <header
         ref={headerRef}
         className="fixed top-0 left-0 right-0 z-50 bg-red-600/80 backdrop-blur-md text-white shadow-lg"
@@ -4425,9 +4328,10 @@ const PostList = () => {
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
-                  setPage(1); // Reset to first page on search
-                  setPosts([]); // Clear posts to start fresh
-                  fetchPosts(1); // Fetch first page
+                  setPage(1);
+                  setPosts([]);
+                  setAllPosts([]);
+                  debouncedFetchPosts(1, e.target.value);
                 }}
                 className={`pl-10 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 ${
                   isDarkMode
@@ -4435,96 +4339,57 @@ const PostList = () => {
                     : "bg-white text-gray-950"
                 }`}
               />
-              {searchQuery &&
-                (postSuggestions.length > 0 || userSuggestions.length > 0) && (
-                  <div
-                    className={`${
-                      isMobile
-                        ? "fixed left-0 right-0"
-                        : "absolute top-full left-0 w-full mt-1 max-h-80"
-                    } overflow-y-auto rounded-md shadow-lg ${
-                      isDarkMode
-                        ? "bg-gray-800 text-white"
-                        : "bg-white text-gray-900"
-                    } z-50`}
-                    style={
-                      isMobile
-                        ? {
-                            top: headerHeight,
-                            height: `calc(100vh - ${headerHeight}px)`,
-                          }
-                        : {}
-                    }
-                  >
-                    {postSuggestions.map((post) => (
-                      <Link
-                        key={post._id}
-                        to={`/posts/${post._id}`}
-                        className={`flex items-center p-2 hover:${
-                          isDarkMode ? "bg-gray-700" : "bg-gray-100"
-                        } transition-colors`}
-                        onClick={() => setSearchQuery("")}
-                      >
-                        {post.media && (
-                          <>
-                            {post.media.endsWith(".mp4") ? (
-                              <div
-                                className={`w-10 h-10 flex items-center justify-center rounded mr-2 ${
-                                  isDarkMode ? "bg-gray-700" : "bg-gray-300"
-                                }`}
-                              >
-                                <span>🎥</span>
-                              </div>
-                            ) : (
-                              <img
-                                src={post.media}
-                                alt={post.title}
-                                className="w-10 h-10 object-cover rounded mr-2"
-                                onError={(e) =>
-                                  (e.target.src =
-                                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
-                                }
-                              />
-                            )}
-                          </>
-                        )}
-                        <span>{post.title}</span>
-                      </Link>
-                    ))}
-                    {isAuthenticated && userSuggestions.length > 0 && (
-                      <div className="p-2 font-bold border-t border-gray-700">
-                        Users
-                      </div>
-                    )}
-                    {isAuthenticated &&
-                      userSuggestions.map((u) => (
-                        <Link
-                          key={u._id}
-                          to={`/profile/${u._id}`}
-                          className={`flex items-center p-2 hover:${
-                            isDarkMode ? "bg-gray-700" : "bg-gray-100"
-                          } transition-colors`}
-                          onClick={() => setSearchQuery("")}
-                        >
-                          <img
-                            src={
-                              u.profilePicture ||
-                              `https://avatar.iran.liara.run/public/${Math.floor(
-                                Math.random() * 100
-                              )}`
-                            }
-                            alt={u.username}
-                            className="w-10 h-10 rounded-full object-cover mr-2"
-                            onError={(e) =>
-                              (e.target.src =
-                                "https://avatar.iran.liara.run/public")
-                            }
-                          />
-                          <span>{u.username}</span>
-                        </Link>
-                      ))}
+              {searchQuery && userSuggestions.length > 0 && (
+                <div
+                  className={`${
+                    isMobile
+                      ? "fixed left-0 right-0"
+                      : "absolute top-full left-0 w-full mt-1 max-h-80"
+                  } overflow-y-auto rounded-md shadow-lg ${
+                    isDarkMode
+                      ? "bg-gray-800 text-white"
+                      : "bg-white text-gray-900"
+                  } z-50`}
+                  style={
+                    isMobile
+                      ? {
+                          top: headerHeight,
+                          height: `calc(100vh - ${headerHeight}px)`,
+                        }
+                      : {}
+                  }
+                >
+                  <div className="p-2 font-bold border-t border-gray-700">
+                    Users
                   </div>
-                )}
+                  {userSuggestions.map((u) => (
+                    <Link
+                      key={u._id}
+                      to={`/profile/${u._id}`}
+                      className={`flex items-center p-2 hover:${
+                        isDarkMode ? "bg-gray-700" : "bg-gray-100"
+                      } transition-colors`}
+                      onClick={() => setSearchQuery("")}
+                    >
+                      <img
+                        src={
+                          u.profilePicture ||
+                          `https://avatar.iran.liara.run/public/${Math.floor(
+                            Math.random() * 100
+                          )}`
+                        }
+                        alt={u.username}
+                        className="w-10 h-10 rounded-full object-cover mr-2"
+                        onError={(e) =>
+                          (e.target.src =
+                            "https://avatar.iran.liara.run/public")
+                        }
+                      />
+                      <span>{u.username}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
             <button
               onClick={toggleDarkMode}
@@ -4621,10 +4486,11 @@ const PostList = () => {
                 key={category}
                 onClick={() => {
                   setSelectedCategory(category);
-                  setSelectedHashtag(""); // Reset hashtag when changing category
-                  setPage(1); // Reset to first page
-                  setPosts([]); // Clear posts
-                  fetchPosts(1); // Fetch first page
+                  setSelectedHashtag("");
+                  setPage(1);
+                  setPosts([]);
+                  setAllPosts([]);
+                  debouncedFetchPosts(1, searchQuery);
                 }}
                 className={`px-3 py-1 text-sm font-medium uppercase tracking-wide rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 whitespace-nowrap ${
                   selectedCategory === category
@@ -4644,9 +4510,7 @@ const PostList = () => {
           </div>
         </div>
       </header>
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 pt-30 md:pt-36 pb-20 md:pb-12">
-        {/* Featured Post and Recent Activity (Eager-loaded) */}
         {loading && posts.length === 0 ? (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -4831,7 +4695,6 @@ const PostList = () => {
             </motion.section>
           )
         )}
-        {/* Lazy-loaded Sections */}
         <Suspense fallback={<LoadingFallback />}>
           {loading && posts.length === 0 ? (
             <motion.section
@@ -4862,10 +4725,9 @@ const PostList = () => {
         </Suspense>
         <div className="flex flex-col md:flex-row gap-6">
           <div className="md:w-2/3">
-            {/* Main Post List (Eager-loaded) */}
             {loading && posts.length === 0 ? (
               <div className="grid grid-cols-1 gap-6">
-                {[...Array(4)].map((_, index) => (
+                {[...Array(5)].map((_, index) => (
                   <motion.div
                     key={index}
                     className="bg-white rounded-xl shadow-md p-4 animate-pulse"
@@ -4880,7 +4742,7 @@ const PostList = () => {
                   </motion.div>
                 ))}
               </div>
-            ) : displayedPosts.length === 0 ? (
+            ) : filteredPosts.length === 0 ? (
               <motion.div
                 className={`text-center py-12 ${
                   isDarkMode ? "bg-gray-900" : "bg-white"
@@ -4914,7 +4776,7 @@ const PostList = () => {
             ) : (
               <div className="grid grid-cols-1 gap-6">
                 <AnimatePresence>
-                  {displayedPosts.map((post, index) => (
+                  {filteredPosts.map((post, index) => (
                     <motion.div
                       key={post._id}
                       className={`${
@@ -5182,21 +5044,211 @@ const PostList = () => {
                     </motion.div>
                   ))}
                 </AnimatePresence>
-                {/* Load More Trigger */}
-                {page < totalPages && (
-                  <div ref={loaderRef} className="flex justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-600"></div>
+                <div className="flex justify-center items-center space-x-2 py-4 overflow-x-auto">
+                  {/* Previous Button */}
+                  <motion.button
+                    onClick={() => handlePageChange(page - 1)}
+                    disabled={page === 1}
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${
+                      page === 1
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : isDarkMode
+                        ? "bg-gray-700 text-white hover:bg-gray-600"
+                        : "bg-red-600 text-white hover:bg-red-700"
+                    } transition-colors duration-200`}
+                    whileHover={{ scale: page === 1 ? 1 : 1.05 }}
+                    whileTap={{ scale: page === 1 ? 1 : 0.95 }}
+                    aria-label="Previous page"
+                  >
+                    Previous
+                  </motion.button>
+
+                  {/* Numbered Page Buttons (Limited Range) */}
+                  <div className="flex space-x-1">
+                    {(() => {
+                      const maxButtons = 5; // Show up to 5 page buttons
+                      const startPage = Math.max(
+                        1,
+                        page - Math.floor(maxButtons / 2)
+                      );
+                      const endPage = Math.min(
+                        totalPages,
+                        startPage + maxButtons - 1
+                      );
+                      const adjustedStartPage = Math.max(
+                        1,
+                        endPage - maxButtons + 1
+                      );
+                      return Array.from(
+                        { length: endPage - adjustedStartPage + 1 },
+                        (_, index) => adjustedStartPage + index
+                      ).map((pageNumber) => (
+                        <motion.button
+                          key={pageNumber}
+                          onClick={() => handlePageChange(pageNumber)}
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            page === pageNumber
+                              ? isDarkMode
+                                ? "bg-red-600 text-white"
+                                : "bg-red-600 text-white"
+                              : isDarkMode
+                              ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+                          } transition-colors duration-200`}
+                          whileHover={{ scale: page === pageNumber ? 1 : 1.05 }}
+                          whileTap={{ scale: page === pageNumber ? 1 : 0.95 }}
+                          aria-label={`Go to page ${pageNumber}`}
+                        >
+                          {pageNumber}
+                        </motion.button>
+                      ));
+                    })()}
                   </div>
-                )}
-                {page >= totalPages && posts.length > 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    No more posts to load.
-                  </div>
-                )}
+
+                  {/* Next Button */}
+                  <motion.button
+                    onClick={() => handlePageChange(page + 1)}
+                    disabled={page >= totalPages}
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${
+                      page >= totalPages
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : isDarkMode
+                        ? "bg-gray-700 text-white hover:bg-gray-600"
+                        : "bg-red-600 text-white hover:bg-red-700"
+                    } transition-colors duration-200`}
+                    whileHover={{ scale: page >= totalPages ? 1 : 1.05 }}
+                    whileTap={{ scale: page >= totalPages ? 1 : 0.95 }}
+                    aria-label="Next page"
+                  >
+                    Next
+                  </motion.button>
+                </div>{" "}
+                <Suspense fallback={<LoadingFallback />}>
+                  {loading && posts.length === 0 ? (
+                    <motion.section
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
+                      className="mt-12 mb-8"
+                    >
+                      <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+                      <div className="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide">
+                        {[...Array(5)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="min-w-[150px] bg-white rounded-xl shadow-lg overflow-hidden flex flex-col items-center p-4 animate-pulse"
+                          >
+                            <div className="w-20 h-20 rounded-full bg-gray-200 mb-3"></div>
+                            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                            <div className="h-3 bg-gray-200 rounded w-1/2 mb-3"></div>
+                            <div className="h-8 bg-gray-200 rounded-full w-20"></div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.section>
+                  ) : (
+                    <SuggestedUsersSection
+                      suggestedUsers={suggestedUsers}
+                      isDarkMode={isDarkMode}
+                      followedUsers={followedUsers}
+                      handleFollow={handleFollow}
+                    />
+                  )}
+                </Suspense>
+                <Suspense fallback={<LoadingFallback />}>
+                  {loading && posts.length === 0 ? (
+                    <motion.section
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
+                      className="mt-12"
+                    >
+                      <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {[...Array(3)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
+                          >
+                            <div className="w-full h-40 bg-gray-200"></div>
+                            <div className="p-4">
+                              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.section>
+                  ) : (
+                    <RecommendedSection
+                      recommendedPosts={recommendedPosts}
+                      isDarkMode={isDarkMode}
+                    />
+                  )}
+                </Suspense>
+                <Suspense fallback={<LoadingFallback />}>
+                  {loading && posts.length === 0 ? (
+                    <motion.section
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                      className="mt-12"
+                    >
+                      <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                        {[...Array(5)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="relative rounded-lg overflow-hidden shadow-md animate-pulse"
+                          >
+                            <div className="w-full h-32 bg-gray-200"></div>
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-2">
+                              <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.section>
+                  ) : (
+                    <PhotosSection
+                      photoPosts={photoPosts}
+                      isDarkMode={isDarkMode}
+                    />
+                  )}
+                </Suspense>
+                <Suspense fallback={<LoadingFallback />}>
+                  {loading && posts.length === 0 ? (
+                    <motion.section
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.6 }}
+                      className="mt-12"
+                    >
+                      <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                        {[...Array(5)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="relative rounded-lg overflow-hidden shadow-md animate-pulse"
+                          >
+                            <div className="w-full h-32 bg-gray-200"></div>
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-2">
+                              <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.section>
+                  ) : (
+                    <VideosSection
+                      videoPosts={videoPosts}
+                      isDarkMode={isDarkMode}
+                    />
+                  )}
+                </Suspense>
               </div>
             )}
           </div>
-          {/* Sidebar with Lazy-loaded Sections */}
           <div className="md:w-1/3 space-y-6 md:sticky md:top-36 md:h-[calc(100vh-144px)] md:overflow-y-auto scrollbar-hide">
             <Suspense fallback={<LoadingFallback />}>
               {isAuthenticated && (
@@ -5261,125 +5313,7 @@ const PostList = () => {
             </Suspense>
           </div>
         </div>
-        <Suspense fallback={<LoadingFallback />}>
-          {loading && posts.length === 0 ? (
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-12 mb-8"
-            >
-              <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
-              <div className="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide">
-                {[...Array(5)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="min-w-[150px] bg-white rounded-xl shadow-lg overflow-hidden flex flex-col items-center p-4 animate-pulse"
-                  >
-                    <div className="w-20 h-20 rounded-full bg-gray-200 mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2 mb-3"></div>
-                    <div className="h-8 bg-gray-200 rounded-full w-20"></div>
-                  </div>
-                ))}
-              </div>
-            </motion.section>
-          ) : (
-            <SuggestedUsersSection
-              suggestedUsers={suggestedUsers}
-              isDarkMode={isDarkMode}
-              followedUsers={followedUsers}
-              handleFollow={handleFollow}
-            />
-          )}
-        </Suspense>
-        <Suspense fallback={<LoadingFallback />}>
-          {loading && posts.length === 0 ? (
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-12"
-            >
-              <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {[...Array(3)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
-                  >
-                    <div className="w-full h-40 bg-gray-200"></div>
-                    <div className="p-4">
-                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.section>
-          ) : (
-            <RecommendedSection
-              recommendedPosts={recommendedPosts}
-              isDarkMode={isDarkMode}
-            />
-          )}
-        </Suspense>
-        <Suspense fallback={<LoadingFallback />}>
-          {loading && posts.length === 0 ? (
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="mt-12"
-            >
-              <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                {[...Array(5)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="relative rounded-lg overflow-hidden shadow-md animate-pulse"
-                  >
-                    <div className="w-full h-32 bg-gray-200"></div>
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-2">
-                      <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.section>
-          ) : (
-            <PhotosSection photoPosts={photoPosts} isDarkMode={isDarkMode} />
-          )}
-        </Suspense>
-        <Suspense fallback={<LoadingFallback />}>
-          {loading && posts.length === 0 ? (
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-12"
-            >
-              <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                {[...Array(5)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="relative rounded-lg overflow-hidden shadow-md animate-pulse"
-                  >
-                    <div className="w-full h-32 bg-gray-200"></div>
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-2">
-                      <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.section>
-          ) : (
-            <VideosSection videoPosts={videoPosts} isDarkMode={isDarkMode} />
-          )}
-        </Suspense>
       </main>
-      {/* Footer */}
       <footer
         className={`${
           isDarkMode ? "bg-gray-900" : "bg-gray-800"
@@ -5428,7 +5362,6 @@ const PostList = () => {
           </div>
         </div>
       </footer>
-      {/* Back to Top Button */}
       <motion.button
         className="fixed bottom-15 right-6 p-3 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 transition-all duration-300"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -5438,7 +5371,6 @@ const PostList = () => {
       >
         <HiArrowUp className="h-5 w-5" />
       </motion.button>
-      {/* Mobile Navigation */}
       <nav
         className={`fixed bottom-0 left-0 right-0 ${
           isDarkMode ? "bg-gray-900" : "bg-white"
@@ -5453,13 +5385,13 @@ const PostList = () => {
             className={`h-6 w-6 ${
               isDarkMode
                 ? "text-gray-300 bg-red-500 rounded-2xl"
-                : "text-red-600 bg-red-100 rounded-2xl "
+                : "text-red-600 bg-red-100 rounded-2xl"
             }`}
           />
         </Link>
         <Link
           to="/notifications"
-          className=" p-1 flex flex-col items-center"
+          className="p-1 flex flex-col items-center"
           aria-label="Notifications"
         >
           <HiBell

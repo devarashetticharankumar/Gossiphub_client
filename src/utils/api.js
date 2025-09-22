@@ -74,17 +74,32 @@ export const getHashtags = async () => {
 // In your API utility file (e.g., api.js)
 
 // Existing getPosts function, updated to include pagination
-export const getPosts = async ({ page = 1, limit = 10, hashtag = "" } = {}) => {
+
+////////////////////////////////////////////////////////////////////////////////////////
+// export const getPosts = async ({ page = 1, limit = 5, hashtag = "" } = {}) => {
+//   const query = new URLSearchParams({ page, limit });
+//   if (hashtag) query.append("hashtag", hashtag);
+//   const response = await fetch(`${API_URL}/posts?${query.toString()}`);
+//   return handleResponse(response);
+// };
+export const getPosts = async ({
+  page = 1,
+  limit = 5,
+  hashtag = "",
+  search = "",
+} = {}) => {
   const query = new URLSearchParams({ page, limit });
+
   if (hashtag) query.append("hashtag", hashtag);
+  if (search) query.append("search", search);
+
   const response = await fetch(`${API_URL}/posts?${query.toString()}`);
   return handleResponse(response);
 };
-
 // New function for fetching posts by hashtag
 export const getPostsByHashtag = async (
   hashtag,
-  { page = 1, limit = 10 } = {}
+  { page = 1, limit = 5 } = {}
 ) => {
   const query = new URLSearchParams({ page, limit });
   const response = await fetch(
