@@ -22726,7 +22726,7 @@ const PostDetails = () => {
       {/* Floating Comment Button for Mobile */}
       <motion.button
         onClick={scrollToCommentInput}
-        className={`fixed bottom-6 right-6 p-4 rounded-full bg-red-600 text-white shadow-lg md:hidden z-50 ${
+        className={`fixed bottom-16 right-4 p-2 rounded-full bg-red-600 text-white shadow-lg md:hidden z-50 ${
           isDarkMode ? "hover:bg-red-700" : "hover:bg-red-500"
         } transition-colors`}
         whileHover={{ scale: 1.1 }}

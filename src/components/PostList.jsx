@@ -5538,20 +5538,30 @@ const PostList = () => {
 
   const fetchPosts = useCallback(
     async (pageToFetch, search = "", isSearch = false) => {
-      // Fetch posts
       setLoadingPosts(true);
       try {
-        const postsRes = selectedHashtag
-          ? await getPostsByHashtag(selectedHashtag, {
-              page: pageToFetch,
-              limit,
-            })
-          : await getPosts({
-              page: pageToFetch,
-              limit,
-              hashtag: selectedHashtag,
-              search,
-            });
+        let postsRes;
+        // Check if search query starts with '#'
+        const isHashtagSearch = search.startsWith("#") && search.length > 1;
+        if (isHashtagSearch) {
+          const hashtag = search.substring(1); // Remove '#' from search
+          postsRes = await getPostsByHashtag(hashtag, {
+            page: pageToFetch,
+            limit,
+          });
+        } else if (selectedHashtag) {
+          postsRes = await getPostsByHashtag(selectedHashtag, {
+            page: pageToFetch,
+            limit,
+          });
+        } else {
+          postsRes = await getPosts({
+            page: pageToFetch,
+            limit,
+            hashtag: selectedHashtag,
+            search,
+          });
+        }
 
         const sanitizedPosts = (postsRes.posts || []).map((post) => ({
           ...post,
@@ -5971,7 +5981,7 @@ const PostList = () => {
   );
 
   const userSuggestions =
-    isAuthenticated && searchQuery
+    isAuthenticated && searchQuery && !searchQuery.startsWith("#")
       ? allUsers
           .filter(
             (u) =>
@@ -6140,7 +6150,7 @@ const PostList = () => {
               <HiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search posts or users..."
+                placeholder="Search posts, users, or #hashtags..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
