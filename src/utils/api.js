@@ -38,6 +38,24 @@ export const getPostById = async (postId) => {
   return handleResponse(response);
 };
 
+// New function for fetching posts by category
+export const getPostsByCategory = async (
+  category,
+  { page = 1, limit = 5, search = "" } = {}
+) => {
+  const query = new URLSearchParams({ page, limit });
+  if (search) query.append("search", search);
+  const response = await fetch(
+    `${API_URL}/posts/category/${encodeURIComponent(
+      category
+    )}?${query.toString()}`,
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
+  return handleResponse(response);
+};
+
 export const createPost = async (data) => {
   const response = await fetch(`${API_URL}/posts`, {
     method: "POST",
