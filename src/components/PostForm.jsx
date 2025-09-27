@@ -1768,6 +1768,7 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                 <option value="Entertainment">Entertainment</option>
                 <option value="Political">Political</option>
                 <option value="International">International</option>
+                <option value="Actress">Actress</option>
               </select>
             </div>
             <div>

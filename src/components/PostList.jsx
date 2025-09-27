@@ -5465,10 +5465,10 @@ import {
   followUser,
   unfollowUser,
   addReaction,
+  getPostsByCategory,
 } from "../utils/api";
 import Logo from "../assets/GossippHublogo.svg";
 import confetti from "canvas-confetti";
-
 const TrendingSection = lazy(() => import("./TrendingSection"));
 const LatestStoriesSection = lazy(() => import("./LatestStoriesSection"));
 const MostViewedSection = lazy(() => import("./MostViewedSection"));
@@ -5477,16 +5477,22 @@ const PhotosSection = lazy(() => import("./PhotosSection"));
 const VideosSection = lazy(() => import("./VideosSection"));
 const SuggestedUsersSection = lazy(() => import("./SuggestedUsersSection"));
 const ReactionStreakSection = lazy(() => import("./ReactionStreakSection"));
+const ReviewsSection = lazy(() => import("./ReviewsSection"));
+const ActressSection = lazy(() => import("./ActressSection"));
 
 const PostList = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
+  const [reviewPosts, setReviewPosts] = useState([]);
+  const [actressPosts, setActressPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const [loadingActressPosts, setLoadingActressPosts] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedHashtag, setSelectedHashtag] = useState("");
   const [categories, setCategories] = useState(["All"]);
@@ -5503,10 +5509,8 @@ const PostList = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const isAuthenticated = !!localStorage.getItem("token");
   const headerRef = useRef(null);
-
   // Cache for user-related data to avoid refetching on pagination
   const userCache = useRef({ user: null, allUsers: [], suggestedUsers: [] });
-
   // Debounced fetchPosts for search only
   const debouncedFetchPosts = useCallback(
     debounce((pageToFetch, search) => {
@@ -5514,16 +5518,43 @@ const PostList = () => {
     }, 300),
     []
   );
-
+  const fetchReviewPosts = useCallback(async () => {
+    setLoadingReviews(true);
+    try {
+      const reviewPostsRes = await getPostsByCategory("Reviews", {
+        page: 1,
+        limit: 6,
+      });
+      setReviewPosts(reviewPostsRes.posts || []);
+    } catch (err) {
+      const message = err.message || "Failed to fetch review posts";
+      toast.error(message);
+    } finally {
+      setLoadingReviews(false);
+    }
+  }, []);
+  const fetchActressPosts = useCallback(async () => {
+    setLoadingActressPosts(true);
+    try {
+      const actressPostsRes = await getPostsByCategory("Actress", {
+        page: 1,
+        limit: 4,
+      });
+      setActressPosts(actressPostsRes.posts || []);
+    } catch (err) {
+      const message = err.message || "Failed to fetch actress posts";
+      toast.error(message);
+    } finally {
+      setLoadingActressPosts(false);
+    }
+  }, []);
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
     if (saved) setIsDarkMode(JSON.parse(saved));
   }, []);
-
   useEffect(() => {
     localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
   }, [isDarkMode]);
-
   useEffect(() => {
     const updateDimensions = () => {
       setIsMobile(window.innerWidth < 768);
@@ -5535,7 +5566,10 @@ const PostList = () => {
     updateDimensions();
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
-
+  useEffect(() => {
+    fetchReviewPosts();
+    fetchActressPosts();
+  }, [fetchReviewPosts, fetchActressPosts]);
   const fetchPosts = useCallback(
     async (pageToFetch, search = "", isSearch = false) => {
       setLoadingPosts(true);
@@ -5562,7 +5596,6 @@ const PostList = () => {
             search,
           });
         }
-
         const sanitizedPosts = (postsRes.posts || []).map((post) => ({
           ...post,
           media:
@@ -5570,7 +5603,6 @@ const PostList = () => {
               ? post.media
               : null,
         }));
-
         // Only reset posts if it's a search or hashtag change
         if (isSearch || selectedHashtag || pageToFetch === 1) {
           setPosts(sanitizedPosts);
@@ -5592,7 +5624,6 @@ const PostList = () => {
           ...new Set(sanitizedPosts.map((post) => post.category || "General")),
         ];
         setCategories(uniqueCategories);
-
         if (isAuthenticated) {
           const userId = localStorage.getItem("userId");
           const reactions = {};
@@ -5607,12 +5638,11 @@ const PostList = () => {
           setUserReactions((prev) => ({ ...prev, ...reactions }));
         }
       } catch (err) {
-        const message = err.response?.data?.message || "Failed to fetch posts";
+        const message = err.message || "Failed to fetch posts";
         toast.error(message);
       } finally {
         setLoadingPosts(false);
       }
-
       if (isAuthenticated && !userCache.current.user) {
         // Fetch user profile (only if not cached)
         setLoadingUser(true);
@@ -5654,13 +5684,11 @@ const PostList = () => {
           }
           setFollowedUsers(userRes.following || []);
         } catch (err) {
-          const message =
-            err.response?.data?.message || "Failed to fetch user profile";
+          const message = err.message || "Failed to fetch user profile";
           toast.error(message);
         } finally {
           setLoadingUser(false);
         }
-
         // Fetch all users (only if not cached)
         if (!userCache.current.allUsers.length) {
           setLoadingUsers(true);
@@ -5676,13 +5704,11 @@ const PostList = () => {
               )
               .slice(0, 10)
               .map((u) => u._id);
-
             if (suggestedUserIds.length === 0) {
               setSuggestedUsers([]);
               userCache.current.suggestedUsers = [];
               return;
             }
-
             const suggestedUsersData = await Promise.all(
               suggestedUserIds.map(async (userId) => {
                 try {
@@ -5700,8 +5726,7 @@ const PostList = () => {
             setSuggestedUsers(filteredUsers);
             userCache.current.suggestedUsers = filteredUsers;
           } catch (err) {
-            const message =
-              err.response?.data?.message || "Failed to fetch users";
+            const message = err.message || "Failed to fetch users";
             toast.error(message);
           } finally {
             setLoadingUsers(false);
@@ -5711,12 +5736,10 @@ const PostList = () => {
     },
     [isAuthenticated, selectedHashtag, limit]
   );
-
   useEffect(() => {
     // Initial fetch with reset
     fetchPosts(1, searchQuery, true);
-  }, [selectedHashtag]);
-
+  }, [selectedHashtag, fetchPosts]);
   const handleReaction = async (postId, type) => {
     if (!isAuthenticated) {
       toast.error("Please sign in to add a reaction");
@@ -5761,6 +5784,19 @@ const PostList = () => {
             : post
         )
       );
+      setActressPosts((prevActressPosts) =>
+        prevActressPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: updatedReactions.likes || [],
+                loves: updatedReactions.loves || [],
+                laughs: updatedReactions.laughs || [],
+                sads: updatedReactions.sads || [],
+              }
+            : post
+        )
+      );
       const user = await getUserProfile();
       setUser(user);
       userCache.current.user = user;
@@ -5794,14 +5830,12 @@ const PostList = () => {
       setIsReacting(null);
     }
   };
-
   const filteredPosts =
     selectedCategory === "All"
       ? posts
       : posts.filter(
           (post) => (post.category || "General") === selectedCategory
         );
-
   const videoPosts = filteredPosts
     .filter(
       (post) =>
@@ -5810,7 +5844,6 @@ const PostList = () => {
         post.media.endsWith(".mp4")
     )
     .slice(0, 5);
-
   const photoPosts = filteredPosts
     .filter(
       (post) =>
@@ -5819,19 +5852,15 @@ const PostList = () => {
         !post.media.endsWith(".mp4")
     )
     .slice(0, 5);
-
   const recommendedPosts = filteredPosts
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 3);
-
   const mostViewedPosts = filteredPosts
     .sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
     .slice(0, 3);
-
   const latestStories = allPosts
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 5);
-
   const trends = posts
     .map((post) => ({
       ...post,
@@ -5843,25 +5872,10 @@ const PostList = () => {
     }))
     .sort((a, b) => b.totalReactions - a.totalReactions)
     .slice(0, 5);
-
-  const recentComments = posts
-    .flatMap((post) =>
-      (post.comments || []).map((comment) => ({
-        postId: post._id,
-        postTitle: post.title,
-        commentText: comment.text,
-        commentDate: comment.createdAt,
-      }))
-    )
-    .sort((a, b) => new Date(b.commentDate) - new Date(a.commentDate))
-    .slice(0, 4);
-
   const profileImage = isAuthenticated
     ? user?.profilePicture || "https://avatar.iran.liara.run/public/26"
     : null;
-
   const featuredPost = filteredPosts.length > 0 ? filteredPosts[0] : null;
-
   const handleQuickShare = (post) => {
     const shareUrl = `${window.location.origin}/posts/${post._id}`;
     const stripHtmlTags = (text) => {
@@ -5894,7 +5908,6 @@ const PostList = () => {
         .catch(() => toast.error("Failed to copy link"));
     }
   };
-
   const handleFollow = async (userId) => {
     if (!isAuthenticated) {
       toast.error("Please sign in to follow users");
@@ -5969,17 +5982,14 @@ const PostList = () => {
       }
     }
   };
-
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
-
   const LoadingFallback = () => (
     <div className="flex justify-center items-center py-8">
       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-600"></div>
     </div>
   );
-
   const userSuggestions =
     isAuthenticated && searchQuery && !searchQuery.startsWith("#")
       ? allUsers
@@ -5991,7 +6001,6 @@ const PostList = () => {
           )
           .slice(0, 10)
       : [];
-
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
@@ -6000,7 +6009,6 @@ const PostList = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
-
   return (
     <div
       className={`min-h-screen font-poppins transition-colors duration-500 ${
@@ -6357,14 +6365,20 @@ const PostList = () => {
                 } backdrop-blur-md p-4 rounded-xl shadow-lg transition-colors duration-500`}
               >
                 <div className="h-6 bg-gray-200 rounded w-1/2 mb-4 animate-pulse"></div>
-                <ul className="space-y-3">
-                  {[...Array(4)].map((_, index) => (
-                    <li key={index} className="text-sm text-gray-700">
-                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-1 animate-pulse"></div>
-                      <div className="h-3 bg-gray-200 rounded w-full animate-pulse"></div>
-                    </li>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
+                  {[...Array(3)].map((_, index) => (
+                    <div
+                      key={index}
+                      className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
+                    >
+                      <div className="w-full h-32 bg-gray-200"></div>
+                      <div className="p-3">
+                        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                      </div>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             </div>
           </motion.section>
@@ -6450,68 +6464,29 @@ const PostList = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <h3
-                    className={`text-lg font-bold ${
-                      isDarkMode ? "text-gray-100" : "text-gray-900"
-                    } mb-4 flex items-center`}
-                  >
-                    <HiChatAlt className="h-6 w-6 text-blue-500 mr-2" />
-                    Recent Activity
-                  </h3>
-                  <ul className="space-y-3">
-                    {recentComments.length > 0 ? (
-                      recentComments.map((comment, index) => (
-                        <motion.li
-                          key={index}
-                          className={`text-sm ${
-                            isDarkMode ? "text-gray-300" : "text-gray-700"
-                          }`}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                        >
-                          <Link
-                            to={`/posts/${comment.postId}`}
-                            className={`font-medium ${
-                              isDarkMode ? "text-gray-100" : "text-gray-900"
-                            } hover:text-red-600 transition-colors`}
+                  <Suspense fallback={<LoadingFallback />}>
+                    {loadingActressPosts ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
+                        {[...Array(3)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
                           >
-                            {comment.postTitle.length > 40
-                              ? `${comment.postTitle.slice(0, 40)}...`
-                              : comment.postTitle}
-                          </Link>
-                          <p
-                            className={`text-gray-600 mt-1 line-clamp-1 ${
-                              isDarkMode ? "text-gray-400" : "text-gray-600"
-                            }`}
-                          >
-                            {comment.commentText}
-                          </p>
-                          <p
-                            className={`text-xs mt-1 ${
-                              isDarkMode ? "text-gray-500" : "text-gray-500"
-                            }`}
-                          >
-                            {new Date(comment.commentDate).toLocaleDateString(
-                              "en-US",
-                              {
-                                month: "short",
-                                day: "numeric",
-                              }
-                            )}
-                          </p>
-                        </motion.li>
-                      ))
+                            <div className="w-full h-32 bg-gray-200"></div>
+                            <div className="p-3">
+                              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     ) : (
-                      <li
-                        className={`text-sm ${
-                          isDarkMode ? "text-gray-400" : "text-gray-500"
-                        }`}
-                      >
-                        No recent activity available.
-                      </li>
+                      <ActressSection
+                        actressPosts={actressPosts}
+                        isDarkMode={isDarkMode}
+                      />
                     )}
-                  </ul>
+                  </Suspense>
                 </motion.div>
               </div>
             </motion.section>
@@ -6880,7 +6855,9 @@ const PostList = () => {
                     whileHover={{
                       scale: page === 1 || loadingPosts ? 1 : 1.05,
                     }}
-                    whileTap={{ scale: page === 1 || loadingPosts ? 1 : 0.95 }}
+                    whileTap={{
+                      scale: page === 1 || loadingPosts ? 1 : 0.95,
+                    }}
                     aria-label="Previous page"
                   >
                     Previous
@@ -7014,6 +6991,37 @@ const PostList = () => {
                   ) : (
                     <RecommendedSection
                       recommendedPosts={recommendedPosts}
+                      isDarkMode={isDarkMode}
+                    />
+                  )}
+                </Suspense>
+                <Suspense fallback={<LoadingFallback />}>
+                  {loadingReviews ? (
+                    <motion.section
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                      className="mt-12"
+                    >
+                      <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {[...Array(3)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
+                          >
+                            <div className="w-full h-40 bg-gray-200"></div>
+                            <div className="p-4">
+                              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.section>
+                  ) : (
+                    <ReviewsSection
+                      reviewPosts={reviewPosts}
                       isDarkMode={isDarkMode}
                     />
                   )}
@@ -7257,5 +7265,4 @@ const PostList = () => {
     </div>
   );
 };
-
 export default PostList;

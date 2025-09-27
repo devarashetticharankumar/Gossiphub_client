@@ -2613,6 +2613,7 @@ Respond with HTML content for a rich text editor.`;
                 <option value="Entertainment">Entertainment</option>
                 <option value="Political">Political</option>
                 <option value="International">International</option>
+                <option value="Actress">Actress</option>
               </select>
             </div>
             <div>
