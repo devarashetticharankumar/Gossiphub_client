@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const ReviewsSection = ({ reviewPosts, isDarkMode }) => {
+const UpcomingMovies = ({ upcomingMovies, isDarkMode }) => {
   return (
     <motion.section
-      className="bg-gray-500 p-5 rounded-xl"
+      className="bg-gray-700 p-5 rounded-xl"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.5 }}
@@ -14,9 +14,9 @@ const ReviewsSection = ({ reviewPosts, isDarkMode }) => {
           isDarkMode ? "text-gray-100" : "text-white"
         } flex items-center`}
       >
-        <span className="mr-2">📝</span> Film Reviews & Trailers
+        <span className="mr-2">🎬</span> Upcoming Movies
       </h2>
-      {reviewPosts.length === 0 ? (
+      {upcomingMovies.length === 0 ? (
         <div
           className={`${
             isDarkMode ? "bg-gray-900" : "bg-white"
@@ -27,20 +27,20 @@ const ReviewsSection = ({ reviewPosts, isDarkMode }) => {
               isDarkMode ? "text-gray-400" : "text-gray-600"
             }`}
           >
-            No reviews available yet. Be the first to share your review!
+            No upcoming movies available yet. Check back soon!
           </p>
           <Link
             to="/create-post"
             className="mt-4 inline-block px-6 py-2.5 bg-red-600 text-white font-medium rounded-full hover:bg-red-700 transition-all duration-300"
           >
-            Write a Review
+            Share a Movie
           </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {reviewPosts.map((post, index) => (
+          {upcomingMovies.map((movie, index) => (
             <motion.div
-              key={post._id}
+              key={movie._id}
               className={`${
                 isDarkMode ? "bg-gray-800" : "bg-white"
               } rounded-xl shadow-lg overflow-hidden transition-colors duration-500`}
@@ -48,11 +48,11 @@ const ReviewsSection = ({ reviewPosts, isDarkMode }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Link to={`/posts/${post._id}`}>
-                {post.media &&
-                  (post.media.endsWith(".mp4") ? (
+              <Link to={`/posts/${movie._id}`}>
+                {movie.media &&
+                  (movie.media.endsWith(".mp4") ? (
                     <video
-                      src={post.media}
+                      src={movie.media}
                       className="w-full h-40 object-cover"
                       muted
                       autoPlay
@@ -65,8 +65,8 @@ const ReviewsSection = ({ reviewPosts, isDarkMode }) => {
                     />
                   ) : (
                     <img
-                      src={post.media}
-                      alt={`Review: ${post.title}`}
+                      src={movie.media}
+                      alt={`Movie: ${movie.title}`}
                       className="w-full h-40 object-cover"
                       loading="lazy"
                       onError={(e) =>
@@ -81,21 +81,8 @@ const ReviewsSection = ({ reviewPosts, isDarkMode }) => {
                       isDarkMode ? "text-gray-100" : "text-gray-900"
                     } line-clamp-2`}
                   >
-                    {post.title}
+                    {movie.title}
                   </h3>
-                  <p
-                    className={`text-sm mt-2 line-clamp-2 ${
-                      isDarkMode ? "text-gray-400" : "text-gray-600"
-                    }`}
-                  >
-                    {post.description.split("\n\n").map((paragraph, pIdx) => (
-                      <div
-                        key={pIdx}
-                        className="mb-4 last:mb-0"
-                        dangerouslySetInnerHTML={{ __html: paragraph }}
-                      />
-                    ))}
-                  </p>
                 </div>
               </Link>
             </motion.div>
@@ -106,4 +93,4 @@ const ReviewsSection = ({ reviewPosts, isDarkMode }) => {
   );
 };
 
-export default ReviewsSection;
+export default UpcomingMovies;

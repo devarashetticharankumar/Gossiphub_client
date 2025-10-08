@@ -375,14 +375,14 @@ const PrivacyPolicy = () => {
               You have the right to access, update, or delete your personal
               information. To exercise these rights, please contact us at{" "}
               <a
-                href="mailto:support@gossipphub.com"
+                href="mailto:gossipphub@gmail.com"
                 className={`${
                   isDarkMode
                     ? "text-red-400 hover:text-red-300"
                     : "text-red-600 hover:text-red-700"
                 } hover:underline transition-colors duration-200`}
               >
-                support@gossiphub.com
+                gossiphub@gmail.com
               </a>
               .
             </p>
@@ -410,14 +410,14 @@ const PrivacyPolicy = () => {
               If you have any questions about this Privacy Policy, please reach
               out to us at{" "}
               <a
-                href="mailto:support@gossipphub.com"
+                href="mailto:gossipphub@gmail.com"
                 className={`${
                   isDarkMode
                     ? "text-red-400 hover:text-red-300"
                     : "text-red-600 hover:text-red-700"
                 } hover:underline transition-colors duration-200`}
               >
-                support@gossiphub.com
+                gossiphub@gmail.com
               </a>
               .
             </p>
@@ -446,6 +446,12 @@ const PrivacyPolicy = () => {
               className="text-sm text-white hover:text-gray-200 transition-colors duration-200"
             >
               Contact Us
+            </Link>
+            <Link
+              to="/terms"
+              className="text-sm text-white hover:underline transition-colors duration-200"
+            >
+              Terms & Conditions
             </Link>
           </div>
           <p className="text-sm">© 2025 GossipHub. All rights reserved.</p>

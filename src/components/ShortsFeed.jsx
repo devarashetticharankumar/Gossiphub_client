@@ -1,612 +1,852 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { getTrendingShorts, getPosts, addReaction } from "../utils/api";
+// import React, { useState, useEffect, useRef, useCallback } from "react";
+// import { useSwipeable } from "react-swipeable";
+// import {
+//   FaHeart,
+//   FaComment,
+//   FaShare,
+//   FaPlay,
+//   FaArrowUp,
+//   FaArrowDown,
+//   FaPaperPlane,
+//   FaTimes,
+// } from "react-icons/fa";
+// import {
+//   getShorts,
+//   toggleShortLike,
+//   addShortComment,
+//   getUserProfile,
+// } from "../utils/api";
+
+// const ShortsFeed = () => {
+//   const [shorts, setShorts] = useState([]);
+//   const [currentIndex, setCurrentIndex] = useState(0);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [isMuted, setIsMuted] = useState(false);
+//   const [page, setPage] = useState(1);
+//   const [hasMore, setHasMore] = useState(true);
+//   const [isCommenting, setIsCommenting] = useState(false);
+//   const [commentText, setCommentText] = useState("");
+//   const [userId, setUserId] = useState(null);
+//   const [progress, setProgress] = useState(0);
+//   const [isPlaying, setIsPlaying] = useState(true);
+//   const [lastTap, setLastTap] = useState(0);
+//   const videoRefs = useRef([]);
+//   const progressInterval = useRef(null);
+
+//   const LIMIT = 5;
+
+//   useEffect(() => {
+//     const fetchUserProfile = async () => {
+//       try {
+//         const profile = await getUserProfile();
+//         setUserId(profile._id);
+//       } catch (err) {
+//         setError("Failed to fetch user profile");
+//       }
+//     };
+//     fetchUserProfile();
+//   }, []);
+
+//   const fetchShorts = async (pageNum) => {
+//     try {
+//       const data = await getShorts({ page: pageNum, limit: LIMIT });
+//       setShorts((prev) => {
+//         const existingIds = new Set(prev.map((short) => short._id));
+//         const newShorts = data.shorts.filter(
+//           (short) => !existingIds.has(short._id)
+//         );
+//         return [...prev, ...newShorts];
+//       });
+//       setHasMore(data.page < data.totalPages);
+//       setIsLoading(false);
+//     } catch (err) {
+//       setError(err.message);
+//       setIsLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchShorts(page);
+//   }, [page]);
+
+//   useEffect(() => {
+//     if (currentIndex >= shorts.length - 2 && hasMore && !isLoading) {
+//       setPage((prev) => prev + 1);
+//     }
+//   }, [currentIndex, shorts.length, hasMore]);
+
+//   const updateProgress = useCallback(() => {
+//     const currentVideo = videoRefs.current[currentIndex];
+//     if (currentVideo && !isNaN(currentVideo.duration)) {
+//       const duration = currentVideo.duration;
+//       const currentTime = currentVideo.currentTime;
+//       setProgress((currentTime / duration) * 100);
+//     }
+//   }, [currentIndex]);
+
+//   useEffect(() => {
+//     const currentVideo = videoRefs.current[currentIndex];
+//     if (currentVideo) {
+//       progressInterval.current = setInterval(updateProgress, 500);
+//       if (isPlaying)
+//         currentVideo.play().catch((e) => console.error("Play error:", e));
+//       else currentVideo.pause();
+//     }
+//     return () => {
+//       if (progressInterval.current) clearInterval(progressInterval.current);
+//     };
+//   }, [currentIndex, isPlaying, updateProgress]);
+
+//   const handleNextVideo = () => {
+//     if (currentIndex < shorts.length - 1) {
+//       videoRefs.current[currentIndex]?.pause();
+//       setCurrentIndex((prev) => prev + 1);
+//       setIsPlaying(true);
+//       videoRefs.current[currentIndex + 1]
+//         ?.play()
+//         .catch((e) => console.error("Play error:", e));
+//     }
+//   };
+
+//   const handlePreviousVideo = () => {
+//     if (currentIndex > 0) {
+//       videoRefs.current[currentIndex]?.pause();
+//       setCurrentIndex((prev) => prev - 1);
+//       setIsPlaying(true);
+//       videoRefs.current[currentIndex - 1]
+//         ?.play()
+//         .catch((e) => console.error("Play error:", e));
+//     }
+//   };
+
+//   const handlers = useSwipeable({
+//     onSwipedUp: handleNextVideo,
+//     onSwipedDown: handlePreviousVideo,
+//     onTap: (e) => {
+//       const currentTime = Date.now();
+//       const tapDelay = currentTime - lastTap;
+//       setLastTap(currentTime);
+//       if (tapDelay < 300) {
+//         handleLike(shorts[currentIndex]._id);
+//       } else {
+//         const currentVideo = videoRefs.current[currentIndex];
+//         if (currentVideo) {
+//           setIsPlaying((prev) => {
+//             if (prev) currentVideo.pause();
+//             else
+//               currentVideo.play().catch((e) => console.error("Play error:", e));
+//             return !prev;
+//           });
+//         }
+//       }
+//     },
+//     trackMouse: true,
+//     delta: 50,
+//     preventDefaultTouchmoveEvent: true,
+//   });
+
+//   const handleLike = async (shortId, e) => {
+//     e.preventDefault();
+//     e.stopPropagation();
+//     try {
+//       console.log("Toggling like for shortId:", shortId); // Debug log
+//       const data = await toggleShortLike(shortId);
+//       console.log("API response:", data); // Debug log
+//       if (data && (data.likes !== undefined || data.likeCount !== undefined)) {
+//         setShorts((prev) =>
+//           prev.map((short) =>
+//             short._id === shortId
+//               ? {
+//                   ...short,
+//                   likes: Array.isArray(data.likes)
+//                     ? data.likes
+//                     : Array(data.likeCount || data.likes).fill({ _id: userId }),
+//                 }
+//               : short
+//           )
+//         );
+//       } else {
+//         console.error("Unexpected API response format:", data);
+//       }
+//     } catch (err) {
+//       console.error("Error toggling like:", err.message);
+//       setError(err.message);
+//     }
+//   };
+
+//   const handleCommentSubmit = async (shortId) => {
+//     if (!commentText.trim()) return;
+//     try {
+//       const data = await addShortComment(shortId, { text: commentText });
+//       setShorts((prev) =>
+//         prev.map((short) =>
+//           short._id === shortId ? { ...short, comments: data.comments } : short
+//         )
+//       );
+//       setCommentText("");
+//       setIsCommenting(false);
+//     } catch (err) {
+//       setError(err.message);
+//     }
+//   };
+
+//   const handleVideoError = (e, shortId) => {
+//     console.error(`Video error for short ${shortId}:`, e);
+//     setError(
+//       `Failed to load video for short ${shortId}. Check console for details.`
+//     );
+//   };
+
+//   const handleCloseComment = (e) => {
+//     e.preventDefault();
+//     e.stopPropagation();
+//     setIsCommenting(false);
+//   };
+
+//   const handleOverlayClick = (e) => {
+//     if (e.target.className.includes("comment-overlay")) {
+//       setIsCommenting(false);
+//     }
+//   };
+
+//   if (isLoading && shorts.length === 0) {
+//     return (
+//       <div className="flex items-center justify-center h-screen bg-black text-white">
+//         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="flex items-center justify-center h-screen bg-black text-white">
+//         <p>{error}</p>
+//       </div>
+//     );
+//   }
+
+//   if (shorts.length === 0) {
+//     return (
+//       <div className="flex items-center justify-center h-screen bg-black text-white">
+//         <p>No shorts available</p>
+//       </div>
+//     );
+//   }
+
+//   const currentShort = shorts[currentIndex];
+
+//   return (
+//     <div
+//       {...handlers}
+//       className="h-screen w-screen overflow-hidden relative md:bg-black md:max-w-[390px] md:mx-auto"
+//     >
+//       <div
+//         className="h-full w-full transition-transform duration-300 ease-in-out"
+//         style={{ transform: `translateY(-${currentIndex * 100}vh)` }}
+//       >
+//         {shorts.map((short, index) => (
+//           <div
+//             key={`${short._id}-${index}`}
+//             className="h-screen w-full relative flex items-center justify-center"
+//           >
+//             <div className="relative w-full h-full">
+//               <video
+//                 ref={(el) => (videoRefs.current[index] = el)}
+//                 src={short.videoUrl}
+//                 autoPlay={index === currentIndex && isPlaying}
+//                 loop
+//                 muted={isMuted}
+//                 className="w-full h-full object-cover"
+//                 onError={(e) => handleVideoError(e, short._id)}
+//                 onLoadedData={(e) =>
+//                   console.log(
+//                     `Video loaded for short ${short._id}:`,
+//                     e.target.src
+//                   )
+//                 }
+//                 playsInline
+//               />
+//               {/* Progress Bar */}
+//               <div className="absolute top-0 left-0 w-full h-1 bg-gray-800">
+//                 <div
+//                   className="h-full bg-red-600"
+//                   style={{ width: `${index === currentIndex ? progress : 0}%` }}
+//                 ></div>
+//               </div>
+//               {/* Play/Pause Button */}
+//               {index === currentIndex && !isPlaying && (
+//                 <button
+//                   onClick={() => {
+//                     const currentVideo = videoRefs.current[currentIndex];
+//                     if (currentVideo) {
+//                       currentVideo
+//                         .play()
+//                         .catch((e) => console.error("Play error:", e));
+//                       setIsPlaying(true);
+//                     }
+//                   }}
+//                   className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-3xl sm:text-3xl bg-black/50 rounded-full p-3 sm:p-4"
+//                 >
+//                   <FaPlay />
+//                 </button>
+//               )}
+//               {/* Video Info */}
+//               <div className="absolute bottom-0 left-0 w-full p-2 sm:p-4 text-white bg-gradient-to-t from-black/80 to-transparent z-10">
+//                 <p className="text-[16px] font-medium">
+//                   @{short.user?.username || "Unknown"}
+//                 </p>
+//                 <p className="text-[16px] mt-1 line-clamp-2">{short.caption}</p>
+//               </div>
+//               {/* Like, Comment, Share Controls */}
+//               <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 sm:space-y-2 z-10">
+//                 <button
+//                   onClick={(e) => handleLike(short._id, e)}
+//                   className="flex flex-col items-center justify-center w-10 h-10 rounded-full text-white"
+//                 >
+//                   <FaHeart
+//                     className={`text-lg sm:text-xl ${
+//                       short.likes.some((like) => like._id === userId)
+//                         ? "text-red-500"
+//                         : ""
+//                     }`}
+//                   />
+//                   <span className="text-xs sm:text-sm ml-0 hidden md:block">
+//                     {short.likes.length}
+//                   </span>
+//                 </button>
+//                 <button
+//                   onClick={(e) => {
+//                     e.preventDefault();
+//                     e.stopPropagation();
+//                     setIsCommenting(true);
+//                   }}
+//                   className="flex items-center justify-center w-10 h-10 rounded-full text-white"
+//                 >
+//                   <FaComment className="text-lg sm:text-xl" />
+//                 </button>
+//                 <button
+//                   onClick={(e) => {
+//                     e.preventDefault();
+//                     e.stopPropagation();
+//                     // Add share functionality here if needed
+//                   }}
+//                   className="flex items-center justify-center w-10 h-10 rounded-full text-white"
+//                 >
+//                   <FaShare className="text-lg sm:text-xl" />
+//                 </button>
+//               </div>
+//               {/* Comment Section */}
+//               {isCommenting && index === currentIndex && (
+//                 <div
+//                   className="comment-overlay fixed inset-0 bg-black/70 z-30 flex items-end"
+//                   onClick={handleOverlayClick}
+//                 >
+//                   <div className="w-full bg-black/90 p-4 rounded-t-lg z-40">
+//                     <div className="flex justify-between items-center mb-2">
+//                       <h3 className="text-white text-sm font-semibold">
+//                         Comments
+//                       </h3>
+//                       <button
+//                         onClick={handleCloseComment}
+//                         className="text-white text-xl"
+//                       >
+//                         <FaTimes />
+//                       </button>
+//                     </div>
+//                     <div className="flex items-center bg-gray-800 rounded-full p-1 mb-2">
+//                       <input
+//                         type="text"
+//                         value={commentText}
+//                         onChange={(e) => setCommentText(e.target.value)}
+//                         placeholder="Add a comment..."
+//                         className="flex-1 bg-transparent text-white text-sm p-2 outline-none"
+//                       />
+//                       <button
+//                         onClick={() => handleCommentSubmit(short._id)}
+//                         disabled={!commentText.trim()}
+//                         className="text-blue-400 text-lg p-2 disabled:opacity-50"
+//                       >
+//                         <FaPaperPlane />
+//                       </button>
+//                     </div>
+//                     <div className="max-h-[40vh] overflow-y-auto text-gray-300 text-sm">
+//                       {short.comments.map((comment, idx) => (
+//                         <div key={idx} className="flex items-start mb-2">
+//                           <div className="w-6 h-6 bg-gray-600 rounded-full mr-2 flex-shrink-0"></div>
+//                           <div>
+//                             <p className="font-medium text-white">
+//                               @{comment.userId || "User"}
+//                             </p>
+//                             <p className="text-gray-300">{comment.text}</p>
+//                           </div>
+//                         </div>
+//                       ))}
+//                     </div>
+//                   </div>
+//                 </div>
+//               )}
+//             </div>
+//             {/* Navigation Buttons (Left Side, Desktop Only) */}
+//             <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-4 hidden md:block z-10">
+//               <button
+//                 onClick={handlePreviousVideo}
+//                 className="flex items-center justify-center w-12 h-12 bg-black/50 rounded-full text-white disabled:opacity-50"
+//                 disabled={currentIndex === 0}
+//               >
+//                 <FaArrowUp className="text-2xl" />
+//               </button>
+//               <button
+//                 onClick={handleNextVideo}
+//                 className="flex items-center justify-center w-12 h-12 bg-black/50 rounded-full text-white disabled:opacity-50"
+//                 disabled={currentIndex === shorts.length - 1}
+//               >
+//                 <FaArrowDown className="text-2xl" />
+//               </button>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//       {isLoading && (
+//         <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2">
+//           <div className="animate-spin rounded-full h-6 sm:h-8 w-6 sm:w-8 border-t-2 border-white"></div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default ShortsFeed;
+
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useSwipeable } from "react-swipeable";
+import {
+  FaHeart,
+  FaComment,
+  FaShare,
+  FaPlay,
+  FaArrowUp,
+  FaArrowDown,
+  FaPaperPlane,
+  FaTimes,
+} from "react-icons/fa";
+import {
+  getShorts,
+  toggleShortLike,
+  addShortComment,
+  getUserProfile,
+} from "../utils/api";
 
 const ShortsFeed = () => {
   const [shorts, setShorts] = useState([]);
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isMuted, setIsMuted] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [showPlayPauseIcon, setShowPlayPauseIcon] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isCommenting, setIsCommenting] = useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [userId, setUserId] = useState(null); // userId can be null if not logged in
   const [progress, setProgress] = useState(0);
-  const [isBuffering, setIsBuffering] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [lastTap, setLastTap] = useState(0);
   const videoRefs = useRef([]);
-  const lastTap = useRef(0);
-  const navigate = useNavigate();
+  const progressInterval = useRef(null);
 
-  // Persistent dark mode
-  useEffect(() => {
-    const saved = localStorage.getItem("darkMode");
-    if (saved) setIsDarkMode(JSON.parse(saved));
-    else setIsDarkMode(true);
-  }, []);
+  const LIMIT = 5;
 
   useEffect(() => {
-    localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
-
-  // Fetch shorts
-  useEffect(() => {
-    const fetchShorts = async () => {
+    const fetchUserProfile = async () => {
       try {
-        let fetchedShorts = await getTrendingShorts();
-        if (fetchedShorts.length === 0) {
-          fetchedShorts = await getPosts("Short");
-        }
-        setShorts(fetchedShorts);
+        const profile = await getUserProfile();
+        setUserId(profile._id);
       } catch (err) {
-        toast.error("Failed to load shorts: " + err.message);
+        console.warn(
+          "User profile fetch failed, proceeding without login:",
+          err.message
+        );
+        setUserId(null); // Allow component to work without userId
       }
     };
-    fetchShorts();
+    fetchUserProfile();
   }, []);
 
-  // Intersection Observer to detect which video is in view
-  useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.8,
-    };
-
-    const observerCallback = (entries) => {
-      entries.forEach((entry) => {
-        const index = parseInt(entry.target.dataset.index, 10);
-        const video = videoRefs.current[index];
-        if (entry.isIntersecting) {
-          setCurrentVideoIndex(index);
-          if (isPlaying) {
-            video.play().catch((err) => {
-              console.error("Video playback failed:", err);
-              toast.error("Failed to play video: " + err.message);
-            });
-          }
-        } else {
-          video.pause();
-          video.currentTime = 0;
-          setProgress(0);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(
-      observerCallback,
-      observerOptions
-    );
-
-    videoRefs.current.forEach((video) => {
-      if (video) observer.observe(video);
-    });
-
-    return () => {
-      videoRefs.current.forEach((video) => {
-        if (video) observer.unobserve(video);
-      });
-    };
-  }, [shorts, isPlaying]);
-
-  // Update muted state for all videos
-  useEffect(() => {
-    videoRefs.current.forEach((video) => {
-      if (video) {
-        video.muted = isMuted;
-      }
-    });
-  }, [isMuted, shorts]);
-
-  // Update progress bar
-  useEffect(() => {
-    const video = videoRefs.current[currentVideoIndex];
-    if (!video) return;
-
-    const updateProgress = () => {
-      if (video.duration) {
-        const progressPercent = (video.currentTime / video.duration) * 100;
-        setProgress(progressPercent);
-      }
-    };
-
-    const handleBuffering = () => setIsBuffering(true);
-    const handleCanPlay = () => setIsBuffering(false);
-
-    video.addEventListener("timeupdate", updateProgress);
-    video.addEventListener("waiting", handleBuffering);
-    video.addEventListener("canplay", handleCanPlay);
-
-    return () => {
-      video.removeEventListener("timeupdate", updateProgress);
-      video.removeEventListener("waiting", handleBuffering);
-      video.removeEventListener("canplay", handleCanPlay);
-    };
-  }, [currentVideoIndex, shorts]);
-
-  // Toggle mute state
-  const toggleMute = () => {
-    setIsMuted((prev) => {
-      const newMutedState = !prev;
-      videoRefs.current.forEach((video) => {
-        if (video) {
-          video.muted = newMutedState;
-          if (
-            !newMutedState &&
-            video === videoRefs.current[currentVideoIndex] &&
-            isPlaying
-          ) {
-            video.play().catch((err) => {
-              console.error("Failed to play video with sound:", err);
-              toast.warn(
-                "Click the video to enable sound due to browser restrictions."
-              );
-            });
-          }
-        }
-      });
-      return newMutedState;
-    });
-  };
-
-  // Toggle play/pause on video tap
-  const togglePlayPause = () => {
-    const video = videoRefs.current[currentVideoIndex];
-    if (video) {
-      if (video.paused) {
-        setIsPlaying(true);
-        video.play().catch((err) => {
-          console.error("Failed to play video:", err);
-          toast.error("Failed to play video: " + err.message);
-        });
-        setShowPlayPauseIcon("play");
-      } else {
-        setIsPlaying(false);
-        video.pause();
-        setShowPlayPauseIcon("pause");
-      }
-      setTimeout(() => setShowPlayPauseIcon(null), 1000);
-    }
-  };
-
-  // Double-tap to like
-  const handleDoubleTap = (shortId) => {
-    const now = Date.now();
-    const DOUBLE_TAP_DELAY = 300;
-    if (now - lastTap.current < DOUBLE_TAP_DELAY) {
-      handleReaction(shortId, "like");
-      // Show a like animation (heart pop-up)
-      setShowPlayPauseIcon("like");
-      setTimeout(() => setShowPlayPauseIcon(null), 1000);
-    }
-    lastTap.current = now;
-  };
-
-  // Handle reaction
-  const handleReaction = async (postId, type) => {
+  const fetchShorts = async (pageNum) => {
     try {
-      const updatedReactions = await addReaction(postId, { type });
-      setShorts((prevShorts) =>
-        prevShorts.map((short) =>
-          short._id === postId
-            ? {
-                ...short,
-                likes: updatedReactions.likes,
-                loves: updatedReactions.loves,
-                laughs: updatedReactions.laughs,
-                sads: updatedReactions.sads,
-                shares: updatedReactions.shares,
-              }
-            : short
+      const data = await getShorts({ page: pageNum, limit: LIMIT });
+      setShorts((prev) => {
+        const existingIds = new Set(prev.map((short) => short._id));
+        const newShorts = data.shorts.filter(
+          (short) => !existingIds.has(short._id)
+        );
+        return [...prev, ...newShorts];
+      });
+      setHasMore(data.page < data.totalPages);
+      setIsLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchShorts(page);
+  }, [page]);
+
+  useEffect(() => {
+    if (currentIndex >= shorts.length - 2 && hasMore && !isLoading) {
+      setPage((prev) => prev + 1);
+    }
+  }, [currentIndex, shorts.length, hasMore]);
+
+  const updateProgress = useCallback(() => {
+    const currentVideo = videoRefs.current[currentIndex];
+    if (currentVideo && !isNaN(currentVideo.duration)) {
+      const duration = currentVideo.duration;
+      const currentTime = currentVideo.currentTime;
+      setProgress((currentTime / duration) * 100);
+    }
+  }, [currentIndex]);
+
+  useEffect(() => {
+    const currentVideo = videoRefs.current[currentIndex];
+    if (currentVideo) {
+      progressInterval.current = setInterval(updateProgress, 500);
+      if (isPlaying)
+        currentVideo.play().catch((e) => console.error("Play error:", e));
+      else currentVideo.pause();
+    }
+    return () => {
+      if (progressInterval.current) clearInterval(progressInterval.current);
+    };
+  }, [currentIndex, isPlaying, updateProgress]);
+
+  const handleNextVideo = () => {
+    if (currentIndex < shorts.length - 1) {
+      videoRefs.current[currentIndex]?.pause();
+      setCurrentIndex((prev) => prev + 1);
+      setIsPlaying(true);
+      videoRefs.current[currentIndex + 1]
+        ?.play()
+        .catch((e) => console.error("Play error:", e));
+    }
+  };
+
+  const handlePreviousVideo = () => {
+    if (currentIndex > 0) {
+      videoRefs.current[currentIndex]?.pause();
+      setCurrentIndex((prev) => prev - 1);
+      setIsPlaying(true);
+      videoRefs.current[currentIndex - 1]
+        ?.play()
+        .catch((e) => console.error("Play error:", e));
+    }
+  };
+
+  const handlers = useSwipeable({
+    onSwipedUp: handleNextVideo,
+    onSwipedDown: handlePreviousVideo,
+    onTap: (e) => {
+      const currentTime = Date.now();
+      const tapDelay = currentTime - lastTap;
+      setLastTap(currentTime);
+      if (tapDelay < 300 && userId) {
+        // Only allow liking if user is logged in
+        handleLike(shorts[currentIndex]._id);
+      } else {
+        const currentVideo = videoRefs.current[currentIndex];
+        if (currentVideo) {
+          setIsPlaying((prev) => {
+            if (prev) currentVideo.pause();
+            else
+              currentVideo.play().catch((e) => console.error("Play error:", e));
+            return !prev;
+          });
+        }
+      }
+    },
+    trackMouse: true,
+    delta: 50,
+    preventDefaultTouchmoveEvent: true,
+  });
+
+  const handleLike = async (shortId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!userId) {
+      console.warn("User must be logged in to like a short.");
+      return; // Prevent liking if not logged in
+    }
+    try {
+      console.log("Toggling like for shortId:", shortId);
+      const data = await toggleShortLike(shortId);
+      console.log("API response:", data);
+      if (data && (data.likes !== undefined || data.likeCount !== undefined)) {
+        setShorts((prev) =>
+          prev.map((short) =>
+            short._id === shortId
+              ? {
+                  ...short,
+                  likes: Array.isArray(data.likes)
+                    ? data.likes
+                    : Array(data.likeCount || data.likes).fill({ _id: userId }),
+                }
+              : short
+          )
+        );
+      } else {
+        console.error("Unexpected API response format:", data);
+      }
+    } catch (err) {
+      console.error("Error toggling like:", err.message);
+      setError(err.message);
+    }
+  };
+
+  const handleCommentSubmit = async (shortId) => {
+    if (!userId) {
+      console.warn("User must be logged in to comment.");
+      return; // Prevent commenting if not logged in
+    }
+    if (!commentText.trim()) return;
+    try {
+      const data = await addShortComment(shortId, { text: commentText });
+      setShorts((prev) =>
+        prev.map((short) =>
+          short._id === shortId ? { ...short, comments: data.comments } : short
         )
       );
-      toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} added!`);
+      setCommentText("");
+      setIsCommenting(false);
     } catch (err) {
-      toast.error("Failed to add reaction: " + err.message);
+      setError(err.message);
     }
   };
 
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+  const handleVideoError = (e, shortId) => {
+    console.error(`Video error for short ${shortId}:`, e);
+    setError(
+      `Failed to load video for short ${shortId}. Check console for details.`
+    );
   };
 
-  // Navigate to hashtag search
-  const handleHashtagClick = (hashtag) => {
-    navigate(`/search?hashtag=${hashtag}`);
+  const handleCloseComment = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsCommenting(false);
   };
 
-  // Navigate to user profile
-  const handleUsernameClick = (username) => {
-    navigate(`/profile/${username}`);
+  const handleOverlayClick = (e) => {
+    if (e.target.className.includes("comment-overlay")) {
+      setIsCommenting(false);
+    }
   };
 
-  // Handle follow action (placeholder)
-  const handleFollow = (username) => {
-    toast.info(`Followed ${username}!`);
-  };
+  if (isLoading && shorts.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black text-white">
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (shorts.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black text-white">
+        <p>No shorts available</p>
+      </div>
+    );
+  }
+
+  const currentShort = shorts[currentIndex];
 
   return (
     <div
-      className={`min-h-screen ${
-        isDarkMode ? "bg-black" : "bg-gray-100"
-      } transition-colors duration-500 font-sans flex flex-col items-center overflow-y-auto snap-y snap-mandatory`}
+      {...handlers}
+      className="h-screen w-screen overflow-hidden relative md:bg-black md:max-w-[390px] md:mx-auto"
     >
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black to-gray-900 text-white">
-        <div className="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-white hover:text-gray-300 transition-colors"
-            aria-label="Back to previous page"
+      <div
+        className="h-full w-full transition-transform duration-300 ease-in-out"
+        style={{ transform: `translateY(-${currentIndex * 100}vh)` }}
+      >
+        {shorts.map((short, index) => (
+          <div
+            key={`${short._id}-${index}`}
+            className="h-screen w-full relative flex items-center justify-center"
           >
-            <svg
-              className="w-7 h-7"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <h1 className="text-xl font-bold">Reels</h1>
-          <button
-            onClick={toggleDarkMode}
-            className="text-white hover:text-gray-300 transition-colors"
-            aria-label={
-              isDarkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {isDarkMode ? (
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                />
-              </svg>
-            )}
-          </button>
-        </div>
-      </header>
-
-      {/* Shorts Feed */}
-      <div className="pt-14 w-full max-w-md overflow-y-auto snap-y snap-mandatory">
-        {shorts.length === 0 ? (
-          <div className="flex items-center justify-center h-screen">
-            <p
-              className={`text-lg ${
-                isDarkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              No reels available. Create one now!
-            </p>
-          </div>
-        ) : (
-          shorts.map((short, index) => (
-            <div
-              key={short._id}
-              className="relative w-full snap-start flex items-center justify-center h-screen"
-            >
-              {/* Video */}
+            <div className="relative w-full h-full">
               <video
                 ref={(el) => (videoRefs.current[index] = el)}
-                data-index={index}
-                src={short.media.url}
+                src={short.videoUrl}
+                autoPlay={index === currentIndex && isPlaying}
                 loop
-                playsInline
                 muted={isMuted}
-                className="w-full h-full object-contain shadow-lg"
-                onClick={(e) => {
-                  togglePlayPause();
-                  handleDoubleTap(short._id);
-                }}
-                onTouchStart={(e) => {
-                  const touch = e.touches[0];
-                  lastTap.current = Date.now();
-                }}
+                className="w-full h-full object-cover"
+                onError={(e) => handleVideoError(e, short._id)}
+                onLoadedData={(e) =>
+                  console.log(
+                    `Video loaded for short ${short._id}:`,
+                    e.target.src
+                  )
+                }
+                playsInline
               />
-
-              {/* Buffering Spinner */}
-              {isBuffering && currentVideoIndex === index && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg
-                    className="w-12 h-12 text-white animate-spin"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                    />
-                  </svg>
-                </div>
-              )}
-
-              {/* Play/Pause/Like Overlay Icon */}
-              {showPlayPauseIcon && currentVideoIndex === index && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-black bg-opacity-50 rounded-full p-4 animate-pop">
-                    {showPlayPauseIcon === "play" ? (
-                      <svg
-                        className="w-12 h-12 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    ) : showPlayPauseIcon === "pause" ? (
-                      <svg
-                        className="w-12 h-12 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M6 4h4v16H6zm8 0h4v16h-4z" />
-                      </svg>
-                    ) : (
-                      <svg
-                        className="w-16 h-16 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                      </svg>
-                    )}
-                  </div>
-                </div>
-              )}
-
               {/* Progress Bar */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-500 bg-opacity-50">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gray-800">
                 <div
-                  className="h-full bg-white transition-all duration-100"
-                  style={{ width: `${progress}%` }}
-                />
+                  className="h-full bg-red-600"
+                  style={{ width: `${index === currentIndex ? progress : 0}%` }}
+                ></div>
               </div>
-
-              {/* Overlay with Info and Controls */}
-              <div className="absolute inset-0 flex flex-col justify-between p-4 pointer-events-none">
-                {/* Top Section: Mute Toggle */}
-                <div className="flex justify-end pointer-events-auto">
-                  <button
-                    onClick={toggleMute}
-                    className="p-2 rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-70 transition-transform transform hover:scale-110"
-                    aria-label={isMuted ? "Unmute video" : "Mute video"}
-                  >
-                    {isMuted ? (
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+              {/* Play/Pause Button */}
+              {index === currentIndex && !isPlaying && (
+                <button
+                  onClick={() => {
+                    const currentVideo = videoRefs.current[currentIndex];
+                    if (currentVideo) {
+                      currentVideo
+                        .play()
+                        .catch((e) => console.error("Play error:", e));
+                      setIsPlaying(true);
+                    }
+                  }}
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-3xl sm:text-3xl bg-black/50 rounded-full p-3 sm:p-4"
+                >
+                  <FaPlay />
+                </button>
+              )}
+              {/* Video Info */}
+              <div className="absolute bottom-0 left-0 w-full p-2 sm:p-4 text-white bg-gradient-to-t from-black/80 to-transparent z-10">
+                <p className="text-[16px] font-medium">
+                  @{short.user?.username || "Unknown"}
+                </p>
+                <p className="text-[16px] mt-1 line-clamp-2">{short.caption}</p>
+              </div>
+              {/* Like, Comment, Share Controls */}
+              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2 sm:space-y-2 z-10">
+                <button
+                  onClick={(e) => handleLike(short._id, e)}
+                  className="flex flex-col items-center justify-center w-10 h-10 rounded-full text-white"
+                  disabled={!userId} // Disable like button if not logged in
+                >
+                  <FaHeart
+                    className={`text-lg sm:text-xl ${
+                      userId && short.likes.some((like) => like._id === userId)
+                        ? "text-red-500"
+                        : ""
+                    }`}
+                  />
+                  <span className="text-xs sm:text-sm ml-0 hidden md:block">
+                    {short.likes.length}
+                  </span>
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (userId) setIsCommenting(true);
+                    else console.warn("User must be logged in to comment.");
+                  }}
+                  className="flex items-center justify-center w-10 h-10 rounded-full text-white"
+                >
+                  <FaComment className="text-lg sm:text-xl" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Add share functionality here if needed
+                  }}
+                  className="flex items-center justify-center w-10 h-10 rounded-full text-white"
+                >
+                  <FaShare className="text-lg sm:text-xl" />
+                </button>
+              </div>
+              {/* Comment Section */}
+              {isCommenting && index === currentIndex && userId && (
+                <div
+                  className="comment-overlay fixed inset-0 bg-black/70 z-30 flex items-end"
+                  onClick={handleOverlayClick}
+                >
+                  <div className="w-full bg-black/90 p-4 rounded-t-lg z-40">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="text-white text-sm font-semibold">
+                        Comments
+                      </h3>
+                      <button
+                        onClick={handleCloseComment}
+                        className="text-white text-xl"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M5.586 5.586a2 2 0 00-2.828 0L3 6l1.414 1.414M12 4v16l-6-3H4a2 2 0 01-2-2V9a2 2 0 012-2h2l6-3zm7 5l-2 2m0 4l2 2"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M12 4v16l-6-3H4a2 2 0 01-2-2V9a2 2 0 012-2h2l6-3z"
-                        />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-
-                {/* Bottom Section: Info with Gradient Overlay */}
-                <div className="relative">
-                  <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black to-transparent pointer-events-none" />
-                  <div className="flex justify-between items-end pointer-events-auto relative">
-                    <div className="text-white max-w-[65%]">
-                      <div className="flex items-center gap-2 mb-1">
-                        <button
-                          onClick={() =>
-                            handleUsernameClick(
-                              short.isAnonymous
-                                ? "anonymous"
-                                : short.author.username
-                            )
-                          }
-                          className="font-bold text-base hover:underline"
-                        >
-                          {short.isAnonymous
-                            ? "anonymous"
-                            : short.author.username}
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleFollow(
-                              short.isAnonymous
-                                ? "anonymous"
-                                : short.author.username
-                            )
-                          }
-                          className="text-sm text-white font-semibold px-2 py-1 rounded-full border border-white hover:bg-white hover:bg-opacity-10 transition-colors"
-                        >
-                          Follow
-                        </button>
-                      </div>
-                      <p className="text-sm font-medium line-clamp-2">
-                        {short.title}
-                      </p>
-                      {short.hashtags && short.hashtags.length > 0 && (
-                        <div className="flex items-center gap-1 mt-1">
-                          <svg
-                            className="w-4 h-4"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 3c-4.95 0-9 4.05-9 9s4.05 9 9 9 9-4.05 9-9-4.05-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zm1-11h-2v3H8v2h3v3h2v-3h3v-2h-3V8z" />
-                          </svg>
-                          <p className="text-sm font-medium truncate">
-                            {short.hashtags
-                              .map((hashtag) => `#${hashtag}`)
-                              .join(" ")}
-                          </p>
-                        </div>
-                      )}
+                        <FaTimes />
+                      </button>
                     </div>
-
-                    {/* Right Section: Reactions and Avatar */}
-                    <div className="flex flex-col items-center gap-3">
+                    <div className="flex items-center bg-gray-800 rounded-full p-1 mb-2">
+                      <input
+                        type="text"
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder="Add a comment..."
+                        className="flex-1 bg-transparent text-white text-sm p-2 outline-none"
+                      />
                       <button
-                        onClick={() => handleReaction(short._id, "like")}
-                        className="flex flex-col items-center text-white hover:text-red-400 transition-transform transform hover:scale-110"
-                        aria-label="Like reel"
+                        onClick={() => handleCommentSubmit(short._id)}
+                        disabled={!commentText.trim()}
+                        className="text-blue-400 text-lg p-2 disabled:opacity-50"
                       >
-                        <svg
-                          className="w-8 h-8"
-                          fill={short.likes.length > 0 ? "red" : "none"}
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
-                          />
-                        </svg>
-                        <span className="text-xs font-medium mt-1">
-                          {short.likes.length}
-                        </span>
+                        <FaPaperPlane />
                       </button>
-                      <button
-                        onClick={() => navigate(`/post/${short._id}`)}
-                        className="flex flex-col items-center text-white hover:text-gray-300 transition-transform transform hover:scale-110"
-                        aria-label="View comments"
-                      >
-                        <svg
-                          className="w-8 h-8"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                          />
-                        </svg>
-                        <span className="text-xs font-medium mt-1">
-                          {short.comments.length}
-                        </span>
-                      </button>
-                      <button
-                        onClick={() => handleReaction(short._id, "share")}
-                        className="flex flex-col items-center text-white hover:text-gray-300 transition-transform transform hover:scale-110"
-                        aria-label="Share reel"
-                      >
-                        <svg
-                          className="w-8 h-8"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-                          />
-                        </svg>
-                        <span className="text-xs font-medium mt-1">
-                          {short.shares.length}
-                        </span>
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleUsernameClick(
-                            short.isAnonymous
-                              ? "anonymous"
-                              : short.author.username
-                          )
-                        }
-                        className="mt-2"
-                        aria-label="View profile"
-                      >
-                        <div className="w-8 h-8 rounded-full bg-gray-500 border-2 border-white">
-                          {/* Placeholder for avatar; replace with actual image if available */}
+                    </div>
+                    <div className="max-h-[40vh] overflow-y-auto text-gray-300 text-sm">
+                      {short.comments.map((comment, idx) => (
+                        <div key={idx} className="flex items-start mb-2">
+                          <div className="w-6 h-6 bg-gray-600 rounded-full mr-2 flex-shrink-0"></div>
+                          <div>
+                            <p className="font-medium text-white">
+                              @{comment.userId || "User"}
+                            </p>
+                            <p className="text-gray-300">{comment.text}</p>
+                          </div>
                         </div>
-                      </button>
+                      ))}
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-          ))
-        )}
+            {/* Navigation Buttons (Left Side, Desktop Only) */}
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-4 hidden md:block z-10">
+              <button
+                onClick={handlePreviousVideo}
+                className="flex items-center justify-center w-12 h-12 bg-black/50 rounded-full text-white disabled:opacity-50"
+                disabled={currentIndex === 0}
+              >
+                <FaArrowUp className="text-2xl" />
+              </button>
+              <button
+                onClick={handleNextVideo}
+                className="flex items-center justify-center w-12 h-12 bg-black/50 rounded-full text-white disabled:opacity-50"
+                disabled={currentIndex === shorts.length - 1}
+              >
+                <FaArrowDown className="text-2xl" />
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-
-      {/* Tailwind Animation and Font Styles */}
-      <style>
-        {`
-          .animate-pop {
-            animation: pop 0.5s ease-out;
-          }
-          @keyframes pop {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); opacity: 0; }
-          }
-          .animate-fade-out {
-            animation: fadeOut 1s forwards;
-          }
-          @keyframes fadeOut {
-            0% { opacity: 1; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-          }
-          .font-sans {
-            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Arial', sans-serif;
-          }
-        `}
-      </style>
+      {isLoading && (
+        <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2">
+          <div className="animate-spin rounded-full h-6 sm:h-8 w-6 sm:w-8 border-t-2 border-white"></div>
+        </div>
+      )}
     </div>
   );
 };

@@ -234,7 +234,7 @@ const ContactUs = () => {
     >
       {/* Sticky Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-md transition-colors duration-500">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <Link to="/" className="flex items-center">
             <img
               src={Logo}
@@ -251,11 +251,11 @@ const ContactUs = () => {
             }
           >
             {isDarkMode ? (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
               </svg>
             ) : (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
               </svg>
             )}
@@ -264,7 +264,7 @@ const ContactUs = () => {
       </header>
 
       {/* Main Content */}
-      <div className="max-w-5xl mx-auto px-4 pt-24 pb-12">
+      <div className="max-w-7xl mx-auto px-4 pt-24 pb-12">
         <div>
           <h1
             className={`text-3xl md:text-4xl font-bold ${
@@ -283,9 +283,64 @@ const ContactUs = () => {
                 isDarkMode ? "text-gray-200" : "text-gray-700"
               } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              Have a question, suggestion, or just want to say hi? We'd love to
-              hear from you! Reach out to us using the form below, and we'll get
-              back to you as soon as possible.
+              We’d love to hear from you! Whether you have feedback, business
+              inquiries, or want to share a story, feel free to reach out using
+              the form below or through our contact details.
+            </p>
+            <p
+              className={`text-base ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              <span className="font-semibold">📬 Contact Information:</span>
+              <ul className="list-disc pl-5 mt-2">
+                <li>
+                  Email:{" "}
+                  <a
+                    href="mailto:gossiphub@gmail.com"
+                    className="text-red-600 hover:underline"
+                  >
+                    gossiphub@gmail.com
+                  </a>
+                </li>
+                <li>
+                  Website:{" "}
+                  <a
+                    href="https://gossiphub.in"
+                    className="text-red-600 hover:underline"
+                  >
+                    gossiphub.in
+                  </a>
+                </li>
+                <li>Business Hours: Monday – Saturday, 10 AM to 6 PM (IST)</li>
+              </ul>
+            </p>
+            <p
+              className={`text-base ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              <span className="font-semibold">🗣 Feedback & Suggestions:</span>{" "}
+              Your opinions help us improve! Share your thoughts, corrections,
+              or ideas — we value every message from our readers.
+            </p>
+            <p
+              className={`text-base ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              <span className="font-semibold">
+                💼 For Business & Partnerships:
+              </span>{" "}
+              Interested in collaborating or advertising with GossipHub? Please
+              write to us at{" "}
+              <a
+                href="mailto:gossiphub@gmail.com?subject=Business%20Inquiry"
+                className="text-red-600 hover:underline"
+              >
+                gossiphub@gmail.com
+              </a>{" "}
+              with “Business Inquiry” in the subject line.
             </p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -360,36 +415,19 @@ const ContactUs = () => {
                 />
               </div>
               <button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 type="submit"
                 className="w-full md:w-auto px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-full hover:bg-red-700 transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 Send Message
               </button>
             </form>
-            <div className="mt-6">
-              <p
-                className={`text-base ${
-                  isDarkMode ? "text-gray-200" : "text-gray-700"
-                } transition-colors duration-500`}
-              >
-                You can also reach us at:{" "}
-                <a
-                  href="mailto:support@gossipphub.com"
-                  className="text-red-600 hover:underline"
-                >
-                  support@gossiphub.com
-                </a>
-              </p>
-            </div>
           </div>
         </div>
       </div>
 
       {/* Footer */}
       <footer className="bg-red-600 text-white py-6 transition-colors duration-500">
-        <div className="max-w-5xl mx-auto px-4 text-center">
+        <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="flex justify-center space-x-4 mb-4">
             <Link
               to="/about"
@@ -408,6 +446,12 @@ const ContactUs = () => {
               className="text-sm text-white hover:underline transition-colors duration-200"
             >
               Contact Us
+            </Link>
+            <Link
+              to="/terms"
+              className="text-sm text-white hover:underline transition-colors duration-200"
+            >
+              Terms & Conditions
             </Link>
           </div>
           <p className="text-sm text-white">

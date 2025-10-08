@@ -5447,13 +5447,14 @@ import {
   HiDocumentText,
   HiChatAlt,
   HiPlus,
-  HiBell,
   HiUser,
   HiSearch,
   HiShare,
   HiFire,
 } from "react-icons/hi";
-import { BsFacebook, BsTwitterX } from "react-icons/bs";
+import { SiYoutubeshorts } from "react-icons/si";
+import { BsTwitterX } from "react-icons/bs";
+import { IoLogoYoutube } from "react-icons/io5";
 import { AiFillInstagram } from "react-icons/ai";
 import { debounce } from "lodash";
 import {
@@ -5478,6 +5479,7 @@ const VideosSection = lazy(() => import("./VideosSection"));
 const SuggestedUsersSection = lazy(() => import("./SuggestedUsersSection"));
 const ReactionStreakSection = lazy(() => import("./ReactionStreakSection"));
 const ReviewsSection = lazy(() => import("./ReviewsSection"));
+const UpcomingMovies = lazy(() => import("./UpcomingMovies"));
 const ActressSection = lazy(() => import("./ActressSection"));
 
 const PostList = () => {
@@ -5492,12 +5494,14 @@ const PostList = () => {
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
+  const [loadingMovies, setLoadingMovies] = useState(false);
+  const [upcomingMovies, setUpcomingMovies] = useState([]);
   const [loadingActressPosts, setLoadingActressPosts] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedHashtag, setSelectedHashtag] = useState("");
   const [categories, setCategories] = useState(["All"]);
   const [page, setPage] = useState(1);
-  const [limit] = useState(5);
+  const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestedUsers, setSuggestedUsers] = useState([]);
@@ -5518,13 +5522,17 @@ const PostList = () => {
     }, 300),
     []
   );
+
   const fetchReviewPosts = useCallback(async () => {
     setLoadingReviews(true);
     try {
-      const reviewPostsRes = await getPostsByCategory("Reviews", {
-        page: 1,
-        limit: 6,
-      });
+      const reviewPostsRes = await getPostsByCategory(
+        "Film Reviews & Trailers",
+        {
+          page: 1,
+          limit: 6,
+        }
+      );
       setReviewPosts(reviewPostsRes.posts || []);
     } catch (err) {
       const message = err.message || "Failed to fetch review posts";
@@ -5533,6 +5541,23 @@ const PostList = () => {
       setLoadingReviews(false);
     }
   }, []);
+
+  const fetchUpcomingMovies = useCallback(async () => {
+    setLoadingMovies(true);
+    try {
+      const moviePostsRes = await getPostsByCategory("Upcoming Movies", {
+        page: 1,
+        limit: 6,
+      });
+      setUpcomingMovies(moviePostsRes.posts || []);
+    } catch (err) {
+      const message = err.message || "Failed to fetch upcoming movies";
+      toast.error(message);
+    } finally {
+      setLoadingMovies(false);
+    }
+  }, []);
+
   const fetchActressPosts = useCallback(async () => {
     setLoadingActressPosts(true);
     try {
@@ -5569,7 +5594,8 @@ const PostList = () => {
   useEffect(() => {
     fetchReviewPosts();
     fetchActressPosts();
-  }, [fetchReviewPosts, fetchActressPosts]);
+    fetchUpcomingMovies();
+  }, [fetchReviewPosts, fetchActressPosts, fetchUpcomingMovies]);
   const fetchPosts = useCallback(
     async (pageToFetch, search = "", isSearch = false) => {
       setLoadingPosts(true);
@@ -6255,11 +6281,12 @@ const PostList = () => {
               >
                 Create Post
               </Link>
+
               <Link
-                to="/notifications"
+                to="/create-short"
                 className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-full hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg"
               >
-                Notifications
+                Create Short
               </Link>
               {isAuthenticated && (
                 <div className="flex items-center space-x-2">
@@ -6933,6 +6960,38 @@ const PostList = () => {
                   </motion.button>
                 </div>
                 <Suspense fallback={<LoadingFallback />}>
+                  {loadingMovies ? (
+                    <motion.section
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                      className="mt-12"
+                    >
+                      <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {[...Array(3)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
+                          >
+                            <div className="w-full h-40 bg-gray-200"></div>
+                            <div className="p-4">
+                              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.section>
+                  ) : (
+                    <UpcomingMovies
+                      upcomingMovies={upcomingMovies}
+                      isDarkMode={isDarkMode}
+                    />
+                  )}
+                </Suspense>
+
+                <Suspense fallback={<LoadingFallback />}>
                   {loadingUsers && suggestedUsers.length === 0 ? (
                     <motion.section
                       initial={{ opacity: 0, y: 20 }}
@@ -7170,15 +7229,15 @@ const PostList = () => {
               rel="noopener noreferrer"
               className="text-white hover:text-gray-200"
             >
-              <BsTwitterX className="text-red-600 text-xl" />
+              <BsTwitterX className="text-white  text-[22px]" />
             </a>
             <a
-              href="https://facebook.com/"
+              href="https://youtube.com/@gossiphub24?si=8-DLFlpQD4OxpEmx"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-gray-200"
             >
-              <BsFacebook className="text-red-600 text-xl" />
+              <IoLogoYoutube className="text-white text-[24px]" />
             </a>
             <a
               href="https://www.instagram.com/gossiphub247?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
@@ -7186,7 +7245,7 @@ const PostList = () => {
               rel="noopener noreferrer"
               className="text-white hover:text-gray-200"
             >
-              <AiFillInstagram className="text-red-600 text-xl" />
+              <AiFillInstagram className="text-white text-[24px]" />
             </a>
           </div>
           <div className="mt-4 flex justify-center space-x-4">
@@ -7198,6 +7257,12 @@ const PostList = () => {
             </Link>
             <Link to="/contact" className="text-sm hover:underline">
               Contact Us
+            </Link>
+            <Link
+              to="/terms"
+              className="text-sm text-white hover:underline transition-colors duration-200"
+            >
+              Terms & Conditions
             </Link>
           </div>
         </div>
@@ -7230,11 +7295,11 @@ const PostList = () => {
           />
         </Link>
         <Link
-          to="/notifications"
+          to="/shorts"
           className="p-1 flex flex-col items-center"
-          aria-label="Notifications"
+          aria-label="Shorts"
         >
-          <HiBell
+          <SiYoutubeshorts
             className={`h-6 w-6 ${
               isDarkMode ? "text-gray-300" : "text-gray-600"
             }`}

@@ -300,6 +300,79 @@ export const getUsers = async () => {
   return handleResponse(response);
 };
 
+// Shorts API functions
+// export const getShorts = async ({ page = 1, limit = 5 } = {}) => {
+//   const query = new URLSearchParams({ page, limit });
+//   const response = await fetch(`${API_URL}/shorts?${query.toString()}`, {
+//     headers: { Authorization: `Bearer ${getToken()}` },
+//   });
+//   return handleResponse(response);
+// };
+export const getShorts = async ({ page = 1, limit = 5, authorId } = {}) => {
+  const query = new URLSearchParams({ page, limit });
+  if (authorId) query.append("authorId", authorId);
+  const response = await fetch(`${API_URL}/shorts?${query.toString()}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return handleResponse(response);
+};
+
+export const getShortById = async (shortId) => {
+  const response = await fetch(`${API_URL}/shorts/${shortId}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return handleResponse(response);
+};
+
+export const createShort = async (data) => {
+  const response = await fetch(`${API_URL}/shorts`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${getToken()}` },
+    body: data, // FormData for file upload
+  });
+  return handleResponse(response);
+};
+
+export const updateShort = async (shortId, data) => {
+  const response = await fetch(`${API_URL}/shorts/${shortId}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${getToken()}` },
+    body: data, // FormData for file upload or JSON for caption
+  });
+  return handleResponse(response);
+};
+
+export const deleteShort = async (shortId) => {
+  const response = await fetch(`${API_URL}/shorts/${shortId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  return handleResponse(response);
+};
+
+export const toggleShortLike = async (shortId) => {
+  const response = await fetch(`${API_URL}/shorts/${shortId}/like`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  return handleResponse(response);
+};
+
+export const addShortComment = async (shortId, data) => {
+  const response = await fetch(`${API_URL}/shorts/${shortId}/comment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
 // Chat APIs
 export const createChatRoom = async (data) => {
   const response = await fetch(`${API_URL}/chat/room`, {

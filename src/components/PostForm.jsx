@@ -1750,24 +1750,26 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                 aria-label="Post category"
               >
                 <option value="General">General</option>
-                <option value="Humor">Humor</option>
-                <option value="News">News</option>
-                <option value="Technology">Technology</option>
-                <option value="Jobs">Jobs</option>
-                <option value="Reviews">Reviews</option>
-                <option value="Movie Gossips">Movie</option>
-                <option value="Celebrity Gossips">Celebrity</option>
-                <option value="Personal Life Gossips">Personal Life</option>
-                <option value="Office Gossips">Office</option>
-                <option value="College Gossips">College</option>
-                <option value="School Gossips">School</option>
-                <option value="Music and Dance">Music and Dance</option>
-                <option value="Industry Gossips">Industry</option>
+                <option value="Tech News">Tech News</option>
+                <option value="Film Reviews & Trailers">
+                  Film Reviews & Trailers
+                </option>
+                <option value="Entertainment News">Entertainment News</option>
+                <option value="Celebrity News">Celebrity News</option>
+                <option value="Tollywood">Tollywood</option>
+                <option value="Bollywood">Bollywood</option>
+                <option value="Kollywood">Kollywood</option>
+                <option value="Mollywood">Mollywood</option>
+                <option value="Hollywood">Hollywood</option>
+                <option value="Upcoming Movies">Upcoming Movies</option>
+                <option value="Music & Soundtracks">Music & Soundtracks</option>
+                <option value="TV & Web Series">TV & Web Series</option>
+                <option value="Awards & Events">Awards & Events</option>
+                <option value="Lifestyle & Fashion">Lifestyle & Fashion</option>
                 <option value="Sports">Sports</option>
-                <option value="Social Media">Social Media</option>
-                <option value="Entertainment">Entertainment</option>
+                <option value="Interviews">Interviews</option>
                 <option value="Political">Political</option>
-                <option value="International">International</option>
+                <option value="Global News">Global News</option>
                 <option value="Actress">Actress</option>
               </select>
             </div>

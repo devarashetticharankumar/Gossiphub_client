@@ -20718,6 +20718,10 @@ import {
   HiVolumeUp,
   HiVolumeOff,
 } from "react-icons/hi";
+import { BsTwitterX } from "react-icons/bs";
+import { IoLogoYoutube } from "react-icons/io5";
+import { AiFillInstagram } from "react-icons/ai";
+
 import { FaComment } from "react-icons/fa";
 import {
   getPosts,
@@ -21908,7 +21912,7 @@ const PostDetails = () => {
                       } rounded-full transition-colors`}
                       aria-label={`View posts with hashtag ${tag}`}
                     >
-                      #{tag}
+                      {tag}
                     </Link>
                   ))}
                 </div>
@@ -22723,6 +22727,61 @@ const PostDetails = () => {
           </Suspense>
         </div>
       </div>
+      <footer
+        className={`${
+          isDarkMode ? "bg-gray-900" : "bg-gray-800"
+        } text-white py-6 transition-colors duration-500`}
+      >
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-sm">
+            &copy; {new Date().getFullYear()} GossipHub. All rights reserved.
+          </p>
+          <div className="mt-4 flex justify-center space-x-4">
+            <a
+              href="https://x.com/Charankumar2580"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-gray-200"
+            >
+              <BsTwitterX className="text-white text-[22px]" />
+            </a>
+            <a
+              href="https://youtube.com/@gossiphub24?si=8-DLFlpQD4OxpEmx"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-gray-200"
+            >
+              <IoLogoYoutube className="text-white text-[24px]" />
+            </a>
+            <a
+              href="https://www.instagram.com/gossiphub247?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-gray-200"
+            >
+              <AiFillInstagram className="text-white text-[24px]" />
+            </a>
+          </div>
+          <div className="mt-4 flex justify-center space-x-4">
+            <Link to="/about" className="text-sm hover:underline">
+              About Us
+            </Link>
+            <Link to="/privacy" className="text-sm hover:underline">
+              Privacy Policy
+            </Link>
+            <Link to="/contact" className="text-sm hover:underline">
+              Contact Us
+            </Link>
+            <Link
+              to="/terms"
+              className="text-sm text-white hover:underline transition-colors duration-200"
+            >
+              Terms & Conditions
+            </Link>
+          </div>
+        </div>
+      </footer>
+
       {/* Floating Comment Button for Mobile */}
       <motion.button
         onClick={scrollToCommentInput}

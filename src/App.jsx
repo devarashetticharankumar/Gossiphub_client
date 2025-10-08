@@ -15,6 +15,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import UserProfile from "./components/UserProfile";
 import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
+import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PublicUserProfile from "./components/PublicUserProfile";
 // import ChatContainer from "./components/ChatContainer";
@@ -22,6 +23,9 @@ import PublicUserProfile from "./components/PublicUserProfile";
 import UpdatePostForm from "./components/UpdatePostForm";
 import StoryZone from "./components/StoryZone"; // Import the new component
 import HashtagPosts from "./components/HashtagPosts";
+import ShortsFeed from "./components/ShortsFeed";
+import ShortVideoForm from "./components/ShortVideoForm";
+import ShortVideoUpdateForm from "./components/ShortVideoUpdateForm";
 
 function App() {
   return (
@@ -34,11 +38,12 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/profile/:userId" element={<PublicUserProfile />} />
-
-        {/* <Route path="/shorts" element={<ShortsFeed />} /> */}
+        <Route path="/shorts/:Id" element={<ShortsFeed />} />
+        <Route path="/shorts/" element={<ShortsFeed />} />
 
         <Route
           path="/create-post"
@@ -48,12 +53,28 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/create-short"
+          element={
+            <ProtectedRoute>
+              <ShortVideoForm />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/stories" element={<StoryZone />} />
         <Route
           path="/posts/:postId/edit"
           element={
             <ProtectedRoute>
               <UpdatePostForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/shorts/:shortId/edit"
+          element={
+            <ProtectedRoute>
+              <ShortVideoUpdateForm />
             </ProtectedRoute>
           }
         />

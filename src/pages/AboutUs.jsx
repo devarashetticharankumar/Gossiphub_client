@@ -208,11 +208,12 @@ const AboutUs = () => {
               } mb-4 leading-relaxed transition-colors duration-500`}
             >
               Welcome to{" "}
-              <span className="font-semibold text-red-600">GossipHub</span>, the
-              ultimate platform for sharing and discovering the juiciest gossip,
-              stories, and conversations! We are a vibrant community where users
-              can spill the tea, engage in lively discussions, and stay updated
-              on trending topics.
+              <span className="font-semibold text-red-600">GossipHub</span> —
+              Your Daily Dose of Entertainment! At GossipHub, we bring you the
+              latest and most exciting stories from the world of entertainment,
+              cinema, and lifestyle. From Tollywood and Bollywood updates to
+              viral social media trends, GossipHub is your one-stop destination
+              for reliable, engaging, and fast entertainment news.
             </p>
             <p
               className={`text-base ${
@@ -221,20 +222,70 @@ const AboutUs = () => {
             >
               Founded in 2024, GossipHub was created to provide a fun, safe, and
               engaging space for people to connect over shared interests and
-              stories. Whether you're here to share a hot rumor, read about the
-              latest buzz, or simply enjoy some entertaining content, we've got
-              you covered.
+              stories. We aim to keep our readers informed and entertained with
+              factual updates, thoughtful opinions, and fun insights — all in a
+              simple, reader-friendly style.
             </p>
             <p
               className={`text-base ${
                 isDarkMode ? "text-gray-200" : "text-gray-700"
               } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              Our mission is to foster a community where everyone can express
-              themselves freely while maintaining respect and authenticity. We
-              value user privacy and ensure that you can share anonymously if
-              you choose to. Join us today and become part of the GossipHub
-              family!
+              <span className="font-semibold">What We Cover:</span>
+              <ul className="list-disc pl-5 mt-2">
+                <li>🎬 Movie News & Updates</li>
+                <li>🌟 Celebrity Buzz & Gossip</li>
+                <li>📰 Industry Insights & Interviews</li>
+                <li>⚡ Trending Stories & Viral News</li>
+              </ul>
+            </p>
+            <p
+              className={`text-base ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              Our content is created with care by a small team of passionate
+              entertainment enthusiasts who believe in quality journalism and
+              responsible reporting. We focus on authenticity, creativity, and
+              user experience, ensuring that our readers get only the best.
+            </p>
+            <p
+              className={`text-base ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              <span className="font-semibold">Our Mission:</span> To become
+              India’s most trusted source for entertainment news — delivering
+              stories that matter, inspire, and entertain millions every day. If
+              you love cinema, celebrity stories, and trending culture — you’re
+              at the right place!
+            </p>
+            <p
+              className={`text-base ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              <span className="font-semibold">Get in Touch:</span>
+              <ul className="list-disc pl-5 mt-2">
+                <li>
+                  📍 Website:{" "}
+                  <a
+                    href="https://gossiphub.in"
+                    className="text-red-600 hover:underline"
+                  >
+                    gossiphub.in
+                  </a>
+                </li>
+                <li>
+                  📧 Email:{" "}
+                  <a
+                    href="mailto:gossiphub@gmail.com"
+                    className="text-red-600 hover:underline"
+                  >
+                    gossiphub@gmail.com
+                  </a>
+                </li>
+              </ul>
             </p>
             <div className="mt-6">
               <Link
@@ -260,6 +311,12 @@ const AboutUs = () => {
             </Link>
             <Link to="/contact" className="text-sm hover:underline">
               Contact Us
+            </Link>
+            <Link
+              to="/terms"
+              className="text-sm text-white hover:underline transition-colors duration-200"
+            >
+              Terms & Conditions
             </Link>
           </div>
           <p className="text-sm">© 2025 GossipHub. All rights reserved.</p>
