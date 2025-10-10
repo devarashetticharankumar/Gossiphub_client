@@ -4,14 +4,14 @@ import { motion } from "framer-motion";
 const ReviewsSection = ({ reviewPosts, isDarkMode }) => {
   return (
     <motion.section
-      className="bg-gray-500 p-5 rounded-xl"
+      className={`${isDarkMode ? "bg-gray-500" : "bg-gray-200"} p-5 rounded-xl`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.5 }}
     >
       <h2
         className={`text-2xl font-bold mb-4 ${
-          isDarkMode ? "text-gray-100" : "text-white"
+          isDarkMode ? "text-white" : "text-black"
         } flex items-center`}
       >
         <span className="mr-2">📝</span> Film Reviews & Trailers

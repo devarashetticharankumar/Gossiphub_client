@@ -26,6 +26,7 @@ import HashtagPosts from "./components/HashtagPosts";
 import ShortsFeed from "./components/ShortsFeed";
 import ShortVideoForm from "./components/ShortVideoForm";
 import ShortVideoUpdateForm from "./components/ShortVideoUpdateForm";
+// import CategoryPosts from "./components/CategoryPosts";
 
 function App() {
   return (
@@ -81,6 +82,7 @@ function App() {
 
         <Route path="/posts/:postId" element={<PostDetails />} />
         <Route path="/posts/hashtag/:hashtag" element={<HashtagPosts />} />
+        {/* <Route path="/posts/category/:category" element={<CategoryPosts />} /> */}
 
         <Route
           path="/admin"

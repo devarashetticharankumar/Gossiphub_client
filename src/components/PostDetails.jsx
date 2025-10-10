@@ -21899,6 +21899,41 @@ const PostDetails = () => {
                 )}
               </div>
               {/* Hashtags Section */}
+              {/* {post.hashtags?.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {post.hashtags.map((tag, index) => (
+                    <Link
+                      key={index}
+                      to={`/posts/hashtag/${encodeURIComponent(tag)}`}
+                      className={`px-3 py-1 text-xs font-medium ${
+                        isDarkMode
+                          ? "text-gray-300 bg-red-800 hover:bg-red-700"
+                          : "text-red-700 bg-red-200 hover:bg-red-300"
+                      } rounded-full transition-colors`}
+                      aria-label={`View posts with hashtag ${tag}`}
+                    >
+                      {tag}
+                    </Link>
+                  ))}
+                </div>
+              )} */}
+
+              {/* Category Display */}
+              {/* {post.category && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <span
+                    className={`px-3 py-1 text-xs font-medium ${
+                      isDarkMode
+                        ? "text-gray-300 bg-gray-800"
+                        : "text-gray-700 bg-gray-200"
+                    } rounded-full`}
+                  >
+                    {post.category}
+                  </span>
+                </div>
+              )} */}
+
+              {/* Hashtags Section */}
               {post.hashtags?.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-6">
                   {post.hashtags.map((tag, index) => (
@@ -21917,20 +21952,24 @@ const PostDetails = () => {
                   ))}
                 </div>
               )}
-              {/* Category Display */}
+
+              {/* Category Section */}
               {post.category && (
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <span
+                  <Link
+                    to={`/posts/category/${encodeURIComponent(post.category)}`}
                     className={`px-3 py-1 text-xs font-medium ${
                       isDarkMode
-                        ? "text-gray-300 bg-gray-800"
-                        : "text-gray-700 bg-gray-200"
-                    } rounded-full`}
+                        ? "text-gray-300 bg-red-800 hover:bg-red-700"
+                        : "text-red-700 bg-red-200 hover:bg-red-300"
+                    } rounded-full transition-colors`}
+                    aria-label={`View posts in category ${post.category}`}
                   >
                     {post.category}
-                  </span>
+                  </Link>
                 </div>
               )}
+
               {isAuthenticated && (
                 <motion.div
                   className="mb-6 p-4 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg text-white shadow-md"

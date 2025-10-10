@@ -5481,6 +5481,7 @@ const ReactionStreakSection = lazy(() => import("./ReactionStreakSection"));
 const ReviewsSection = lazy(() => import("./ReviewsSection"));
 const UpcomingMovies = lazy(() => import("./UpcomingMovies"));
 const ActressSection = lazy(() => import("./ActressSection"));
+const PopularSection = lazy(() => import("./PopularSection"));
 
 const PostList = () => {
   const navigate = useNavigate();
@@ -5513,6 +5514,9 @@ const PostList = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const isAuthenticated = !!localStorage.getItem("token");
   const headerRef = useRef(null);
+  const [popularPosts, setPopularPosts] = useState([]);
+  const [loadingPopular, setLoadingPopular] = useState(false);
+
   // Cache for user-related data to avoid refetching on pagination
   const userCache = useRef({ user: null, allUsers: [], suggestedUsers: [] });
   // Debounced fetchPosts for search only
@@ -5539,6 +5543,39 @@ const PostList = () => {
       toast.error(message);
     } finally {
       setLoadingReviews(false);
+    }
+  }, []);
+
+  const fetchPopularPosts = useCallback(async () => {
+    setLoadingPopular(true);
+    try {
+      const tollywoodPosts = await getPostsByCategory("Tollywood", {
+        page: 1,
+        limit: 3,
+      });
+      const bollywoodPosts = await getPostsByCategory("Bollywood", {
+        page: 1,
+        limit: 3,
+      });
+      const kollywoodPosts = await getPostsByCategory("Kollywood", {
+        page: 1,
+        limit: 3,
+      });
+      const HollywoodPosts = await getPostsByCategory("Hollywood", {
+        page: 1,
+        limit: 3,
+      });
+      setPopularPosts([
+        ...(tollywoodPosts.posts || []),
+        ...(bollywoodPosts.posts || []),
+        ...(kollywoodPosts.posts || []),
+        ...(HollywoodPosts.posts || []),
+      ]);
+    } catch (err) {
+      const message = err.message || "Failed to fetch popular posts";
+      toast.error(message);
+    } finally {
+      setLoadingPopular(false);
     }
   }, []);
 
@@ -5595,7 +5632,13 @@ const PostList = () => {
     fetchReviewPosts();
     fetchActressPosts();
     fetchUpcomingMovies();
-  }, [fetchReviewPosts, fetchActressPosts, fetchUpcomingMovies]);
+    fetchPopularPosts();
+  }, [
+    fetchReviewPosts,
+    fetchActressPosts,
+    fetchUpcomingMovies,
+    fetchPopularPosts,
+  ]);
   const fetchPosts = useCallback(
     async (pageToFetch, search = "", isSearch = false) => {
       setLoadingPosts(true);
@@ -7086,6 +7129,37 @@ const PostList = () => {
                   )}
                 </Suspense>
                 <Suspense fallback={<LoadingFallback />}>
+                  {loadingPopular ? (
+                    <motion.section
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                      className="mt-12"
+                    >
+                      <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {[...Array(3)].map((_, index) => (
+                          <div
+                            key={index}
+                            className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
+                          >
+                            <div className="w-full h-40 bg-gray-200"></div>
+                            <div className="p-4">
+                              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.section>
+                  ) : (
+                    <PopularSection
+                      popularPosts={popularPosts}
+                      isDarkMode={isDarkMode}
+                    />
+                  )}
+                </Suspense>
+                <Suspense fallback={<LoadingFallback />}>
                   {loadingPosts && posts.length === 0 ? (
                     <motion.section
                       initial={{ opacity: 0, y: 20 }}
@@ -7149,6 +7223,35 @@ const PostList = () => {
             )}
           </div>
           <div className="md:w-1/3 space-y-6 md:sticky md:top-36 md:h-[calc(100vh-144px)] md:overflow-y-auto scrollbar-hide">
+            <section
+              className={`${
+                isDarkMode ? "bg-gray-800" : "bg-white"
+              } p-4 rounded-xl mt-6`}
+            >
+              <h2 className="text-xl font-semibold mb-2 text-red-600">
+                What is GossipHub?
+              </h2>
+              <p
+                className={`${
+                  isDarkMode ? "text-white" : "text-black"
+                }text-white leading-relaxed`}
+              >
+                GossipHub is your ultimate entertainment news destination —
+                bringing you the latest updates from Tollywood, Bollywood, and
+                beyond! From movie reviews, celebrity news, and exclusive
+                interviews to trending gossip and film ratings, we keep you
+                connected with everything happening in the world of cinema.
+              </p>
+              <p
+                className={`${
+                  isDarkMode ? "text-white" : "text-black"
+                } leading-relaxed mt-2}`}
+              >
+                Our goal is to deliver fast, reliable, and engaging stories that
+                fans love to read — all in one place. Stay tuned to GossipHub
+                for your daily dose of entertainment buzz!
+              </p>
+            </section>
             <Suspense fallback={<LoadingFallback />}>
               {isAuthenticated && (
                 <ReactionStreakSection user={user} isDarkMode={isDarkMode} />
