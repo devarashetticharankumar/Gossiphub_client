@@ -7234,7 +7234,7 @@ const PostList = () => {
               <p
                 className={`${
                   isDarkMode ? "text-white" : "text-black"
-                }text-white leading-relaxed`}
+                } leading-relaxed`}
               >
                 GossipHub is your ultimate entertainment news destination —
                 bringing you the latest updates from Tollywood, Bollywood, and
