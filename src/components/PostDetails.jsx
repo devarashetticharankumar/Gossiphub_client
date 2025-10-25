@@ -21956,17 +21956,16 @@ const PostDetails = () => {
               {/* Category Section */}
               {post.category && (
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <Link
-                    to={`/posts/category/${encodeURIComponent(post.category)}`}
+                  <div
                     className={`px-3 py-1 text-xs font-medium ${
                       isDarkMode
-                        ? "text-gray-300 bg-red-800 hover:bg-red-700"
-                        : "text-red-700 bg-red-200 hover:bg-red-300"
+                        ? "text-gray-300 bg-gray-800 hover:bg-gray-700"
+                        : "text-gray-700 bg-gray-100 hover:bg-gray-300"
                     } rounded-full transition-colors`}
                     aria-label={`View posts in category ${post.category}`}
                   >
                     {post.category}
-                  </Link>
+                  </div>
                 </div>
               )}
 

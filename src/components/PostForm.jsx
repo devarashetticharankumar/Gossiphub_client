@@ -1769,6 +1769,7 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                 <option value="Sports">Sports</option>
                 <option value="Interviews">Interviews</option>
                 <option value="Political">Political</option>
+                <option value="News">News</option>
                 <option value="Global News">Global News</option>
                 <option value="Actress">Actress</option>
               </select>
