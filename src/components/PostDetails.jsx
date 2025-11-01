@@ -21662,6 +21662,15 @@ const PostDetails = () => {
     window.open(linkedinUrl, "_blank", "noopener,noreferrer");
   };
 
+  const handleSharePinterest = () => {
+    const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(
+      postUrl
+    )}&media=${encodeURIComponent(shareImage)}&description=${encodeURIComponent(
+      postTitle
+    )}`;
+    window.open(pinterestUrl, "_blank", "noopener,noreferrer");
+  };
+
   // Fallback UI for lazy-loaded components
   const LoadingFallback = () => (
     <div className="flex justify-center items-center py-8">
@@ -22759,6 +22768,7 @@ const PostDetails = () => {
               handleShareFacebook={handleShareFacebook}
               handleShareTelegram={handleShareTelegram}
               handleShareLinkedin={handleShareLinkedin}
+              handleSharePinterest={handleSharePinterest}
               isCopied={isCopied}
               isDarkMode={isDarkMode}
             />

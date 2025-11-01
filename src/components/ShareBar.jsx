@@ -7,6 +7,7 @@ import {
   FaTelegram,
   FaLinkedin,
   FaLink,
+  FaPinterest,
 } from "react-icons/fa";
 
 const ShareBar = ({
@@ -16,6 +17,7 @@ const ShareBar = ({
   handleShareFacebook,
   handleShareTelegram,
   handleShareLinkedin,
+  handleSharePinterest, // Add prop
   handleCopyLink,
   isCopied,
   isDarkMode,
@@ -83,6 +85,16 @@ const ShareBar = ({
         aria-label="Share on LinkedIn"
       >
         <FaLinkedin className="h-4 w-4" />
+      </motion.button>
+      {/* Pinterest - NEW */}
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={handleSharePinterest}
+        className="p-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+        aria-label="Share on Pinterest"
+      >
+        <FaPinterest className="h-4 w-4" />
       </motion.button>
       <motion.button
         whileHover={{ scale: 1.1, border: "2px solid #16a34a" }}
