@@ -22848,6 +22848,7 @@
 
 // export default PostDetails;
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import {
   useState,
   useEffect,
@@ -22915,30 +22916,17 @@ const estimateReadTime = (text) => {
   return minutes === 0 ? "Less than a minute" : `${minutes} min read`;
 };
 
-// Updated Utility to format hashtags exactly as requested
+// Dynamic Utility to format hashtags: splits camelCase or PascalCase into words with proper capitalization
 const formatHashtag = (tag) => {
   const cleaned = tag.replace(/^#/, "").trim();
-  const specialMap = {
-    rakulpreetsingh: "Rakul Preet Singh",
-    dedepyaar2: "De De Pyaar2",
-    thighhighslit: "Thigh High Slit",
-    bollywoodfashion: "Bollywood Fashion",
-    bollywoodactress: "Bollywood Actress",
-    celebritystyle: "Celebrity Style",
-    photoshoot: "Photoshoot",
-    fashionicon: "Fashion Icon",
-    internetstuns: "Internet Stuns",
-    rakulglam: "Rakul Glam",
-  };
-  const lower = cleaned.toLowerCase();
-  if (specialMap[lower]) {
-    return specialMap[lower];
-  }
-  // Fallback to general camelCase splitting
-  return cleaned
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (str) => str.toUpperCase())
-    .trim();
+  if (!cleaned) return "";
+  // Insert space before each uppercase letter (except first if it's the start), and handle numbers/acronyms gracefully
+  let spaced = cleaned.replace(/([A-Z0-9])/g, " $1").trim();
+  // Capitalize first letter
+  spaced = spaced.charAt(0).toUpperCase() + spaced.slice(1);
+  // Handle cases like "Pyaar2" -> "Pyaar 2"
+  spaced = spaced.replace(/(\d+)/g, " $1");
+  return spaced.trim();
 };
 
 // ImageCarousel Component
@@ -23592,7 +23580,7 @@ const PostDetails = () => {
     : postMedia;
   const shareImage = isVideo ? videoThumbnail : postMedia;
 
-  // Updated keywords with formatted hashtags using the new formatHashtag
+  // Updated keywords with formatted hashtags using the dynamic formatHashtag
   const rawKeywords = post?.hashtags
     ? [
         ...post.hashtags.map((tag) => formatHashtag(tag)),
@@ -24038,7 +24026,7 @@ const PostDetails = () => {
                   />
                 )}
               </div>
-              {/* Hashtags Section - Updated to use formatHashtag */}
+              {/* Hashtags Section - Now uses dynamic formatHashtag */}
               {post.hashtags?.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-6">
                   {post.hashtags.map((tag, index) => (
@@ -24406,6 +24394,7 @@ const PostDetails = () => {
                         <Comment
                           key={c._id}
                           comment={{ ...c, isPopular: true }}
+                          handleCommentReaction={handleCommentReaction}
                           handleCommentReaction={handleCommentReaction}
                           isCommentReacting={isCommentReacting}
                           userId={userId}
