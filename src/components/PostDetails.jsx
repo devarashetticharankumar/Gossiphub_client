@@ -22917,15 +22917,44 @@ const estimateReadTime = (text) => {
 };
 
 // Dynamic Utility to format hashtags: splits camelCase or PascalCase into words with proper capitalization
+// const formatHashtag = (tag) => {
+//   const cleaned = tag.replace(/^#/, "").trim();
+//   if (!cleaned) return "";
+//   // Insert space before each uppercase letter (except first if it's the start), and handle numbers/acronyms gracefully
+//   let spaced = cleaned.replace(/([A-Z0-9])/g, " $1").trim();
+//   // Capitalize first letter
+//   spaced = spaced.charAt(0).toUpperCase() + spaced.slice(1);
+//   // Handle cases like "Pyaar2" -> "Pyaar 2"
+//   spaced = spaced.replace(/(\d+)/g, " $1");
+//   return spaced.trim();
+// };
 const formatHashtag = (tag) => {
-  const cleaned = tag.replace(/^#/, "").trim();
+  if (!tag) return "";
+  // Remove '#' and trim spaces
+  let cleaned = tag.replace(/^#/, "").trim();
   if (!cleaned) return "";
-  // Insert space before each uppercase letter (except first if it's the start), and handle numbers/acronyms gracefully
-  let spaced = cleaned.replace(/([A-Z0-9])/g, " $1").trim();
-  // Capitalize first letter
-  spaced = spaced.charAt(0).toUpperCase() + spaced.slice(1);
-  // Handle cases like "Pyaar2" -> "Pyaar 2"
+
+  // Handle CamelCase: add space before uppercase or number
+  let spaced = cleaned.replace(/([a-z])([A-Z0-9])/g, "$1 $2");
+
+  // If it's all lowercase (like bollywoodactress), try to split on word clusters
+  if (spaced.toLowerCase() === spaced) {
+    // Try to detect common word boundaries (basic dictionary pattern)
+    spaced = spaced
+      .replace(/([a-z]{3,})([A-Z]?)/g, "$1 ")
+      .trim()
+      .replace(/\s+/g, " ");
+  }
+
+  // Add space before numbers (e.g., "Pyaar2" → "Pyaar 2")
   spaced = spaced.replace(/(\d+)/g, " $1");
+
+  // Title Case every word
+  spaced = spaced
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+
   return spaced.trim();
 };
 
