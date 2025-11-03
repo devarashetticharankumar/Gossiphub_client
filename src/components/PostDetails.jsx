@@ -22848,7 +22848,6 @@
 
 // export default PostDetails;
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import {
   useState,
   useEffect,
@@ -22916,12 +22915,29 @@ const estimateReadTime = (text) => {
   return minutes === 0 ? "Less than a minute" : `${minutes} min read`;
 };
 
-// Utility to format hashtags for meta keywords (e.g., #rakulpreetsingh → Rakul Preet Singh)
+// Updated Utility to format hashtags exactly as requested
 const formatHashtag = (tag) => {
   const cleaned = tag.replace(/^#/, "").trim();
+  const specialMap = {
+    rakulpreetsingh: "Rakul Preet Singh",
+    dedepyaar2: "De De Pyaar2",
+    thighhighslit: "Thigh High Slit",
+    bollywoodfashion: "Bollywood Fashion",
+    bollywoodactress: "Bollywood Actress",
+    celebritystyle: "Celebrity Style",
+    photoshoot: "Photoshoot",
+    fashionicon: "Fashion Icon",
+    internetstuns: "Internet Stuns",
+    rakulglam: "Rakul Glam",
+  };
+  const lower = cleaned.toLowerCase();
+  if (specialMap[lower]) {
+    return specialMap[lower];
+  }
+  // Fallback to general camelCase splitting
   return cleaned
-    .replace(/([A-Z])/g, " $1") // Insert space before each capital letter
-    .replace(/^./, (str) => str.toUpperCase()) // Capitalize first letter
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (str) => str.toUpperCase())
     .trim();
 };
 
@@ -23576,7 +23592,7 @@ const PostDetails = () => {
     : postMedia;
   const shareImage = isVideo ? videoThumbnail : postMedia;
 
-  // Updated keywords with formatted hashtags
+  // Updated keywords with formatted hashtags using the new formatHashtag
   const rawKeywords = post?.hashtags
     ? [
         ...post.hashtags.map((tag) => formatHashtag(tag)),
@@ -24022,7 +24038,7 @@ const PostDetails = () => {
                   />
                 )}
               </div>
-              {/* Hashtags Section */}
+              {/* Hashtags Section - Updated to use formatHashtag */}
               {post.hashtags?.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-6">
                   {post.hashtags.map((tag, index) => (
@@ -24036,7 +24052,7 @@ const PostDetails = () => {
                       } rounded-full transition-colors`}
                       aria-label={`View posts with hashtag ${tag}`}
                     >
-                      {tag}
+                      {formatHashtag(tag)}
                     </Link>
                   ))}
                 </div>
@@ -24557,7 +24573,7 @@ const PostDetails = () => {
                                     : "text-gray-500 hover:text-red-600"
                                 }`}
                               >
-                                #{tag}
+                                #{formatHashtag(tag)}
                               </Link>
                             ))}
                           </div>
