@@ -382,7 +382,7 @@ const PrivacyPolicy = () => {
                     : "text-red-600 hover:text-red-700"
                 } hover:underline transition-colors duration-200`}
               >
-                gossiphub@gmail.com
+                gossipphub@gmail.com
               </a>
               .
             </p>
@@ -417,7 +417,7 @@ const PrivacyPolicy = () => {
                     : "text-red-600 hover:text-red-700"
                 } hover:underline transition-colors duration-200`}
               >
-                gossiphub@gmail.com
+                gossipphub@gmail.com
               </a>
               .
             </p>

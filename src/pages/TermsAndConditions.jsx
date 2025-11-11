@@ -263,7 +263,7 @@ const TermsAndConditions = () => {
                     href="mailto:gossiphub@gmail.com"
                     className="text-red-600 hover:underline"
                   >
-                    gossiphub@gmail.com
+                    gossipphub@gmail.com
                   </a>
                 </li>
               </ul>

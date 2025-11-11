@@ -187,9 +187,290 @@
 
 // export default ContactUs;
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// import { useState, useEffect } from "react";
+// import { Link } from "react-router-dom";
+// import { toast } from "react-toastify";
+// import Logo from "../assets/GossippHublogo.svg";
+
+// const ContactUs = () => {
+//   const [isDarkMode, setIsDarkMode] = useState(false);
+//   const [formData, setFormData] = useState({
+//     name: "",
+//     email: "",
+//     message: "",
+//   });
+
+//   // Persistent dark mode
+//   useEffect(() => {
+//     const saved = localStorage.getItem("darkMode");
+//     if (saved) setIsDarkMode(JSON.parse(saved));
+//   }, []);
+
+//   useEffect(() => {
+//     localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
+//   }, [isDarkMode]);
+
+//   const toggleDarkMode = () => {
+//     setIsDarkMode(!isDarkMode);
+//   };
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData((prev) => ({ ...prev, [name]: value }));
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     // Placeholder for form submission logic
+//     toast.success("Message sent! We'll get back to you soon.");
+//     setFormData({ name: "", email: "", message: "" });
+//   };
+
+//   return (
+//     <div
+//       className={`min-h-screen ${
+//         isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
+//       } transition-colors duration-500 font-sans antialiased`}
+//     >
+//       {/* Sticky Header */}
+//       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-md transition-colors duration-500">
+//         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+//           <Link to="/" className="flex items-center">
+//             <img
+//               src={Logo}
+//               alt="GossippHub Logo"
+//               className="h-10 rounded-md"
+//               aria-label="GossippHub Home"
+//             />
+//           </Link>
+//           <button
+//             onClick={toggleDarkMode}
+//             className="p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-200"
+//             aria-label={
+//               isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+//             }
+//           >
+//             {isDarkMode ? (
+//               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+//                 <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
+//               </svg>
+//             ) : (
+//               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+//                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+//               </svg>
+//             )}
+//           </button>
+//         </div>
+//       </header>
+
+//       {/* Main Content */}
+//       <div className="max-w-7xl mx-auto px-4 pt-24 pb-12">
+//         <div>
+//           <h1
+//             className={`text-3xl md:text-4xl font-bold ${
+//               isDarkMode ? "text-gray-100" : "text-gray-900"
+//             } mb-6 transition-colors duration-500`}
+//           >
+//             Contact Us
+//           </h1>
+//           <div
+//             className={`${
+//               isDarkMode ? "bg-gray-900" : "bg-white"
+//             } rounded-2xl p-6 shadow-xl transition-colors duration-500`}
+//           >
+//             <p
+//               className={`text-base ${
+//                 isDarkMode ? "text-gray-200" : "text-gray-700"
+//               } mb-4 leading-relaxed transition-colors duration-500`}
+//             >
+//               We’d love to hear from you! Whether you have feedback, business
+//               inquiries, or want to share a story, feel free to reach out using
+//               the form below or through our contact details.
+//             </p>
+//             <p
+//               className={`text-base ${
+//                 isDarkMode ? "text-gray-200" : "text-gray-700"
+//               } mb-4 leading-relaxed transition-colors duration-500`}
+//             >
+//               <span className="font-semibold">📬 Contact Information:</span>
+//               <ul className="list-disc pl-5 mt-2">
+//                 <li>
+//                   Email:{" "}
+//                   <a
+//                     href="mailto:gossiphub@gmail.com"
+//                     className="text-red-600 hover:underline"
+//                   >
+//                     gossiphub@gmail.com
+//                   </a>
+//                 </li>
+//                 <li>
+//                   Website:{" "}
+//                   <a
+//                     href="https://gossiphub.in"
+//                     className="text-red-600 hover:underline"
+//                   >
+//                     gossiphub.in
+//                   </a>
+//                 </li>
+//                 <li>Business Hours: Monday – Saturday, 10 AM to 6 PM (IST)</li>
+//               </ul>
+//             </p>
+//             <p
+//               className={`text-base ${
+//                 isDarkMode ? "text-gray-200" : "text-gray-700"
+//               } mb-4 leading-relaxed transition-colors duration-500`}
+//             >
+//               <span className="font-semibold">🗣 Feedback & Suggestions:</span>{" "}
+//               Your opinions help us improve! Share your thoughts, corrections,
+//               or ideas — we value every message from our readers.
+//             </p>
+//             <p
+//               className={`text-base ${
+//                 isDarkMode ? "text-gray-200" : "text-gray-700"
+//               } mb-4 leading-relaxed transition-colors duration-500`}
+//             >
+//               <span className="font-semibold">
+//                 💼 For Business & Partnerships:
+//               </span>{" "}
+//               Interested in collaborating or advertising with GossipHub? Please
+//               write to us at{" "}
+//               <a
+//                 href="mailto:gossiphub@gmail.com?subject=Business%20Inquiry"
+//                 className="text-red-600 hover:underline"
+//               >
+//                 gossiphub@gmail.com
+//               </a>{" "}
+//               with “Business Inquiry” in the subject line.
+//             </p>
+//             <form onSubmit={handleSubmit} className="space-y-4">
+//               <div>
+//                 <label
+//                   htmlFor="name"
+//                   className={`block text-sm font-medium ${
+//                     isDarkMode ? "text-gray-100" : "text-gray-900"
+//                   } mb-1 transition-colors duration-500`}
+//                 >
+//                   Name
+//                 </label>
+//                 <input
+//                   type="text"
+//                   id="name"
+//                   name="name"
+//                   value={formData.name}
+//                   onChange={handleInputChange}
+//                   className={`w-full p-3 rounded-lg ${
+//                     isDarkMode
+//                       ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
+//                       : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
+//                   } border focus:ring-2 focus:outline-none transition-colors duration-500`}
+//                   placeholder="Your name"
+//                   required
+//                 />
+//               </div>
+//               <div>
+//                 <label
+//                   htmlFor="email"
+//                   className={`block text-sm font-medium ${
+//                     isDarkMode ? "text-gray-100" : "text-gray-900"
+//                   } mb-1 transition-colors duration-500`}
+//                 >
+//                   Email
+//                 </label>
+//                 <input
+//                   type="email"
+//                   id="email"
+//                   name="email"
+//                   value={formData.email}
+//                   onChange={handleInputChange}
+//                   className={`w-full p-3 rounded-lg ${
+//                     isDarkMode
+//                       ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
+//                       : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
+//                   } border focus:ring-2 focus:outline-none transition-colors duration-500`}
+//                   placeholder="Your email"
+//                   required
+//                 />
+//               </div>
+//               <div>
+//                 <label
+//                   htmlFor="message"
+//                   className={`block text-sm font-medium ${
+//                     isDarkMode ? "text-gray-100" : "text-gray-900"
+//                   } mb-1 transition-colors duration-500`}
+//                 >
+//                   Message
+//                 </label>
+//                 <textarea
+//                   id="message"
+//                   name="message"
+//                   value={formData.message}
+//                   onChange={handleInputChange}
+//                   className={`w-full p-3 rounded-lg ${
+//                     isDarkMode
+//                       ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
+//                       : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
+//                   } border focus:ring-2 focus:outline-none resize-none h-32 transition-colors duration-500`}
+//                   placeholder="Your message"
+//                   required
+//                 />
+//               </div>
+//               <button
+//                 type="submit"
+//                 className="w-full md:w-auto px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-full hover:bg-red-700 transition-all duration-300 shadow-md hover:shadow-lg"
+//               >
+//                 Send Message
+//               </button>
+//             </form>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Footer */}
+//       <footer className="bg-red-600 text-white py-6 transition-colors duration-500">
+//         <div className="max-w-7xl mx-auto px-4 text-center">
+//           <div className="flex justify-center space-x-4 mb-4">
+//             <Link
+//               to="/about"
+//               className="text-sm text-white hover:underline transition-colors duration-200"
+//             >
+//               About Us
+//             </Link>
+//             <Link
+//               to="/privacy"
+//               className="text-sm text-white hover:underline transition-colors duration-200"
+//             >
+//               Privacy Policy
+//             </Link>
+//             <Link
+//               to="/contact"
+//               className="text-sm text-white hover:underline transition-colors duration-200"
+//             >
+//               Contact Us
+//             </Link>
+//             <Link
+//               to="/terms"
+//               className="text-sm text-white hover:underline transition-colors duration-200"
+//             >
+//               Terms & Conditions
+//             </Link>
+//           </div>
+//           <p className="text-sm text-white">
+//             © 2025 GossipHub. All rights reserved.
+//           </p>
+//         </div>
+//       </footer>
+//     </div>
+//   );
+// };
+
+// export default ContactUs;
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import emailjs from "@emailjs/browser";
 import Logo from "../assets/GossippHublogo.svg";
 
 const ContactUs = () => {
@@ -199,6 +480,12 @@ const ContactUs = () => {
     email: "",
     message: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+
+  // EmailJS Config - Replace with your own
+  const SERVICE_ID = "service_cxr6ea7"; // ← Replace
+  const TEMPLATE_ID = "template_n8ycdvl"; // ← Replace
+  const PUBLIC_KEY = "txKgZKaJsgKM5GxiG"; // ← Replace
 
   // Persistent dark mode
   useEffect(() => {
@@ -208,7 +495,8 @@ const ContactUs = () => {
 
   useEffect(() => {
     localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
+    emailjs.init(PUBLIC_KEY); // Initialize EmailJS
+  }, [PUBLIC_KEY]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -219,11 +507,27 @@ const ContactUs = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Placeholder for form submission logic
-    toast.success("Message sent! We'll get back to you soon.");
-    setFormData({ name: "", email: "", message: "" });
+    setIsLoading(true);
+
+    const templateParams = {
+      from_name: formData.name,
+      from_email: formData.email,
+      message: formData.message,
+      to_email: "gossipphub@gmail.com",
+    };
+
+    try {
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
+      toast.success("Message sent successfully! We'll reply soon.");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -233,7 +537,7 @@ const ContactUs = () => {
       } transition-colors duration-500 font-sans antialiased`}
     >
       {/* Sticky Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-md transition-colors duration-500">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <Link to="/" className="flex items-center">
             <img
@@ -245,7 +549,7 @@ const ContactUs = () => {
           </Link>
           <button
             onClick={toggleDarkMode}
-            className="p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-200"
+            className="p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors"
             aria-label={
               isDarkMode ? "Switch to light mode" : "Switch to dark mode"
             }
@@ -269,38 +573,37 @@ const ContactUs = () => {
           <h1
             className={`text-3xl md:text-4xl font-bold ${
               isDarkMode ? "text-gray-100" : "text-gray-900"
-            } mb-6 transition-colors duration-500`}
+            } mb-6`}
           >
             Contact Us
           </h1>
           <div
             className={`${
               isDarkMode ? "bg-gray-900" : "bg-white"
-            } rounded-2xl p-6 shadow-xl transition-colors duration-500`}
+            } rounded-2xl p-6 shadow-xl`}
           >
             <p
               className={`text-base ${
                 isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              } mb-4 leading-relaxed`}
             >
               We’d love to hear from you! Whether you have feedback, business
-              inquiries, or want to share a story, feel free to reach out using
-              the form below or through our contact details.
+              inquiries, or want to share a story, feel free to reach out.
             </p>
             <p
               className={`text-base ${
                 isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              } mb-4 leading-relaxed`}
             >
-              <span className="font-semibold">📬 Contact Information:</span>
+              <span className="font-semibold">Contact Information:</span>
               <ul className="list-disc pl-5 mt-2">
                 <li>
                   Email:{" "}
                   <a
-                    href="mailto:gossiphub@gmail.com"
+                    href="mailto:gossipphub@gmail.com"
                     className="text-red-600 hover:underline"
                   >
-                    gossiphub@gmail.com
+                    gossipphub@gmail.com
                   </a>
                 </li>
                 <li>
@@ -315,40 +618,14 @@ const ContactUs = () => {
                 <li>Business Hours: Monday – Saturday, 10 AM to 6 PM (IST)</li>
               </ul>
             </p>
-            <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
-            >
-              <span className="font-semibold">🗣 Feedback & Suggestions:</span>{" "}
-              Your opinions help us improve! Share your thoughts, corrections,
-              or ideas — we value every message from our readers.
-            </p>
-            <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
-            >
-              <span className="font-semibold">
-                💼 For Business & Partnerships:
-              </span>{" "}
-              Interested in collaborating or advertising with GossipHub? Please
-              write to us at{" "}
-              <a
-                href="mailto:gossiphub@gmail.com?subject=Business%20Inquiry"
-                className="text-red-600 hover:underline"
-              >
-                gossiphub@gmail.com
-              </a>{" "}
-              with “Business Inquiry” in the subject line.
-            </p>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label
                   htmlFor="name"
                   className={`block text-sm font-medium ${
                     isDarkMode ? "text-gray-100" : "text-gray-900"
-                  } mb-1 transition-colors duration-500`}
+                  } mb-1`}
                 >
                   Name
                 </label>
@@ -362,9 +639,10 @@ const ContactUs = () => {
                     isDarkMode
                       ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
                       : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
-                  } border focus:ring-2 focus:outline-none transition-colors duration-500`}
+                  } border focus:ring-2 focus:outline-none`}
                   placeholder="Your name"
                   required
+                  disabled={isLoading}
                 />
               </div>
               <div>
@@ -372,7 +650,7 @@ const ContactUs = () => {
                   htmlFor="email"
                   className={`block text-sm font-medium ${
                     isDarkMode ? "text-gray-100" : "text-gray-900"
-                  } mb-1 transition-colors duration-500`}
+                  } mb-1`}
                 >
                   Email
                 </label>
@@ -386,9 +664,10 @@ const ContactUs = () => {
                     isDarkMode
                       ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
                       : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
-                  } border focus:ring-2 focus:outline-none transition-colors duration-500`}
+                  } border focus:ring-2 focus:outline-none`}
                   placeholder="Your email"
                   required
+                  disabled={isLoading}
                 />
               </div>
               <div>
@@ -396,7 +675,7 @@ const ContactUs = () => {
                   htmlFor="message"
                   className={`block text-sm font-medium ${
                     isDarkMode ? "text-gray-100" : "text-gray-900"
-                  } mb-1 transition-colors duration-500`}
+                  } mb-1`}
                 >
                   Message
                 </label>
@@ -409,16 +688,46 @@ const ContactUs = () => {
                     isDarkMode
                       ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
                       : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
-                  } border focus:ring-2 focus:outline-none resize-none h-32 transition-colors duration-500`}
+                  } border focus:ring-2 focus:outline-none resize-none h-32`}
                   placeholder="Your message"
                   required
+                  disabled={isLoading}
                 />
               </div>
               <button
                 type="submit"
-                className="w-full md:w-auto px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-full hover:bg-red-700 transition-all duration-300 shadow-md hover:shadow-lg"
+                disabled={isLoading}
+                className={`w-full md:w-auto px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-full transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center ${
+                  isLoading
+                    ? "opacity-70 cursor-not-allowed"
+                    : "hover:bg-red-700"
+                }`}
               >
-                Send Message
+                {isLoading ? (
+                  <>
+                    <svg
+                      className="animate-spin h-4 w-4 mr-2"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8z"
+                      />
+                    </svg>
+                    Sending...
+                  </>
+                ) : (
+                  "Send Message"
+                )}
               </button>
             </form>
           </div>
@@ -426,37 +735,23 @@ const ContactUs = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-red-600 text-white py-6 transition-colors duration-500">
+      <footer className="bg-red-600 text-white py-6">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="flex justify-center space-x-4 mb-4">
-            <Link
-              to="/about"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
+            <Link to="/about" className="text-sm hover:underline">
               About Us
             </Link>
-            <Link
-              to="/privacy"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
+            <Link to="/privacy" className="text-sm hover:underline">
               Privacy Policy
             </Link>
-            <Link
-              to="/contact"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
+            <Link to="/contact" className="text-sm hover:underline">
               Contact Us
             </Link>
-            <Link
-              to="/terms"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
+            <Link to="/terms" className="text-sm hover:underline">
               Terms & Conditions
             </Link>
           </div>
-          <p className="text-sm text-white">
-            © 2025 GossipHub. All rights reserved.
-          </p>
+          <p className="text-sm">© 2025 GossipHub. All rights reserved.</p>
         </div>
       </footer>
     </div>
