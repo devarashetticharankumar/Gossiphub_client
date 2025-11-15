@@ -24077,7 +24077,8 @@ const PostDetails = () => {
               {/* Category Section */}
               {post.category && (
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <div
+                  <Link
+                    to={`/posts/category/${encodeURIComponent(post.category)}`}
                     className={`px-3 py-1 text-xs font-medium ${
                       isDarkMode
                         ? "text-gray-300 bg-gray-800 hover:bg-gray-700"
@@ -24086,7 +24087,7 @@ const PostDetails = () => {
                     aria-label={`View posts in category ${post.category}`}
                   >
                     {post.category}
-                  </div>
+                  </Link>
                 </div>
               )}
               {isAuthenticated && (

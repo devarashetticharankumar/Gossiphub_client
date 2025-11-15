@@ -6084,7 +6084,7 @@ const PostList = () => {
         isDarkMode ? "bg-gray-950" : "bg-gray-100"
       }`}
     >
-      <Helmet>
+      {/* <Helmet>
         <title>
           {selectedCategory === "All"
             ? "Gossiphub – Latest Celebrity News & Trending Entertainment"
@@ -6207,7 +6207,143 @@ const PostList = () => {
             },
           })}
         </script>
+      </Helmet> */}
+      <Helmet>
+        <title>
+          {selectedCategory === "All"
+            ? "Gossiphub.in – Telugu Movie News, Celebrity Gossips, Trending Tollywood & Bollywood Entertainment"
+            : `Gossiphub.in – Latest ${selectedCategory} News, Celebrity Gossips & Film Reviews`}
+        </title>
+        <meta
+          name="description"
+          content={
+            selectedCategory === "All"
+              ? "Latest Telugu movie news, trending celebrity gossips, Tollywood and Bollywood film reviews, viral entertainment & OTT updates only on Gossiphub.in."
+              : `Hot ${selectedCategory} news, movie updates, celebrity gossips, trending stories & viral entertainment for Telugu audience on Gossiphub.in.`
+          }
+        />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="GossipHub Team" />
+        <meta
+          property="og:title"
+          content={
+            selectedCategory === "All"
+              ? "Gossiphub.in: Telugu Movie News, Tollywood Gossips & Viral Entertainment"
+              : `Gossiphub.in: Latest ${selectedCategory} News & Trending Gossips`
+          }
+        />
+        <meta
+          property="og:description"
+          content={
+            selectedCategory === "All"
+              ? "Catch all Telugu movie news, trending celebrity entertainment, gossips, Bollywood updates & viral videos at Gossiphub.in."
+              : `Stay updated with the latest ${selectedCategory} news, exclusive celebrity gossips, hot film reviews & trending entertainment on Gossiphub.in.`
+          }
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://gossiphub.in/" />
+        <meta
+          property="og:image"
+          content={
+            featuredPost?.media || "/images/telugu-entertainment-default.jpg"
+          }
+        />
+        <meta
+          property="og:image:alt"
+          content={featuredPost?.title || "Latest Telugu Entertainment News"}
+        />
+        <meta property="og:site_name" content="GossipHub.in" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content={
+            selectedCategory === "All"
+              ? "Gossiphub.in: Telugu Movie, Celebrity & Tollywood News"
+              : `Gossiphub.in: Top ${selectedCategory} News & Gossips`
+          }
+        />
+        <meta
+          name="twitter:description"
+          content={
+            selectedCategory === "All"
+              ? "Latest Telugu film news, trending celebrity gossips, Bollywood and OTT updates on Gossiphub.in."
+              : `Freshest ${selectedCategory} news, viral stories & entertainment buzz for fans on Gossiphub.in.`
+          }
+        />
+        <meta
+          name="twitter:image"
+          content={
+            featuredPost?.media || "/images/telugu-entertainment-default.jpg"
+          }
+        />
+        <meta
+          name="twitter:image:alt"
+          content={featuredPost?.title || "Latest Telugu Entertainment News"}
+        />
+        <link rel="canonical" href="https://gossiphub.in/" />
+        <link rel="alternate" href="https://gossiphub.in/" hreflang="en-in" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name:
+              selectedCategory === "All"
+                ? "GossipHub – Trending Telugu Movie & Entertainment News"
+                : `GossipHub – Best ${selectedCategory} Gossips & Film Updates`,
+            description:
+              selectedCategory === "All"
+                ? "Latest Telugu celebrity gossips, trending Tollywood, Bollywood, OTT news & film reviews on Gossiphub.in."
+                : `Find top ${selectedCategory} news, hottest celebrity gossips, movie reviews & viral updates on Gossiphub.in.`,
+            url: "https://gossiphub.in/",
+            publisher: {
+              "@type": "Organization",
+              name: "GossipHub",
+              logo: {
+                "@type": "ImageObject",
+                url: "/images/logo.svg",
+              },
+              sameAs: [
+                "https://www.instagram.com/gossiphub.in",
+                "https://www.youtube.com/gossiphub",
+                "https://twitter.com/gossiphubin",
+              ],
+            },
+            mainEntity: {
+              "@type": "CollectionPage",
+              name:
+                selectedCategory === "All"
+                  ? "Trending Posts"
+                  : `${selectedCategory} Posts`,
+              description:
+                selectedCategory === "All"
+                  ? "A collection of trending Telugu movie news, reviews, and celebrity gossips on Gossiphub.in."
+                  : `All about ${selectedCategory}: news, trends & viral gossips on Gossiphub.in.`,
+            },
+            breadcrumb: {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: "https://gossiphub.in/",
+                },
+                ...(selectedCategory !== "All"
+                  ? [
+                      {
+                        "@type": "ListItem",
+                        position: 2,
+                        name: selectedCategory,
+                        item: `https://gossiphub.in/#${selectedCategory.toLowerCase()}`,
+                      },
+                    ]
+                  : []),
+              ],
+            },
+          })}
+        </script>
       </Helmet>
+
       <header
         ref={headerRef}
         className="fixed top-0 left-0 right-0 z-50 bg-red-600/80 backdrop-blur-md text-white shadow-lg"
