@@ -5937,7 +5937,8 @@ const PostList = () => {
         (post.likes?.length || 0) +
         (post.loves?.length || 0) +
         (post.laughs?.length || 0) +
-        (post.sads?.length || 0),
+        (post.sads?.length || 0) +
+        (post.comments?.length || 0),
     }))
     .sort((a, b) => b.totalReactions - a.totalReactions)
     .slice(0, 5);
@@ -5946,7 +5947,7 @@ const PostList = () => {
     : null;
   const featuredPost = filteredPosts.length > 0 ? filteredPosts[0] : null;
   const handleQuickShare = (post) => {
-    const shareUrl = `${window.location.origin}/posts/${post._id}`;
+    const shareUrl = `${window.location.origin}/posts/${post.slug || post._id}`;
     const stripHtmlTags = (text) => {
       return text
         .replace(/<[^>]+>/g, "")
@@ -6591,7 +6592,7 @@ const PostList = () => {
             >
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="md:w-2/3">
-                  <Link to={`/posts/${featuredPost._id}`}>
+                  <Link to={`/posts/${featuredPost.slug || featuredPost._id}`}>
                     <motion.div
                       className="relative rounded-xl overflow-hidden shadow-xl"
                       whileHover={{ scale: 1.02 }}
@@ -6815,7 +6816,7 @@ const PostList = () => {
                               } mt-2`}
                           >
                             <Link
-                              to={`/posts/${post._id}`}
+                              to={`/posts/${post.slug || post._id}`}
                               className="hover:text-red-600 transition-colors duration-200"
                             >
                               {post.title}

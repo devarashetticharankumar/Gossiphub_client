@@ -687,7 +687,7 @@ const CategoryPosts = () => {
                     }`}
                 >
                   <Link
-                    to={`/posts/${post._id}`}
+                    to={`/posts/${post.slug || post._id}`}
                     className="block"
                     onClick={() =>
                       window.scrollTo({ top: 0, behavior: "smooth" })
@@ -753,8 +753,8 @@ const CategoryPosts = () => {
                       <div className="flex justify-between items-center">
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-sm ${isDarkMode
-                              ? "bg-red-900 text-red-200"
-                              : "bg-red-100 text-red-800"
+                            ? "bg-red-900 text-red-200"
+                            : "bg-red-100 text-red-800"
                             }`}
                         >
                           {post.category || "General"}

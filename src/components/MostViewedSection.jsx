@@ -4,17 +4,15 @@ import { Link } from "react-router-dom";
 const MostViewedSection = ({ mostViewedPosts, isDarkMode }) => {
   return (
     <motion.section
-      className={`${
-        isDarkMode ? "bg-gray-900" : "bg-white"
-      } p-4 rounded-xl shadow-lg transition-colors duration-500`}
+      className={`${isDarkMode ? "bg-gray-900" : "bg-white"
+        } p-4 rounded-xl shadow-lg transition-colors duration-500`}
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
     >
       <h3
-        className={`text-lg font-bold ${
-          isDarkMode ? "text-gray-100" : "text-gray-900"
-        } mb-4`}
+        className={`text-lg font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+          } mb-4`}
       >
         Most Viewed
       </h3>
@@ -34,8 +32,8 @@ const MostViewedSection = ({ mostViewedPosts, isDarkMode }) => {
                   muted
                   loading="lazy"
                   onError={(e) =>
-                    (e.target.src =
-                      "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+                  (e.target.src =
+                    "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                   }
                 />
               ) : (
@@ -45,24 +43,22 @@ const MostViewedSection = ({ mostViewedPosts, isDarkMode }) => {
                   className="w-16 h-16 object-cover rounded-lg"
                   loading="lazy"
                   onError={(e) =>
-                    (e.target.src =
-                      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
+                  (e.target.src =
+                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                   }
                 />
               ))}
             <div>
               <Link
-                to={`/posts/${post._id}`}
-                className={`text-sm font-medium hover:text-red-600 transition-colors ${
-                  isDarkMode ? "text-gray-100" : "text-gray-900"
-                }`}
+                to={`/posts/${post.slug || post._id}`}
+                className={`text-sm font-medium hover:text-red-600 transition-colors ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                  }`}
               >
                 {post.title}
               </Link>
               <p
-                className={`text-xs mt-1 ${
-                  isDarkMode ? "text-gray-400" : "text-gray-500"
-                }`}
+                className={`text-xs mt-1 ${isDarkMode ? "text-gray-400" : "text-gray-500"
+                  }`}
               >
                 {post.category || "General"}
               </p>

@@ -11,9 +11,8 @@ const TrendingSection = ({ trends, isDarkMode }) => {
       className="mb-8"
     >
       <h3
-        className={`text-xl font-bold ${
-          isDarkMode ? "text-gray-100" : "text-gray-900"
-        } mb-4 flex items-center`}
+        className={`text-xl font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+          } mb-4 flex items-center`}
       >
         <HiFire className="h-6 w-6 text-orange-500 mr-2" />
         Trending Now
@@ -22,9 +21,8 @@ const TrendingSection = ({ trends, isDarkMode }) => {
         {trends.map((trend, index) => (
           <motion.div
             key={trend._id}
-            className={`min-w-[200px] ${
-              isDarkMode ? "bg-gray-800" : "bg-white"
-            } rounded-xl shadow-lg overflow-hidden transition-colors duration-500`}
+            className={`min-w-[200px] ${isDarkMode ? "bg-gray-800" : "bg-white"
+              } rounded-xl shadow-lg overflow-hidden transition-colors duration-500`}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
@@ -41,8 +39,8 @@ const TrendingSection = ({ trends, isDarkMode }) => {
                     loop
                     loading="lazy"
                     onError={(e) =>
-                      (e.target.src =
-                        "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+                    (e.target.src =
+                      "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                     }
                   />
                 ) : (
@@ -52,23 +50,21 @@ const TrendingSection = ({ trends, isDarkMode }) => {
                     className="w-full h-32 object-cover"
                     loading="lazy"
                     onError={(e) =>
-                      (e.target.src =
-                        "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
+                    (e.target.src =
+                      "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                     }
                   />
                 ))}
               <div className="p-3">
                 <p
-                  className={`text-sm font-medium ${
-                    isDarkMode ? "text-gray-100" : "text-gray-900"
-                  } line-clamp-2`}
+                  className={`text-sm font-medium ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                    } line-clamp-2`}
                 >
                   {trend.title}
                 </p>
                 <p
-                  className={`text-xs ${
-                    isDarkMode ? "text-gray-400" : "text-gray-500"
-                  } mt-1`}
+                  className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"
+                    } mt-1`}
                 >
                   {trend.category || "General"}
                 </p>

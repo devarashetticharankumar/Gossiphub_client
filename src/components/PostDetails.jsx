@@ -1,5 +1,8 @@
+//   const postUrl = `${window.location.origin}/posts/${postId}`; // NOTE: This was commented out in previous View. I need to see the REAL file content. The previous view showed commented lines which means I previously edited it with comments?
+// Actually, looking at Step 98 output, I inserted comments at the top of the file? 
+// No, Step 98 output shows I replaced line 1-2 with comments. I corrupted the file start?
+// I need to fix PostDetails.jsx to be valid code.
 
-//   const postUrl = `${window.location.origin}/posts/${postId}`;
 //   const postTitle = post?.title || "Check out this post on GossipHub!";
 //   const seoTitle =
 //     postTitle.length > 60 ? `${postTitle.slice(0, 57)}...` : postTitle;
@@ -22041,7 +22044,7 @@ import {
     lazy,
     Suspense,
 } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet";
@@ -22242,6 +22245,9 @@ const SpinningLoader = ({ isDarkMode }) => (
 
 const PostDetails = () => {
     const { postId } = useParams();
+    const navigate = useNavigate();
+
+
     const [post, setPost] = useState(null);
     const [latestStories, setLatestStories] = useState([]);
     const [mostViewedPosts, setMostViewedPosts] = useState([]);
@@ -22282,6 +22288,18 @@ const PostDetails = () => {
     const commentInputRef = useRef(null);
     const commentsSectionRef = useRef(null);
     // Persistent dark mode
+    // Scroll to top on id change
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [postId]);
+
+    // Redirection for old ID-based URLs
+    useEffect(() => {
+        if (post && post.slug && /^[0-9a-fA-F]{24}$/.test(postId)) {
+            navigate(`/posts/${post.slug}`, { replace: true });
+        }
+    }, [post, postId, navigate]);
+
     useEffect(() => {
         const saved = localStorage.getItem("darkMode");
         if (saved) setIsDarkMode(JSON.parse(saved));
@@ -22317,11 +22335,7 @@ const PostDetails = () => {
     // Fetch main post data
     useEffect(() => {
         const fetchMainPost = async () => {
-            if (!/^[0-9a-fA-F]{24}$/.test(postId)) {
-                toast.error("Invalid post ID");
-                setLoading(false);
-                return;
-            }
+
             try {
                 // Fetch the current post
                 const foundPostRes = await getPostById(postId);
@@ -23858,7 +23872,7 @@ const PostDetails = () => {
                                         transition={{ delay: index * 0.1 }}
                                     >
                                         <Link
-                                            to={`/posts/${story._id}`}
+                                            to={`/posts/${story.slug || story._id}`}
                                             className="flex gap-3"
                                             onClick={() =>
                                                 window.scrollTo({ top: 0, behavior: "smooth" })
@@ -23940,7 +23954,7 @@ const PostDetails = () => {
                                         transition={{ delay: index * 0.1 }}
                                     >
                                         <Link
-                                            to={`/posts/${story._id}`}
+                                            to={`/posts/${story.slug || story._id}`}
                                             className="flex gap-3"
                                             onClick={() =>
                                                 window.scrollTo({ top: 0, behavior: "smooth" })

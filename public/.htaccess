@@ -4,6 +4,9 @@ RewriteEngine On
 RewriteCond %{HTTP_HOST} ^www\.gossiphub\.in [NC]
 RewriteRule ^(.*)$ https://gossiphub.in/$1 [L,R=301]
 
+# Redirect Sitemap to Backend
+RewriteRule ^sitemap\.xml$ https://backendserver.gossiphub.in/sitemap.xml [L,R=301]
+
 # SPA Fallback
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
