@@ -148,9 +148,8 @@ const AboutUs = () => {
 
   return (
     <div
-      className={`min-h-screen ${
-        isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
-      } transition-colors duration-500 font-sans antialiased`}
+      className={`min-h-screen ${isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
+        } transition-colors duration-500 font-sans antialiased`}
     >
       {/* Sticky Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-md transition-colors duration-500">
@@ -158,9 +157,9 @@ const AboutUs = () => {
           <Link to="/" className="flex items-center">
             <img
               src={Logo}
-              alt="GossippHub Logo"
+              alt="GossipHub Logo"
               className="h-10 rounded-md"
-              aria-label="GossippHub Home"
+              aria-label="GossipHub Home"
             />
           </Link>
           <button
@@ -191,21 +190,18 @@ const AboutUs = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <h1
-            className={`text-3xl md:text-4xl font-bold ${
-              isDarkMode ? "text-gray-100" : "text-gray-900"
-            } mb-6 transition-colors duration-500`}
+            className={`text-3xl md:text-4xl font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+              } mb-6 transition-colors duration-500`}
           >
             About Us
           </h1>
           <div
-            className={`${
-              isDarkMode ? "bg-gray-900" : "bg-white"
-            } rounded-lg p-6 shadow-lg transition-colors duration-500`}
+            className={`${isDarkMode ? "bg-gray-900" : "bg-white"
+              } rounded-lg p-6 shadow-lg transition-colors duration-500`}
           >
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               Welcome to{" "}
               <span className="font-semibold text-red-600">GossipHub</span> —
@@ -216,9 +212,8 @@ const AboutUs = () => {
               for reliable, engaging, and fast entertainment news.
             </p>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               Founded in 2024, GossipHub was created to provide a fun, safe, and
               engaging space for people to connect over shared interests and
@@ -227,9 +222,8 @@ const AboutUs = () => {
               simple, reader-friendly style.
             </p>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               <span className="font-semibold">What We Cover:</span>
               <ul className="list-disc pl-5 mt-2">
@@ -240,9 +234,8 @@ const AboutUs = () => {
               </ul>
             </p>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               Our content is created with care by a small team of passionate
               entertainment enthusiasts who believe in quality journalism and
@@ -250,9 +243,8 @@ const AboutUs = () => {
               user experience, ensuring that our readers get only the best.
             </p>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               <span className="font-semibold">Our Mission:</span> To become
               India’s most trusted source for entertainment news — delivering
@@ -261,9 +253,8 @@ const AboutUs = () => {
               at the right place!
             </p>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               <span className="font-semibold">Get in Touch:</span>
               <ul className="list-disc pl-5 mt-2">
@@ -282,7 +273,7 @@ const AboutUs = () => {
                     href="mailto:gossiphub@gmail.com"
                     className="text-red-600 hover:underline"
                   >
-                    gossipphub@gmail.com
+                    gossiphub@gmail.com
                   </a>
                 </li>
               </ul>
@@ -300,28 +291,7 @@ const AboutUs = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-red-600 text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex justify-center space-x-4 mb-4">
-            <Link to="/about" className="text-sm hover:underline">
-              About Us
-            </Link>
-            <Link to="/privacy" className="text-sm hover:underline">
-              Privacy Policy
-            </Link>
-            <Link to="/contact" className="text-sm hover:underline">
-              Contact Us
-            </Link>
-            <Link
-              to="/terms"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
-              Terms & Conditions
-            </Link>
-          </div>
-          <p className="text-sm">© 2025 GossipHub. All rights reserved.</p>
-        </div>
-      </footer>
+
     </div>
   );
 };

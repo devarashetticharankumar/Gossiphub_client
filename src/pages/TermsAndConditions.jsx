@@ -21,9 +21,8 @@ const TermsAndConditions = () => {
 
   return (
     <div
-      className={`min-h-screen ${
-        isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
-      } transition-colors duration-500 font-sans antialiased`}
+      className={`min-h-screen ${isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
+        } transition-colors duration-500 font-sans antialiased`}
     >
       {/* Sticky Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-md transition-colors duration-500">
@@ -31,9 +30,9 @@ const TermsAndConditions = () => {
           <Link to="/" className="flex items-center">
             <img
               src={Logo}
-              alt="GossippHub Logo"
+              alt="GossipHub Logo"
               className="h-10 rounded-md"
-              aria-label="GossippHub Home"
+              aria-label="GossipHub Home"
             />
           </Link>
           <button
@@ -64,28 +63,24 @@ const TermsAndConditions = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <h1
-            className={`text-3xl md:text-4xl font-bold ${
-              isDarkMode ? "text-gray-100" : "text-gray-900"
-            } mb-6 transition-colors duration-500`}
+            className={`text-3xl md:text-4xl font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+              } mb-6 transition-colors duration-500`}
           >
             Terms and Conditions
           </h1>
           <div
-            className={`${
-              isDarkMode ? "bg-gray-900" : "bg-white"
-            } rounded-lg p-6 shadow-lg transition-colors duration-500`}
+            className={`${isDarkMode ? "bg-gray-900" : "bg-white"
+              } rounded-lg p-6 shadow-lg transition-colors duration-500`}
           >
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               <span className="font-semibold">Last Updated: October 2025</span>
             </p>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               Welcome to{" "}
               <span className="font-semibold text-red-600">GossipHub</span>. By
@@ -100,32 +95,28 @@ const TermsAndConditions = () => {
               Conditions. Please read them carefully before using our platform.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               1. Acceptance of Terms
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               By visiting GossipHub, you confirm that you have read, understood,
               and agreed to these Terms. If you do not agree, please do not use
               our site.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               2. Use of Content
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               All articles, images, and materials on GossipHub are for
               informational and entertainment purposes only. You may share our
@@ -134,16 +125,14 @@ const TermsAndConditions = () => {
               content without permission is prohibited.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               3. User-Generated Content
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               When you post comments or submit information on our site:
               <ul className="list-disc pl-5 mt-2">
@@ -162,48 +151,42 @@ const TermsAndConditions = () => {
               </ul>
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               4. Intellectual Property
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               All logos, designs, and written material on GossipHub are the
               intellectual property of the site owners. Unauthorized use of our
               brand, name, or assets is strictly prohibited.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               5. External Links
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               Our website may contain links to third-party sites. We are not
               responsible for the content, privacy policies, or practices of
               these external websites.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               6. Disclaimer
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               While we strive to provide accurate and timely news, GossipHub
               makes no guarantees regarding the completeness, reliability, or
@@ -211,32 +194,28 @@ const TermsAndConditions = () => {
               own discretion and risk.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               7. Limitation of Liability
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               GossipHub and its team are not liable for any direct or indirect
               damages arising from your use of our website or any linked
               content.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               8. Changes to These Terms
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               We may update these Terms and Conditions at any time. Any
               modifications will be posted on this page with an updated “Last
@@ -244,16 +223,14 @@ const TermsAndConditions = () => {
               signifies acceptance of the revised terms.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               9. Contact Us
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               If you have questions about these Terms, please contact us:
               <ul className="list-disc pl-5 mt-2">
@@ -263,7 +240,7 @@ const TermsAndConditions = () => {
                     href="mailto:gossiphub@gmail.com"
                     className="text-red-600 hover:underline"
                   >
-                    gossipphub@gmail.com
+                    gossiphub@gmail.com
                   </a>
                 </li>
               </ul>
@@ -281,39 +258,7 @@ const TermsAndConditions = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-red-600 text-white py-6 transition-colors duration-500">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex justify-center space-x-4 mb-4">
-            <Link
-              to="/about"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
-              About Us
-            </Link>
-            <Link
-              to="/privacy"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              to="/contact"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
-              Contact Us
-            </Link>
-            <Link
-              to="/terms"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
-              Terms & Conditions
-            </Link>
-          </div>
-          <p className="text-sm text-white">
-            © 2025 GossipHub. All rights reserved.
-          </p>
-        </div>
-      </footer>
+
     </div>
   );
 };

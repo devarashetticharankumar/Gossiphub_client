@@ -27,6 +27,7 @@ import ShortsFeed from "./components/ShortsFeed";
 import ShortVideoForm from "./components/ShortVideoForm";
 import ShortVideoUpdateForm from "./components/ShortVideoUpdateForm";
 import CategoryPosts from "./components/CategoryPosts";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -106,6 +107,7 @@ function App() {
           element={<ProtectedRoute>{<ChatClient />}</ProtectedRoute>}
         /> */}
       </Routes>
+      <Footer />
     </Router>
   );
 }

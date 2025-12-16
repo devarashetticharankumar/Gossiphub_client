@@ -5831,12 +5831,12 @@ const PostList = () => {
         prevPosts.map((post) =>
           post._id === postId
             ? {
-                ...post,
-                likes: updatedReactions.likes || [],
-                loves: updatedReactions.loves || [],
-                laughs: updatedReactions.laughs || [],
-                sads: updatedReactions.sads || [],
-              }
+              ...post,
+              likes: updatedReactions.likes || [],
+              loves: updatedReactions.loves || [],
+              laughs: updatedReactions.laughs || [],
+              sads: updatedReactions.sads || [],
+            }
             : post
         )
       );
@@ -5844,12 +5844,12 @@ const PostList = () => {
         prevAllPosts.map((post) =>
           post._id === postId
             ? {
-                ...post,
-                likes: updatedReactions.likes || [],
-                loves: updatedReactions.loves || [],
-                laughs: updatedReactions.laughs || [],
-                sads: updatedReactions.sads || [],
-              }
+              ...post,
+              likes: updatedReactions.likes || [],
+              loves: updatedReactions.loves || [],
+              laughs: updatedReactions.laughs || [],
+              sads: updatedReactions.sads || [],
+            }
             : post
         )
       );
@@ -5857,12 +5857,12 @@ const PostList = () => {
         prevActressPosts.map((post) =>
           post._id === postId
             ? {
-                ...post,
-                likes: updatedReactions.likes || [],
-                loves: updatedReactions.loves || [],
-                laughs: updatedReactions.laughs || [],
-                sads: updatedReactions.sads || [],
-              }
+              ...post,
+              likes: updatedReactions.likes || [],
+              loves: updatedReactions.loves || [],
+              laughs: updatedReactions.laughs || [],
+              sads: updatedReactions.sads || [],
+            }
             : post
         )
       );
@@ -5903,8 +5903,8 @@ const PostList = () => {
     selectedCategory === "All"
       ? posts
       : posts.filter(
-          (post) => (post.category || "General") === selectedCategory
-        );
+        (post) => (post.category || "General") === selectedCategory
+      );
   const videoPosts = filteredPosts
     .filter(
       (post) =>
@@ -6062,13 +6062,13 @@ const PostList = () => {
   const userSuggestions =
     isAuthenticated && searchQuery && !searchQuery.startsWith("#")
       ? allUsers
-          .filter(
-            (u) =>
-              u._id !== user?._id &&
-              (u.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                u.name?.toLowerCase().includes(searchQuery.toLowerCase()))
-          )
-          .slice(0, 10)
+        .filter(
+          (u) =>
+            u._id !== user?._id &&
+            (u.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              u.name?.toLowerCase().includes(searchQuery.toLowerCase()))
+        )
+        .slice(0, 10)
       : [];
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -6080,9 +6080,8 @@ const PostList = () => {
   };
   return (
     <div
-      className={`min-h-screen font-poppins transition-colors duration-500 ${
-        isDarkMode ? "bg-gray-950" : "bg-gray-100"
-      }`}
+      className={`min-h-screen font-poppins transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-100"
+        }`}
     >
       {/* <Helmet>
         <title>
@@ -6330,13 +6329,13 @@ const PostList = () => {
                 },
                 ...(selectedCategory !== "All"
                   ? [
-                      {
-                        "@type": "ListItem",
-                        position: 2,
-                        name: selectedCategory,
-                        item: `https://gossiphub.in/#${selectedCategory.toLowerCase()}`,
-                      },
-                    ]
+                    {
+                      "@type": "ListItem",
+                      position: 2,
+                      name: selectedCategory,
+                      item: `https://gossiphub.in/#${selectedCategory.toLowerCase()}`,
+                    },
+                  ]
                   : []),
               ],
             },
@@ -6350,6 +6349,7 @@ const PostList = () => {
       >
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <Link to="/" className="flex items-center">
+            <h1 className="sr-only">GossipHub - Latest Celebrity News</h1>
             <motion.img
               src={Logo}
               alt="GossipHub Logo"
@@ -6370,29 +6370,26 @@ const PostList = () => {
                   setPage(1);
                   debouncedFetchPosts(1, e.target.value);
                 }}
-                className={`pl-10 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                  isDarkMode
-                    ? "bg-gray-700 text-white"
-                    : "bg-white text-gray-950"
-                }`}
+                className={`pl-10 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 ${isDarkMode
+                  ? "bg-gray-700 text-white"
+                  : "bg-white text-gray-950"
+                  }`}
               />
               {searchQuery && userSuggestions.length > 0 && (
                 <div
-                  className={`${
-                    isMobile
-                      ? "fixed left-0 right-0"
-                      : "absolute top-full left-0 w-full mt-1 max-h-80"
-                  } overflow-y-auto rounded-md shadow-lg ${
-                    isDarkMode
+                  className={`${isMobile
+                    ? "fixed left-0 right-0"
+                    : "absolute top-full left-0 w-full mt-1 max-h-80"
+                    } overflow-y-auto rounded-md shadow-lg ${isDarkMode
                       ? "bg-gray-800 text-white"
                       : "bg-white text-gray-900"
-                  } z-50`}
+                    } z-50`}
                   style={
                     isMobile
                       ? {
-                          top: headerHeight,
-                          height: `calc(100vh - ${headerHeight}px)`,
-                        }
+                        top: headerHeight,
+                        height: `calc(100vh - ${headerHeight}px)`,
+                      }
                       : {}
                   }
                 >
@@ -6403,9 +6400,8 @@ const PostList = () => {
                     <Link
                       key={u._id}
                       to={`/profile/${u._id}`}
-                      className={`flex items-center p-2 hover:${
-                        isDarkMode ? "bg-gray-700" : "bg-gray-100"
-                      } transition-colors`}
+                      className={`flex items-center p-2 hover:${isDarkMode ? "bg-gray-700" : "bg-gray-100"
+                        } transition-colors`}
                       onClick={() => setSearchQuery("")}
                     >
                       <img
@@ -6418,8 +6414,8 @@ const PostList = () => {
                         alt={u.username}
                         className="w-10 h-10 rounded-full object-cover mr-2"
                         onError={(e) =>
-                          (e.target.src =
-                            "https://avatar.iran.liara.run/public")
+                        (e.target.src =
+                          "https://avatar.iran.liara.run/public")
                         }
                       />
                       <span>{u.username}</span>
@@ -6489,8 +6485,8 @@ const PostList = () => {
                       className="h-8 w-8 rounded-full object-cover border-2 border-white hover:border-gray-200 transition-all duration-200"
                       whileHover={{ scale: 1.1 }}
                       onError={(e) =>
-                        (e.target.src =
-                          "https://avatar.iran.liara.run/public/4")
+                      (e.target.src =
+                        "https://avatar.iran.liara.run/public/4")
                       }
                     />
                   </Link>
@@ -6514,9 +6510,8 @@ const PostList = () => {
           </div>
         </div>
         <div
-          className={`${
-            isDarkMode ? "bg-gray-800" : "bg-white/90"
-          } backdrop-blur-md text-gray-500 shadow-md transition-colors duration-500`}
+          className={`${isDarkMode ? "bg-gray-800" : "bg-white/90"
+            } backdrop-blur-md text-gray-500 shadow-md transition-colors duration-500`}
         >
           <div className="max-w-7xl mx-auto px-4 py-2 flex space-x-4 overflow-x-auto scrollbar-hide">
             {categories.map((category) => (
@@ -6528,13 +6523,12 @@ const PostList = () => {
                   setPage(1);
                   fetchPosts(1, searchQuery, true);
                 }}
-                className={`px-3 py-1 text-sm font-medium uppercase tracking-wide rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 whitespace-nowrap ${
-                  selectedCategory === category
-                    ? "bg-red-600 text-white"
-                    : isDarkMode
+                className={`px-3 py-1 text-sm font-medium uppercase tracking-wide rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 whitespace-nowrap ${selectedCategory === category
+                  ? "bg-red-600 text-white"
+                  : isDarkMode
                     ? "hover:bg-gray-700 hover:text-white"
                     : "hover:bg-red-100 hover:text-red-600"
-                }`}
+                  }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label={`Filter posts by ${category}`}
@@ -6566,9 +6560,8 @@ const PostList = () => {
                 </div>
               </div>
               <div
-                className={`md:w-1/3 ${
-                  isDarkMode ? "bg-gray-900" : "bg-white/90"
-                } backdrop-blur-md p-4 rounded-xl shadow-lg transition-colors duration-500`}
+                className={`md:w-1/3 ${isDarkMode ? "bg-gray-900" : "bg-white/90"
+                  } backdrop-blur-md p-4 rounded-xl shadow-lg transition-colors duration-500`}
               >
                 <div className="h-6 bg-gray-200 rounded w-1/2 mb-4 animate-pulse"></div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
@@ -6614,8 +6607,8 @@ const PostList = () => {
                             loop
                             loading="lazy"
                             onError={(e) =>
-                              (e.target.src =
-                                "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+                            (e.target.src =
+                              "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                             }
                           />
                         ) : (
@@ -6625,8 +6618,8 @@ const PostList = () => {
                             className="w-full h-64 md:h-96 object-cover"
                             loading="lazy"
                             onError={(e) =>
-                              (e.target.src =
-                                "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
+                            (e.target.src =
+                              "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                             }
                           />
                         ))}
@@ -6663,9 +6656,8 @@ const PostList = () => {
                   </Link>
                 </div>
                 <motion.div
-                  className={`md:w-1/3 ${
-                    isDarkMode ? "bg-gray-900" : "bg-white/90"
-                  } backdrop-blur-md p-4 rounded-xl shadow-lg transition-colors duration-500`}
+                  className={`md:w-1/3 ${isDarkMode ? "bg-gray-900" : "bg-white/90"
+                    } backdrop-blur-md p-4 rounded-xl shadow-lg transition-colors duration-500`}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6 }}
@@ -6747,25 +6739,22 @@ const PostList = () => {
               </div>
             ) : filteredPosts.length === 0 ? (
               <motion.div
-                className={`text-center py-12 ${
-                  isDarkMode ? "bg-gray-900" : "bg-white"
-                } rounded-xl shadow-md transition-colors duration-500`}
+                className={`text-center py-12 ${isDarkMode ? "bg-gray-900" : "bg-white"
+                  } rounded-xl shadow-md transition-colors duration-500`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6 }}
               >
                 <HiDocumentText className="mx-auto h-24 w-24 text-red-400" />
                 <h3
-                  className={`mt-4 text-xl font-semibold ${
-                    isDarkMode ? "text-gray-100" : "text-gray-900"
-                  }`}
+                  className={`mt-4 text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                    }`}
                 >
                   No Gossips in {selectedCategory}!
                 </h3>
                 <p
-                  className={`mt-2 max-w-md mx-auto text-sm ${
-                    isDarkMode ? "text-gray-400" : "text-gray-600"
-                  }`}
+                  className={`mt-2 max-w-md mx-auto text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"
+                    }`}
                 >
                   Spill some tea and get the conversation started!
                 </p>
@@ -6782,9 +6771,8 @@ const PostList = () => {
                   {filteredPosts.map((post, index) => (
                     <motion.div
                       key={post._id}
-                      className={`${
-                        isDarkMode ? "bg-gray-800" : "bg-white"
-                      } lg:rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transition-colors duration-500`}
+                      className={`${isDarkMode ? "bg-gray-800" : "bg-white"
+                        } lg:rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transition-colors duration-500`}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
@@ -6800,8 +6788,8 @@ const PostList = () => {
                                 className="w-full lg:h-45 object-cover"
                                 loading="lazy"
                                 onError={(e) =>
-                                  (e.target.src =
-                                    "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+                                (e.target.src =
+                                  "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                                 }
                               />
                             ) : (
@@ -6811,8 +6799,8 @@ const PostList = () => {
                                 className="w-full lg:h-45 object-cover"
                                 loading="lazy"
                                 onError={(e) =>
-                                  (e.target.src =
-                                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
+                                (e.target.src =
+                                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                                 }
                               />
                             )}
@@ -6823,9 +6811,8 @@ const PostList = () => {
                             {post.category || "General"}
                           </span>
                           <h3
-                            className={`text-lg font-bold ${
-                              isDarkMode ? "text-gray-100" : "text-gray-900"
-                            } mt-2`}
+                            className={`text-lg font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                              } mt-2`}
                           >
                             <Link
                               to={`/posts/${post._id}`}
@@ -6835,9 +6822,8 @@ const PostList = () => {
                             </Link>
                           </h3>
                           <p
-                            className={`text-sm mt-1 line-clamp-2 ${
-                              isDarkMode ? "text-gray-400" : "text-gray-600"
-                            }`}
+                            className={`text-sm mt-1 line-clamp-2 ${isDarkMode ? "text-gray-400" : "text-gray-600"
+                              }`}
                           >
                             {post.description
                               .split("\n\n")
@@ -6852,9 +6838,8 @@ const PostList = () => {
                               ))}
                           </p>
                           <div
-                            className={`flex items-center justify-between text-xs mt-3 ${
-                              isDarkMode ? "text-gray-400" : "text-gray-500"
-                            }`}
+                            className={`flex items-center justify-between text-xs mt-3 ${isDarkMode ? "text-gray-400" : "text-gray-500"
+                              }`}
                           >
                             <p>
                               By{" "}
@@ -6865,27 +6850,23 @@ const PostList = () => {
                             <div className="flex items-center space-x-2">
                               <motion.button
                                 onClick={() => handleReaction(post._id, "like")}
-                                className={`flex items-center ${
-                                  userReactions[post._id]?.like
-                                    ? "bg-red-600 text-white"
-                                    : isDarkMode
+                                className={`flex items-center ${userReactions[post._id]?.like
+                                  ? "bg-red-600 text-white"
+                                  : isDarkMode
                                     ? "bg-gray-700 text-gray-300"
                                     : "bg-gray-200 text-gray-600"
-                                } px-2 py-1 rounded-full transition-colors duration-200 ${
-                                  isReacting === post._id
+                                  } px-2 py-1 rounded-full transition-colors duration-200 ${isReacting === post._id
                                     ? "opacity-50 cursor-not-allowed"
                                     : ""
-                                }`}
+                                  }`}
                                 whileHover={{ scale: 1.2 }}
                                 whileTap={{ scale: 0.9 }}
                                 disabled={isReacting === post._id}
-                                aria-label={`Like post (${
-                                  post.likes?.length || 0
-                                } likes)${
-                                  userReactions[post._id]?.like
+                                aria-label={`Like post (${post.likes?.length || 0
+                                  } likes)${userReactions[post._id]?.like
                                     ? " (You liked this)"
                                     : ""
-                                }`}
+                                  }`}
                               >
                                 <motion.span
                                   animate={
@@ -6903,27 +6884,23 @@ const PostList = () => {
                               </motion.button>
                               <motion.button
                                 onClick={() => handleReaction(post._id, "love")}
-                                className={`flex items-center ${
-                                  userReactions[post._id]?.love
-                                    ? "bg-pink-600 text-white"
-                                    : isDarkMode
+                                className={`flex items-center ${userReactions[post._id]?.love
+                                  ? "bg-pink-600 text-white"
+                                  : isDarkMode
                                     ? "bg-gray-700 text-gray-300"
                                     : "bg-gray-200 text-gray-600"
-                                } px-2 py-1 rounded-full transition-colors duration-200 ${
-                                  isReacting === post._id
+                                  } px-2 py-1 rounded-full transition-colors duration-200 ${isReacting === post._id
                                     ? "opacity-50 cursor-not-allowed"
                                     : ""
-                                }`}
+                                  }`}
                                 whileHover={{ scale: 1.2 }}
                                 whileTap={{ scale: 0.9 }}
                                 disabled={isReacting === post._id}
-                                aria-label={`Love post (${
-                                  post.loves?.length || 0
-                                } loves)${
-                                  userReactions[post._id]?.love
+                                aria-label={`Love post (${post.loves?.length || 0
+                                  } loves)${userReactions[post._id]?.love
                                     ? " (You loved this)"
                                     : ""
-                                }`}
+                                  }`}
                               >
                                 <motion.span
                                   animate={
@@ -6943,27 +6920,23 @@ const PostList = () => {
                                 onClick={() =>
                                   handleReaction(post._id, "laugh")
                                 }
-                                className={`flex items-center ${
-                                  userReactions[post._id]?.laugh
-                                    ? "bg-yellow-500 text-white"
-                                    : isDarkMode
+                                className={`flex items-center ${userReactions[post._id]?.laugh
+                                  ? "bg-yellow-500 text-white"
+                                  : isDarkMode
                                     ? "bg-gray-700 text-gray-300"
                                     : "bg-gray-200 text-gray-600"
-                                } px-2 py-1 rounded-full transition-colors duration-200 ${
-                                  isReacting === post._id
+                                  } px-2 py-1 rounded-full transition-colors duration-200 ${isReacting === post._id
                                     ? "opacity-50 cursor-not-allowed"
                                     : ""
-                                }`}
+                                  }`}
                                 whileHover={{ scale: 1.2 }}
                                 whileTap={{ scale: 0.9 }}
                                 disabled={isReacting === post._id}
-                                aria-label={`Laugh at post (${
-                                  post.laughs?.length || 0
-                                } laughs)${
-                                  userReactions[post._id]?.laugh
+                                aria-label={`Laugh at post (${post.laughs?.length || 0
+                                  } laughs)${userReactions[post._id]?.laugh
                                     ? " (You laughed at this)"
                                     : ""
-                                }`}
+                                  }`}
                               >
                                 <motion.span
                                   animate={
@@ -6981,27 +6954,23 @@ const PostList = () => {
                               </motion.button>
                               <motion.button
                                 onClick={() => handleReaction(post._id, "sad")}
-                                className={`flex items-center ${
-                                  userReactions[post._id]?.sad
-                                    ? "bg-blue-600 text-white"
-                                    : isDarkMode
+                                className={`flex items-center ${userReactions[post._id]?.sad
+                                  ? "bg-blue-600 text-white"
+                                  : isDarkMode
                                     ? "bg-gray-700 text-gray-300"
                                     : "bg-gray-200 text-gray-600"
-                                } px-2 py-1 rounded-full transition-colors duration-200 ${
-                                  isReacting === post._id
+                                  } px-2 py-1 rounded-full transition-colors duration-200 ${isReacting === post._id
                                     ? "opacity-50 cursor-not-allowed"
                                     : ""
-                                }`}
+                                  }`}
                                 whileHover={{ scale: 1.2 }}
                                 whileTap={{ scale: 0.9 }}
                                 disabled={isReacting === post._id}
-                                aria-label={`Sad reaction (${
-                                  post.sads?.length || 0
-                                } sads)${
-                                  userReactions[post._id]?.sad
+                                aria-label={`Sad reaction (${post.sads?.length || 0
+                                  } sads)${userReactions[post._id]?.sad
                                     ? " (You felt sad about this)"
                                     : ""
-                                }`}
+                                  }`}
                               >
                                 <motion.span
                                   animate={
@@ -7029,18 +6998,16 @@ const PostList = () => {
                           </div>
                         </div>
                         <motion.button
-                          className={`absolute top-4 right-4 p-2 rounded-full ${
-                            isDarkMode ? "bg-gray-600" : "bg-gray-200"
-                          } transition-colors duration-500`}
+                          className={`absolute top-4 right-4 p-2 rounded-full ${isDarkMode ? "bg-gray-600" : "bg-gray-200"
+                            } transition-colors duration-500`}
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => handleQuickShare(post)}
                           aria-label="Quick share"
                         >
                           <HiShare
-                            className={`h-5 w-5 ${
-                              isDarkMode ? "text-gray-300" : "text-gray-600"
-                            }`}
+                            className={`h-5 w-5 ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                              }`}
                           />
                         </motion.button>
                       </div>
@@ -7051,13 +7018,12 @@ const PostList = () => {
                   <motion.button
                     onClick={() => handlePageChange(page - 1)}
                     disabled={page === 1 || loadingPosts}
-                    className={`px-4 py-2 rounded-full text-sm font-medium ${
-                      page === 1 || loadingPosts
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : isDarkMode
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${page === 1 || loadingPosts
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : isDarkMode
                         ? "bg-gray-700 text-white hover:bg-gray-600"
                         : "bg-red-600 text-white hover:bg-red-700"
-                    } transition-colors duration-200`}
+                      } transition-colors duration-200`}
                     whileHover={{
                       scale: page === 1 || loadingPosts ? 1 : 1.05,
                     }}
@@ -7091,17 +7057,15 @@ const PostList = () => {
                           key={pageNumber}
                           onClick={() => handlePageChange(pageNumber)}
                           disabled={loadingPosts}
-                          className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            page === pageNumber
-                              ? isDarkMode
-                                ? "bg-red-600 text-white"
-                                : "bg-red-600 text-white"
-                              : isDarkMode
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${page === pageNumber
+                            ? isDarkMode
+                              ? "bg-red-600 text-white"
+                              : "bg-red-600 text-white"
+                            : isDarkMode
                               ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
                               : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-                          } transition-colors duration-200 ${
-                            loadingPosts ? "opacity-50 cursor-not-allowed" : ""
-                          }`}
+                            } transition-colors duration-200 ${loadingPosts ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
                           whileHover={{
                             scale:
                               page === pageNumber || loadingPosts ? 1 : 1.05,
@@ -7120,13 +7084,12 @@ const PostList = () => {
                   <motion.button
                     onClick={() => handlePageChange(page + 1)}
                     disabled={page >= totalPages || loadingPosts}
-                    className={`px-4 py-2 rounded-full text-sm font-medium ${
-                      page >= totalPages || loadingPosts
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : isDarkMode
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${page >= totalPages || loadingPosts
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : isDarkMode
                         ? "bg-gray-700 text-white hover:bg-gray-600"
                         : "bg-red-600 text-white hover:bg-red-700"
-                    } transition-colors duration-200`}
+                      } transition-colors duration-200`}
                     whileHover={{
                       scale: page >= totalPages || loadingPosts ? 1 : 1.05,
                     }}
@@ -7360,17 +7323,15 @@ const PostList = () => {
           </div>
           <div className="md:w-1/3 space-y-6 md:sticky md:top-36 md:h-[calc(100vh-144px)] md:overflow-y-auto scrollbar-hide">
             <section
-              className={`${
-                isDarkMode ? "bg-gray-800" : "bg-white"
-              } p-4 rounded-xl mt-6`}
+              className={`${isDarkMode ? "bg-gray-800" : "bg-white"
+                } p-4 rounded-xl mt-6`}
             >
               <h2 className="text-xl font-semibold mb-2 text-red-600">
                 What is GossipHub?
               </h2>
               <p
-                className={`${
-                  isDarkMode ? "text-white" : "text-black"
-                } leading-relaxed`}
+                className={`${isDarkMode ? "text-white" : "text-black"
+                  } leading-relaxed`}
               >
                 GossipHub is your ultimate entertainment news destination —
                 bringing you the latest updates from Tollywood, Bollywood, and
@@ -7379,9 +7340,8 @@ const PostList = () => {
                 connected with everything happening in the world of cinema.
               </p>
               <p
-                className={`${
-                  isDarkMode ? "text-white" : "text-black"
-                } leading-relaxed mt-2}`}
+                className={`${isDarkMode ? "text-white" : "text-black"
+                  } leading-relaxed mt-2}`}
               >
                 Our goal is to deliver fast, reliable, and engaging stories that
                 fans love to read — all in one place. Stay tuned to GossipHub
@@ -7452,60 +7412,7 @@ const PostList = () => {
           </div>
         </div>
       </main>
-      <footer
-        className={`${
-          isDarkMode ? "bg-gray-900" : "bg-gray-800"
-        } text-white py-6 transition-colors duration-500`}
-      >
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-sm">
-            &copy; {new Date().getFullYear()} GossipHub. All rights reserved.
-          </p>
-          <div className="mt-4 flex justify-center space-x-4">
-            <a
-              href="https://x.com/Charankumar2580"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-gray-200"
-            >
-              <BsTwitterX className="text-white  text-[22px]" />
-            </a>
-            <a
-              href="https://youtube.com/@gossiphub24?si=8-DLFlpQD4OxpEmx"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-gray-200"
-            >
-              <IoLogoYoutube className="text-white text-[24px]" />
-            </a>
-            <a
-              href="https://www.instagram.com/gossiphub247?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-gray-200"
-            >
-              <AiFillInstagram className="text-white text-[24px]" />
-            </a>
-          </div>
-          <div className="mt-4 flex justify-center space-x-4">
-            <Link to="/about" className="text-sm hover:underline">
-              About Us
-            </Link>
-            <Link to="/privacy" className="text-sm hover:underline">
-              Privacy Policy
-            </Link>
-            <Link to="/contact" className="text-sm hover:underline">
-              Contact Us
-            </Link>
-            <Link
-              to="/terms"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
-              Terms & Conditions
-            </Link>
-          </div>
-        </div>
-      </footer>
+
       <motion.button
         className="fixed bottom-15 right-6 p-3 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 transition-all duration-300"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -7516,9 +7423,8 @@ const PostList = () => {
         <HiArrowUp className="h-5 w-5" />
       </motion.button>
       <nav
-        className={`fixed bottom-0 left-0 right-0 ${
-          isDarkMode ? "bg-gray-900" : "bg-white"
-        } md:hidden flex justify-around py-3 shadow-lg transition-colors duration-500 z-50`}
+        className={`fixed bottom-0 left-0 right-0 ${isDarkMode ? "bg-gray-900" : "bg-white"
+          } md:hidden flex justify-around py-3 shadow-lg transition-colors duration-500 z-50`}
       >
         <Link
           to="/create-post"
@@ -7526,11 +7432,10 @@ const PostList = () => {
           aria-label="Create Post"
         >
           <HiPlus
-            className={`h-6 w-6 ${
-              isDarkMode
-                ? "text-gray-300 bg-red-500 rounded-2xl"
-                : "text-red-600 bg-red-100 rounded-2xl"
-            }`}
+            className={`h-6 w-6 ${isDarkMode
+              ? "text-gray-300 bg-red-500 rounded-2xl"
+              : "text-red-600 bg-red-100 rounded-2xl"
+              }`}
           />
         </Link>
         <Link
@@ -7539,9 +7444,8 @@ const PostList = () => {
           aria-label="Shorts"
         >
           <SiYoutubeshorts
-            className={`h-6 w-6 ${
-              isDarkMode ? "text-gray-300" : "text-gray-600"
-            }`}
+            className={`h-6 w-6 ${isDarkMode ? "text-gray-300" : "text-gray-600"
+              }`}
           />
         </Link>
         <Link

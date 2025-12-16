@@ -437,9 +437,8 @@ import { getPostsByCategory } from "../utils/api";
 const SpinningLoader = ({ isDarkMode }) => (
   <div className="flex justify-center items-center min-h-screen">
     <div
-      className={`animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 ${
-        isDarkMode ? "border-red-400" : "border-red-600"
-      }`}
+      className={`animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 ${isDarkMode ? "border-red-400" : "border-red-600"
+        }`}
     ></div>
   </div>
 );
@@ -576,9 +575,8 @@ const CategoryPosts = () => {
 
   return (
     <motion.div
-      className={`min-h-screen font-inter ${
-        isDarkMode ? "bg-gray-950 text-gray-100" : "bg-gray-50 text-gray-900"
-      } transition-colors duration-500`}
+      className={`min-h-screen font-inter ${isDarkMode ? "bg-gray-950 text-gray-100" : "bg-gray-50 text-gray-900"
+        } transition-colors duration-500`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -657,9 +655,8 @@ const CategoryPosts = () => {
 
       <main className="max-w-7xl mx-auto px-4 pt-20 pb-12">
         <motion.h1
-          className={`text-3xl font-extrabold mb-8 ${
-            isDarkMode ? "text-red-200" : "text-red-800"
-          }`}
+          className={`text-3xl font-extrabold mb-8 ${isDarkMode ? "text-red-200" : "text-red-800"
+            }`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -672,9 +669,8 @@ const CategoryPosts = () => {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className={`text-center ${
-                isDarkMode ? "text-gray-400" : "text-gray-500"
-              }`}
+              className={`text-center ${isDarkMode ? "text-gray-400" : "text-gray-500"
+                }`}
             >
               No posts found in {decodeURIComponent(category)} category.
             </motion.p>
@@ -687,9 +683,8 @@ const CategoryPosts = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ${
-                    isDarkMode ? "bg-gray-800" : "bg-white"
-                  }`}
+                  className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ${isDarkMode ? "bg-gray-800" : "bg-white"
+                    }`}
                 >
                   <Link
                     to={`/posts/${post._id}`}
@@ -709,8 +704,8 @@ const CategoryPosts = () => {
                           loop
                           loading="lazy"
                           onError={(e) =>
-                            (e.target.src =
-                              "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
+                          (e.target.src =
+                            "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
                           }
                         />
                       ) : (
@@ -720,16 +715,15 @@ const CategoryPosts = () => {
                           className="w-full h-65 object-cover"
                           loading="lazy"
                           onError={(e) =>
-                            (e.target.src =
-                              "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
+                          (e.target.src =
+                            "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                           }
                         />
                       )
                     ) : (
                       <div
-                        className={`w-full h-48 flex items-center justify-center ${
-                          isDarkMode ? "bg-gray-700" : "bg-gray-200"
-                        }`}
+                        className={`w-full h-48 flex items-center justify-center ${isDarkMode ? "bg-gray-700" : "bg-gray-200"
+                          }`}
                       >
                         <p
                           className={
@@ -742,16 +736,14 @@ const CategoryPosts = () => {
                     )}
                     <div className="p-4">
                       <h3
-                        className={`text-xl font-semibold mb-2 ${
-                          isDarkMode ? "text-gray-100" : "text-gray-900"
-                        } truncate`}
+                        className={`text-xl font-semibold mb-2 ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                          } truncate`}
                       >
                         {post.title}
                       </h3>
                       <p
-                        className={`text-sm ${
-                          isDarkMode ? "text-gray-400" : "text-gray-600"
-                        } mb-4 line-clamp-2`}
+                        className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"
+                          } mb-4 line-clamp-2`}
                       >
                         {post.description
                           ?.replace(/<[^>]+>/g, "")
@@ -760,11 +752,10 @@ const CategoryPosts = () => {
                       </p>
                       <div className="flex justify-between items-center">
                         <span
-                          className={`inline-block px-3 py-1 rounded-full text-sm ${
-                            isDarkMode
+                          className={`inline-block px-3 py-1 rounded-full text-sm ${isDarkMode
                               ? "bg-red-900 text-red-200"
                               : "bg-red-100 text-red-800"
-                          }`}
+                            }`}
                         >
                           {post.category || "General"}
                         </span>
@@ -801,9 +792,8 @@ const CategoryPosts = () => {
             className="flex justify-center items-center py-6"
           >
             <div
-              className={`animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 ${
-                isDarkMode ? "border-red-400" : "border-red-600"
-              }`}
+              className={`animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 ${isDarkMode ? "border-red-400" : "border-red-600"
+                }`}
             ></div>
           </motion.div>
         )}
@@ -811,34 +801,15 @@ const CategoryPosts = () => {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`text-center text-sm ${
-              isDarkMode ? "text-gray-400" : "text-gray-500"
-            } mt-4`}
+            className={`text-center text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"
+              } mt-4`}
           >
             No more posts to load.
           </motion.p>
         )}
       </main>
 
-      <footer className="bg-red-600 text-white py-6 mt-12">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex justify-center space-x-6 mb-4">
-            <Link to="/about" className="text-sm hover:text-red-200">
-              About
-            </Link>
-            <Link to="/privacy" className="text-sm hover:text-red-200">
-              Privacy
-            </Link>
-            <Link to="/contact" className="text-sm hover:text-red-200">
-              Contact
-            </Link>
-            <Link to="/terms" className="text-sm hover:text-red-200">
-              Terms & Conditions
-            </Link>
-          </div>
-          <p className="text-sm">© 2025 GossipHub. All rights reserved.</p>
-        </div>
-      </footer>
+
 
       <style>
         {`

@@ -532,9 +532,8 @@ const ContactUs = () => {
 
   return (
     <div
-      className={`min-h-screen ${
-        isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
-      } transition-colors duration-500 font-sans antialiased`}
+      className={`min-h-screen ${isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
+        } transition-colors duration-500 font-sans antialiased`}
     >
       {/* Sticky Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-md">
@@ -571,29 +570,25 @@ const ContactUs = () => {
       <div className="max-w-7xl mx-auto px-4 pt-24 pb-12">
         <div>
           <h1
-            className={`text-3xl md:text-4xl font-bold ${
-              isDarkMode ? "text-gray-100" : "text-gray-900"
-            } mb-6`}
+            className={`text-3xl md:text-4xl font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+              } mb-6`}
           >
             Contact Us
           </h1>
           <div
-            className={`${
-              isDarkMode ? "bg-gray-900" : "bg-white"
-            } rounded-2xl p-6 shadow-xl`}
+            className={`${isDarkMode ? "bg-gray-900" : "bg-white"
+              } rounded-2xl p-6 shadow-xl`}
           >
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed`}
             >
               We’d love to hear from you! Whether you have feedback, business
               inquiries, or want to share a story, feel free to reach out.
             </p>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed`}
             >
               <span className="font-semibold">Contact Information:</span>
               <ul className="list-disc pl-5 mt-2">
@@ -623,9 +618,8 @@ const ContactUs = () => {
               <div>
                 <label
                   htmlFor="name"
-                  className={`block text-sm font-medium ${
-                    isDarkMode ? "text-gray-100" : "text-gray-900"
-                  } mb-1`}
+                  className={`block text-sm font-medium ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                    } mb-1`}
                 >
                   Name
                 </label>
@@ -635,11 +629,10 @@ const ContactUs = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={`w-full p-3 rounded-lg ${
-                    isDarkMode
+                  className={`w-full p-3 rounded-lg ${isDarkMode
                       ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
                       : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
-                  } border focus:ring-2 focus:outline-none`}
+                    } border focus:ring-2 focus:outline-none`}
                   placeholder="Your name"
                   required
                   disabled={isLoading}
@@ -648,9 +641,8 @@ const ContactUs = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className={`block text-sm font-medium ${
-                    isDarkMode ? "text-gray-100" : "text-gray-900"
-                  } mb-1`}
+                  className={`block text-sm font-medium ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                    } mb-1`}
                 >
                   Email
                 </label>
@@ -660,11 +652,10 @@ const ContactUs = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full p-3 rounded-lg ${
-                    isDarkMode
+                  className={`w-full p-3 rounded-lg ${isDarkMode
                       ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
                       : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
-                  } border focus:ring-2 focus:outline-none`}
+                    } border focus:ring-2 focus:outline-none`}
                   placeholder="Your email"
                   required
                   disabled={isLoading}
@@ -673,9 +664,8 @@ const ContactUs = () => {
               <div>
                 <label
                   htmlFor="message"
-                  className={`block text-sm font-medium ${
-                    isDarkMode ? "text-gray-100" : "text-gray-900"
-                  } mb-1`}
+                  className={`block text-sm font-medium ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                    } mb-1`}
                 >
                   Message
                 </label>
@@ -684,11 +674,10 @@ const ContactUs = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  className={`w-full p-3 rounded-lg ${
-                    isDarkMode
+                  className={`w-full p-3 rounded-lg ${isDarkMode
                       ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
                       : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
-                  } border focus:ring-2 focus:outline-none resize-none h-32`}
+                    } border focus:ring-2 focus:outline-none resize-none h-32`}
                   placeholder="Your message"
                   required
                   disabled={isLoading}
@@ -697,11 +686,10 @@ const ContactUs = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full md:w-auto px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-full transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center ${
-                  isLoading
+                className={`w-full md:w-auto px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-full transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center ${isLoading
                     ? "opacity-70 cursor-not-allowed"
                     : "hover:bg-red-700"
-                }`}
+                  }`}
               >
                 {isLoading ? (
                   <>
@@ -735,25 +723,7 @@ const ContactUs = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-red-600 text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex justify-center space-x-4 mb-4">
-            <Link to="/about" className="text-sm hover:underline">
-              About Us
-            </Link>
-            <Link to="/privacy" className="text-sm hover:underline">
-              Privacy Policy
-            </Link>
-            <Link to="/contact" className="text-sm hover:underline">
-              Contact Us
-            </Link>
-            <Link to="/terms" className="text-sm hover:underline">
-              Terms & Conditions
-            </Link>
-          </div>
-          <p className="text-sm">© 2025 GossipHub. All rights reserved.</p>
-        </div>
-      </footer>
+
     </div>
   );
 };

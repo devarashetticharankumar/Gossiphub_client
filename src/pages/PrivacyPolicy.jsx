@@ -64,7 +64,7 @@
 //           </h1>
 //           <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-lg">
 //             <p className="text-base text-gray-700 dark:text-gray-200 mb-4 leading-relaxed">
-//               At <span className="font-semibold text-red-600">GossippHub</span>,
+//               At <span className="font-semibold text-red-600">GossipHub</span>,
 //               we are committed to protecting your privacy. This Privacy Policy
 //               explains how we collect, use, and safeguard your information when
 //               you use our platform.
@@ -99,7 +99,7 @@
 //               4. Anonymity Options
 //             </h2>
 //             <p className="text-base text-gray-700 dark:text-gray-200 mb-4 leading-relaxed">
-//               You can choose to post anonymously on GossippHub. When you select
+//               You can choose to post anonymously on GossipHub. When you select
 //               this option, your username and identifiable information will not
 //               be displayed publicly.
 //             </p>
@@ -202,9 +202,8 @@ const PrivacyPolicy = () => {
 
   return (
     <div
-      className={`min-h-screen ${
-        isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
-      } transition-colors duration-500 font-sans antialiased`}
+      className={`min-h-screen ${isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
+        } transition-colors duration-500 font-sans antialiased`}
     >
       {/* Sticky Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-md transition-colors duration-500">
@@ -212,9 +211,9 @@ const PrivacyPolicy = () => {
           <Link to="/" className="flex items-center">
             <img
               src={Logo}
-              alt="GossippHub Logo"
+              alt="GossipHub Logo"
               className="h-10 rounded-md"
-              aria-label="GossippHub Home"
+              aria-label="GossipHub Home"
             />
           </Link>
           <button
@@ -241,21 +240,18 @@ const PrivacyPolicy = () => {
       <div className="max-w-7xl mx-auto px-4 pt-24 pb-12">
         <div>
           <h1
-            className={`text-3xl md:text-4xl font-bold ${
-              isDarkMode ? "text-gray-100" : "text-gray-900"
-            } mb-6 transition-colors duration-500`}
+            className={`text-3xl md:text-4xl font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+              } mb-6 transition-colors duration-500`}
           >
             Privacy Policy
           </h1>
           <div
-            className={`${
-              isDarkMode ? "bg-gray-900" : "bg-white"
-            } rounded-2xl p-6 shadow-xl transition-colors duration-500`}
+            className={`${isDarkMode ? "bg-gray-900" : "bg-white"
+              } rounded-2xl p-6 shadow-xl transition-colors duration-500`}
           >
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               At <span className="font-semibold text-red-600">GossipHub</span>,
               we are committed to protecting your privacy. This Privacy Policy
@@ -263,16 +259,14 @@ const PrivacyPolicy = () => {
               you use our platform.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               1. Information We Collect
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               We collect information you provide directly, such as your
               username, email address, and posts or comments you share. We also
@@ -280,16 +274,14 @@ const PrivacyPolicy = () => {
               activity on the platform, to improve our services.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               2. How We Use Your Information
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               Your information is used to provide and improve our services,
               personalize your experience, and communicate with you. For
@@ -297,127 +289,112 @@ const PrivacyPolicy = () => {
               your inquiries.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               3. Sharing Your Information
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               We do not sell or share your personal information with third
               parties, except as required by law or to protect the safety of our
               users and platform.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               4. Anonymity Options
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               You can choose to post anonymously on GossipHub. When you select
               this option, your username and identifiable information will not
               be displayed publicly.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               5. Cookies and Tracking
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               We use cookies to enhance your experience, such as remembering
               your dark mode preference. You can manage cookie settings in your
               browser.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               6. Data Security
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               We implement industry-standard security measures to protect your
               data. However, no system is completely secure, and we cannot
               guarantee absolute security.
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               7. Your Rights
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               You have the right to access, update, or delete your personal
               information. To exercise these rights, please contact us at{" "}
               <a
-                href="mailto:gossipphub@gmail.com"
-                className={`${
-                  isDarkMode
-                    ? "text-red-400 hover:text-red-300"
-                    : "text-red-600 hover:text-red-700"
-                } hover:underline transition-colors duration-200`}
+                href="mailto:gossiphub@gmail.com"
+                className={`${isDarkMode
+                  ? "text-red-400 hover:text-red-300"
+                  : "text-red-600 hover:text-red-700"
+                  } hover:underline transition-colors duration-200`}
               >
-                gossipphub@gmail.com
+                gossiphub@gmail.com
               </a>
               .
             </p>
             <h2
-              className={`text-xl font-semibold ${
-                isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-2 transition-colors duration-500`}
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mb-2 transition-colors duration-500`}
             >
               8. Changes to This Policy
             </h2>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               We may update this Privacy Policy from time to time. We will
               notify you of significant changes by posting a notice on our
               platform.
             </p>
             <p
-              className={`text-base ${
-                isDarkMode ? "text-gray-200" : "text-gray-700"
-              } mb-4 leading-relaxed transition-colors duration-500`}
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
             >
               If you have any questions about this Privacy Policy, please reach
               out to us at{" "}
               <a
-                href="mailto:gossipphub@gmail.com"
-                className={`${
-                  isDarkMode
-                    ? "text-red-400 hover:text-red-300"
-                    : "text-red-600 hover:text-red-700"
-                } hover:underline transition-colors duration-200`}
+                href="mailto:gossiphub@gmail.com"
+                className={`${isDarkMode
+                  ? "text-red-400 hover:text-red-300"
+                  : "text-red-600 hover:text-red-700"
+                  } hover:underline transition-colors duration-200`}
               >
-                gossipphub@gmail.com
+                gossiphub@gmail.com
               </a>
               .
             </p>
@@ -426,37 +403,7 @@ const PrivacyPolicy = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-red-600 text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex justify-center space-x-4 mb-4">
-            <Link
-              to="/about"
-              className="text-sm text-white hover:text-gray-200 transition-colors duration-200"
-            >
-              About Us
-            </Link>
-            <Link
-              to="/privacy"
-              className="text-sm text-white hover:text-gray-200 transition-colors duration-200"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              to="/contact"
-              className="text-sm text-white hover:text-gray-200 transition-colors duration-200"
-            >
-              Contact Us
-            </Link>
-            <Link
-              to="/terms"
-              className="text-sm text-white hover:underline transition-colors duration-200"
-            >
-              Terms & Conditions
-            </Link>
-          </div>
-          <p className="text-sm">© 2025 GossipHub. All rights reserved.</p>
-        </div>
-      </footer>
+
     </div>
   );
 };
