@@ -39,7 +39,7 @@ const MostViewedSection = ({ mostViewedPosts, isDarkMode }) => {
               ) : (
                 <img
                   src={post.media}
-                  alt={`Most viewed: ${post.title}`}
+                  alt={post.title}
                   className="w-16 h-16 object-cover rounded-lg"
                   loading="lazy"
                   onError={(e) =>

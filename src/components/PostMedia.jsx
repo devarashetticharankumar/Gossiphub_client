@@ -101,6 +101,7 @@ const PostMedia = ({
   videoRef,
   isTrending,
   isDarkMode,
+  altText,
 }) => {
   const [isMediaLoaded, setIsMediaLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -142,9 +143,8 @@ const PostMedia = ({
           <div className="absolute bottom-4 right-4 flex gap-2">
             <motion.button
               onClick={togglePlay}
-              className={`p-2 rounded-full ${
-                isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-              } shadow-md hover:scale-110 transition-transform`}
+              className={`p-2 rounded-full ${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+                } shadow-md hover:scale-110 transition-transform`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label={isPlaying ? "Pause video" : "Play video"}
@@ -157,9 +157,8 @@ const PostMedia = ({
             </motion.button>
             <motion.button
               onClick={toggleMute}
-              className={`p-2 rounded-full ${
-                isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-              } shadow-md hover:scale-110 transition-transform`}
+              className={`p-2 rounded-full ${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+                } shadow-md hover:scale-110 transition-transform`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label={isMuted ? "Unmute video" : "Mute video"}
@@ -175,7 +174,7 @@ const PostMedia = ({
       ) : (
         <img
           src={media}
-          alt="Post media"
+          alt={altText || "Post media"}
           className="w-full h-full object-cover"
           loading="lazy"
           onLoad={() => setIsMediaLoaded(true)}
@@ -188,9 +187,8 @@ const PostMedia = ({
       )}
       {!isMediaLoaded && (
         <div
-          className={`absolute inset-0 ${
-            isDarkMode ? "bg-gray-800" : "bg-gray-200"
-          } animate-pulse`}
+          className={`absolute inset-0 ${isDarkMode ? "bg-gray-800" : "bg-gray-200"
+            } animate-pulse`}
         />
       )}
       {isTrending && (

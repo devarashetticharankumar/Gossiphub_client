@@ -6615,7 +6615,7 @@ const PostList = () => {
                         ) : (
                           <img
                             src={featuredPost.media}
-                            alt={`Featured: ${featuredPost.title}`}
+                            alt={featuredPost.title}
                             className="w-full h-64 md:h-96 object-cover"
                             loading="lazy"
                             onError={(e) =>
@@ -6796,7 +6796,7 @@ const PostList = () => {
                             ) : (
                               <img
                                 src={post.media}
-                                alt={`Post: ${post.title}`}
+                                alt={post.title}
                                 className="w-full lg:h-45 object-cover"
                                 loading="lazy"
                                 onError={(e) =>

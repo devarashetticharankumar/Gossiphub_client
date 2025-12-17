@@ -41,7 +41,7 @@ const LatestStoriesSection = ({ latestStories, isDarkMode }) => {
                   ) : (
                     <img
                       src={story.media}
-                      alt={`Story: ${story.title}`}
+                      alt={story.title}
                       className="w-16 h-16 object-cover rounded-lg"
                       loading="lazy"
                       onError={(e) =>

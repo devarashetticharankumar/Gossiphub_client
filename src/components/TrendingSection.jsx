@@ -46,7 +46,7 @@ const TrendingSection = ({ trends, isDarkMode }) => {
                 ) : (
                   <img
                     src={trend.media}
-                    alt={`Trending: ${trend.title}`}
+                    alt={trend.title}
                     className="w-full h-32 object-cover"
                     loading="lazy"
                     onError={(e) =>

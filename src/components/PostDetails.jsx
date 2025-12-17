@@ -23141,6 +23141,7 @@ const PostDetails = () => {
                                     videoRef={videoRef}
                                     isTrending={isTrending}
                                     isDarkMode={isDarkMode}
+                                    altText={post.title}
                                 />
                             ) : (
                                 <div
@@ -23717,7 +23718,7 @@ const PostDetails = () => {
                                                     ) : (
                                                         <img
                                                             src={story.media}
-                                                            alt={`Related post: ${story.title}`}
+                                                            alt={story.title}
                                                             className="w-16 h-16 object-cover rounded"
                                                             loading="lazy"
                                                             onError={(e) =>
