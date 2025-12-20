@@ -579,19 +579,17 @@ const ShortsFeed = () => {
       return; // Prevent liking if not logged in
     }
     try {
-      console.log("Toggling like for shortId:", shortId);
       const data = await toggleShortLike(shortId);
-      console.log("API response:", data);
       if (data && (data.likes !== undefined || data.likeCount !== undefined)) {
         setShorts((prev) =>
           prev.map((short) =>
             short._id === shortId
               ? {
-                  ...short,
-                  likes: Array.isArray(data.likes)
-                    ? data.likes
-                    : Array(data.likeCount || data.likes).fill({ _id: userId }),
-                }
+                ...short,
+                likes: Array.isArray(data.likes)
+                  ? data.likes
+                  : Array(data.likeCount || data.likes).fill({ _id: userId }),
+              }
               : short
           )
         );
@@ -692,12 +690,7 @@ const ShortsFeed = () => {
                 muted={isMuted}
                 className="w-full h-full object-cover"
                 onError={(e) => handleVideoError(e, short._id)}
-                onLoadedData={(e) =>
-                  console.log(
-                    `Video loaded for short ${short._id}:`,
-                    e.target.src
-                  )
-                }
+                onLoadedData={(e) => { }}
                 playsInline
               />
               {/* Progress Bar */}
@@ -739,11 +732,10 @@ const ShortsFeed = () => {
                   disabled={!userId} // Disable like button if not logged in
                 >
                   <FaHeart
-                    className={`text-lg sm:text-xl ${
-                      userId && short.likes.some((like) => like._id === userId)
+                    className={`text-lg sm:text-xl ${userId && short.likes.some((like) => like._id === userId)
                         ? "text-red-500"
                         : ""
-                    }`}
+                      }`}
                   />
                   <span className="text-xs sm:text-sm ml-0 hidden md:block">
                     {short.likes.length}

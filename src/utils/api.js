@@ -105,11 +105,15 @@ export const getPosts = async ({
   limit = 5,
   hashtag = "",
   search = "",
+  category = "",
+  authorId = "",
 } = {}) => {
   const query = new URLSearchParams({ page, limit });
 
   if (hashtag) query.append("hashtag", hashtag);
   if (search) query.append("search", search);
+  if (category) query.append("category", category);
+  if (authorId) query.append("authorId", authorId);
 
   const response = await fetch(`${API_URL}/posts?${query.toString()}`);
   return handleResponse(response);

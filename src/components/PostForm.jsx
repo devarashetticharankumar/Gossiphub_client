@@ -1,21 +1,3 @@
-// import { useState, useEffect, useCallback } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
-// import { createPost } from "../utils/api";
-// import ReactQuill from "react-quill-new";
-// import "quill/dist/quill.snow.css";
-// import { GoogleGenerativeAI } from "@google/generative-ai";
-
-// // Note: The API key is accessed from the .env file using Vite's convention.
-// // For production, move API calls to a backend to fully secure the API key.
-// const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-
-// const PostForm = () => {
-//   const [formData, setFormData] = useState({
-//     title: "",
-//     description: "",
-//     isAnonymous: false,
-//     category: "General",
 //   });
 //   const [file, setFile] = useState(null);
 //   const [filePreview, setFilePreview] = useState(null);
@@ -25,7 +7,8 @@
 //   const [isRatingLoading, setIsRatingLoading] = useState(false); // State for loading rating
 //   const [isGeneratingDescription, setIsGeneratingDescription] = useState(false); // State for generating description
 //   const [mediaSuggestions, setMediaSuggestions] = useState([]); // State for media suggestions
-//   const navigate = useNavigate();
+// const navigate = useNavigate();
+// const quillRef = useRef(null); // Ref for ReactQuill instance
 
 //   // Persistent dark mode
 //   useEffect(() => {
@@ -246,7 +229,6 @@
 //     try {
 //       // Step 1: Detect the language of the title
 //       const detectedLanguage = await detectLanguageWithGemini(formData.title);
-//       console.log(`Detected language: ${detectedLanguage}`); // For debugging
 
 //       // Step 2: Generate the description in the detected language
 //       const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
@@ -628,7 +610,8 @@
 //                 </button>
 //               </div>
 //               <ReactQuill
-//                 value={formData.description}
+// ref = { quillRef }
+// value = { formData.description }
 //                 onChange={handleDescriptionChange}
 //                 placeholder="Spill the details... Use formatting options to enhance your post."
 //                 className={`${
@@ -798,39 +781,41 @@
 //               >
 //                 Category
 //               </label>
-//               <select
-//                 name="category"
-//                 value={formData.category}
-//                 onChange={handleChange}
-//                 className={`w-full p-3 ${
-//                   isDarkMode
-//                     ? "bg-gray-800 text-gray-100"
-//                     : "bg-gray-50 text-gray-900"
-//                 } border ${
-//                   isDarkMode ? "border-gray-700" : "border-gray-200"
-//                 } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300`}
-//                 aria-label="Post category"
-//               >
-//                 <option value="General">General</option>
-//                 <option value="Humor">Humor</option>
-//                 <option value="News">News</option>
-//                 <option value="Technology">Technology</option>
-//                 <option value="Jobs">Jobs</option>
-//                 <option value="Reviews">Reviews</option>
-//                 <option value="Movie Gossips">Movie</option>
-//                 <option value="Celebrity Gossips">Celebrity</option>
-//                 <option value="Personal Life Gossips">Personal Life</option>
-//                 <option value="Office Gossips">Office</option>
-//                 <option value="College Gossips">College</option>
-//                 <option value="School Gossips">School</option>
-//                 <option value="Music and Dance">Music and Dance</option>
-//                 <option value="Industry Gossips">Industry</option>
-//                 <option value="Sports">Sports</option>
-//                 <option value="Social Media">Social Media</option>
-//                 <option value="Entertainment">Entertainment</option>
-//                 <option value="Political">Political</option>
-//                 <option value="International">International</option>
-//               </select>
+// <select
+//   name="category"
+//   value={formData.category}
+//   onChange={handleChange}
+//   className={`w-full p-3 ${isDarkMode
+//       ? "bg-gray-800 text-gray-100"
+//       : "bg-gray-50 text-gray-900"
+//     } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
+//     } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300`}
+//   aria-label="Post category"
+// >
+//   <option value="General">General</option>
+//   <option value="Tech News">Tech News</option>
+//   <option value="Film Reviews & Trailers">
+//     Film Reviews & Trailers
+//   </option>
+//   <option value="Entertainment News">Entertainment News</option>
+//   <option value="Celebrity News">Celebrity News</option>
+//   <option value="Tollywood">Tollywood</option>
+//   <option value="Bollywood">Bollywood</option>
+//   <option value="Kollywood">Kollywood</option>
+//   <option value="Mollywood">Mollywood</option>
+//   <option value="Hollywood">Hollywood</option>
+//   <option value="Upcoming Movies">Upcoming Movies</option>
+//   <option value="Music & Soundtracks">Music & Soundtracks</option>
+//   <option value="TV & Web Series">TV & Web Series</option>
+//   <option value="Awards & Events">Awards & Events</option>
+//   <option value="Lifestyle & Fashion">Lifestyle & Fashion</option>
+//   <option value="Sports">Sports</option>
+//   <option value="Interviews">Interviews</option>
+//   <option value="Political">Political</option>
+//   <option value="News">News</option>
+//   <option value="Global News">Global News</option>
+//   <option value="Actress">Actress</option>
+// </select>
 //             </div>
 //             <div>
 //               <label
@@ -951,7 +936,7 @@
 
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createPost } from "../utils/api";
@@ -978,6 +963,7 @@ const PostForm = () => {
   const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
   const [mediaSuggestions, setMediaSuggestions] = useState([]);
   const navigate = useNavigate();
+  const quillRef = useRef(null); // Ref for ReactQuill instance
 
   // Persistent dark mode
   useEffect(() => {
@@ -985,9 +971,46 @@ const PostForm = () => {
     if (saved) setIsDarkMode(JSON.parse(saved));
   }, []);
 
+  // Function to insert a table into the editor
+  const [showTableModal, setShowTableModal] = useState(false);
+  const [tableDimensions, setTableDimensions] = useState({ rows: 3, cols: 3 });
+
+  // Function to open the custom table modal
+  const insertTable = () => {
+    setShowTableModal(true);
+  };
+
+  // Function to confirm table insertion from modal
+  const confirmInsertTable = () => {
+    if (quillRef.current) {
+      const quill = quillRef.current.getEditor();
+      const tableModule = quill.getModule("table");
+      if (tableModule) {
+        tableModule.insertTable(parseInt(tableDimensions.rows, 10), parseInt(tableDimensions.cols, 10));
+        setShowTableModal(false);
+      } else {
+        toast.error("Table module not available");
+      }
+    }
+  };
+
+  // Table editing functions
+  const insertRowAbove = () => quillRef.current?.getEditor().getModule("table").insertRowAbove();
+  const insertRowBelow = () => quillRef.current?.getEditor().getModule("table").insertRowBelow();
+  const insertColumnLeft = () => quillRef.current?.getEditor().getModule("table").insertColumnLeft();
+  const insertColumnRight = () => quillRef.current?.getEditor().getModule("table").insertColumnRight();
+  const deleteRow = () => quillRef.current?.getEditor().getModule("table").deleteRow();
+  const deleteColumn = () => quillRef.current?.getEditor().getModule("table").deleteColumn();
+  const deleteTable = () => quillRef.current?.getEditor().getModule("table").deleteTable();
+
   useEffect(() => {
     localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
   }, [isDarkMode]);
+
+  // ... (rest of the component)
+
+
+
 
   // Debounce function to limit API calls
   const debounce = (func, delay) => {
@@ -1103,11 +1126,10 @@ Text: ${title}`;
 Gossip Post Title: ${title}
 Gossip Post Description: ${description}
 Gossip Post Hashtags: ${hashtags}
-${
-  file && file.type.startsWith("image/")
-    ? "\nGossip Post Image: [Attached Image]"
-    : ""
-}`;
+${file && file.type.startsWith("image/")
+          ? "\nGossip Post Image: [Attached Image]"
+          : ""
+        }`;
 
       const requestParts = [prompt];
 
@@ -1312,8 +1334,7 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
       : 200 * 1024 * 1024;
     if (selectedFile.size > maxSize) {
       toast.error(
-        `File size exceeds the limit (${
-          selectedFile.type.startsWith("image/") ? "10MB" : "500MB"
+        `File size exceeds the limit (${selectedFile.type.startsWith("image/") ? "10MB" : "500MB"
         }).`
       );
       e.target.value = null;
@@ -1407,9 +1428,8 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
 
   return (
     <div
-      className={`min-h-screen ${
-        isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
-      } transition-colors duration-500 font-poppins`}
+      className={`min-h-screen ${isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
+        } transition-colors duration-500 font-poppins`}
     >
       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -1445,23 +1465,20 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
 
       <div className="max-w-7xl mx-auto px-4 pt-20 pb-12 flex justify-center">
         <div
-          className={`w-full max-w-2xl ${
-            isDarkMode ? "bg-gray-900" : "bg-white"
-          } rounded-lg p-6 shadow-lg transition-colors duration-500`}
+          className={`w-full max-w-2xl ${isDarkMode ? "bg-gray-900" : "bg-white"
+            } rounded-lg p-6 shadow-lg transition-colors duration-500`}
         >
           <h2
-            className={`text-3xl font-bold ${
-              isDarkMode ? "text-gray-100" : "text-gray-900"
-            } mb-6 text-center`}
+            className={`text-3xl font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+              } mb-6 text-center`}
           >
             Share Your Gossip
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label
-                className={`block text-sm font-medium ${
-                  isDarkMode ? "text-gray-200" : "text-gray-600"
-                } mb-1`}
+                className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                  } mb-1`}
               >
                 Title
               </label>
@@ -1471,22 +1488,19 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                 value={formData.title}
                 onChange={handleChange}
                 required
-                className={`w-full p-3 ${
-                  isDarkMode
-                    ? "bg-gray-800 text-gray-100"
-                    : "bg-gray-50 text-gray-900"
-                } border ${
-                  isDarkMode ? "border-gray-700" : "border-gray-200"
-                } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-500`}
+                className={`w-full p-3 ${isDarkMode
+                  ? "bg-gray-800 text-gray-100"
+                  : "bg-gray-50 text-gray-900"
+                  } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
+                  } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-500`}
                 placeholder="What's the juicy gossip?"
                 aria-label="Post title"
               />
             </div>
             <div>
               <label
-                className={`block text-sm font-medium ${
-                  isDarkMode ? "text-gray-200" : "text-gray-600"
-                } mb-1`}
+                className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                  } mb-1`}
               >
                 Hashtags (comma-separated, e.g., tech,news)
               </label>
@@ -1495,13 +1509,11 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                 name="hashtags"
                 value={formData.hashtags}
                 onChange={handleChange}
-                className={`w-full p-3 ${
-                  isDarkMode
-                    ? "bg-gray-800 text-gray-100"
-                    : "bg-gray-50 text-gray-900"
-                } border ${
-                  isDarkMode ? "border-gray-700" : "border-gray-200"
-                } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-500`}
+                className={`w-full p-3 ${isDarkMode
+                  ? "bg-gray-800 text-gray-100"
+                  : "bg-gray-50 text-gray-900"
+                  } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
+                  } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-500`}
                 placeholder="Enter hashtags, e.g., tech,news"
                 aria-label="Post hashtags"
               />
@@ -1509,9 +1521,8 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label
-                  className={`block text-sm font-medium ${
-                    isDarkMode ? "text-gray-200" : "text-gray-600"
-                  }`}
+                  className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                    }`}
                 >
                   Description
                 </label>
@@ -1519,13 +1530,12 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                   type="button"
                   onClick={generateDescriptionWithGemini}
                   disabled={isGeneratingDescription || !formData.title.trim()}
-                  className={`flex items-center space-x-2 px-3 py-1 rounded-lg font-medium text-sm transition-all duration-300 ${
-                    isGeneratingDescription || !formData.title.trim()
-                      ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                      : isDarkMode
+                  className={`flex items-center space-x-2 px-3 py-1 rounded-lg font-medium text-sm transition-all duration-300 ${isGeneratingDescription || !formData.title.trim()
+                    ? "bg-gray-400 cursor-not-allowed text-gray-700"
+                    : isDarkMode
                       ? "bg-red-600 text-white hover:bg-red-700"
                       : "bg-red-500 text-white hover:bg-red-600"
-                  }`}
+                    }`}
                   aria-label="Generate description with AI"
                 >
                   {isGeneratingDescription ? (
@@ -1566,27 +1576,65 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                     </>
                   )}
                 </button>
+                <button
+                  type="button"
+                  onClick={insertTable}
+                  className={`flex items-center space-x-2 px-3 py-1 rounded-lg font-medium text-sm transition-all duration-300 ${isDarkMode
+                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  aria-label="Insert table"
+                >
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span>Insert Table</span>
+                </button>
+              </div>
+
+              {/* Table Tools */}
+              <div className={`flex flex-wrap gap-2 mb-2 p-2 rounded-lg border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-200"}`}>
+                <span className={`text-xs font-semibold ${isDarkMode ? "text-gray-400" : "text-gray-500"} flex items-center mr-2`}>Table Tools:</span>
+                <button type="button" onClick={insertRowAbove} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200" title="Insert Row Above">+ Row ↑</button>
+                <button type="button" onClick={insertRowBelow} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200" title="Insert Row Below">+ Row ↓</button>
+                <button type="button" onClick={insertColumnLeft} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200" title="Insert Column Left">+ Col ←</button>
+                <button type="button" onClick={insertColumnRight} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200" title="Insert Column Right">+ Col →</button>
+                <button type="button" onClick={deleteRow} className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" title="Delete Row">Del Row</button>
+                <button type="button" onClick={deleteColumn} className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" title="Delete Column">Del Col</button>
+                <button type="button" onClick={deleteTable} className="text-xs px-2 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300" title="Delete Table">Del Table</button>
               </div>
               <ReactQuill
+                ref={quillRef}
                 value={formData.description}
                 onChange={handleDescriptionChange}
                 placeholder="Spill the details... Use formatting options to enhance your post."
-                className={`${
-                  isDarkMode
-                    ? "bg-gray-800 text-gray-100"
-                    : "bg-gray-50 text-gray-900"
-                } border ${
-                  isDarkMode ? "border-gray-700" : "border-gray-200"
-                } rounded-lg focus-within:ring-2 focus-within:ring-red-500 focus-within:border-transparent transition-all duration-300`}
+                className={`${isDarkMode
+                  ? "bg-gray-800 text-gray-100"
+                  : "bg-gray-50 text-gray-900"
+                  } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
+                  } rounded-lg focus-within:ring-2 focus-within:ring-red-500 focus-within:border-transparent transition-all duration-300`}
                 modules={{
                   toolbar: [
-                    [{ header: [1, 2, false] }],
+                    [{ header: [1, 2, 3, false] }],
                     ["bold", "italic", "underline", "strike"],
                     [{ list: "ordered" }, { list: "bullet" }],
                     [{ color: [] }, { background: [] }],
                     ["link", "image", "video"],
-                    ["clean"],
+                    ["clean"], // Add table option here if available in standard quill toolbar, but standard quill usually needs extended modules.
+                    // For now, I will just leave it attempting to use the default or just rely on 'table' module being active.
                   ],
+                  // Explicitly enable table module
+                  table: true,
                 }}
                 formats={[
                   "header",
@@ -1601,19 +1649,18 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                   "video",
                   "color",
                   "background",
+                  "table",
                 ]}
                 aria-label="Post description editor"
               />
               {mediaSuggestions.length > 0 && (
                 <div
-                  className={`mt-3 p-4 rounded-lg ${
-                    isDarkMode ? "bg-gray-800" : "bg-gray-100"
-                  } transition-colors duration-500`}
+                  className={`mt-3 p-4 rounded-lg ${isDarkMode ? "bg-gray-800" : "bg-gray-100"
+                    } transition-colors duration-500`}
                 >
                   <p
-                    className={`text-sm font-medium ${
-                      isDarkMode ? "text-gray-200" : "text-gray-600"
-                    } mb-2`}
+                    className={`text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                      } mb-2`}
                   >
                     Suggested Media for Your Post:
                   </p>
@@ -1621,9 +1668,8 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                     {mediaSuggestions.map((suggestion, index) => (
                       <li
                         key={index}
-                        className={`text-sm ${
-                          isDarkMode ? "text-gray-400" : "text-gray-500"
-                        } flex items-center gap-2`}
+                        className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"
+                          } flex items-center gap-2`}
                       >
                         <span className="font-medium">
                           {suggestion.type === "Suggested Image"
@@ -1638,9 +1684,8 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
               )}
               {(isRatingLoading || contentRating) && (
                 <div
-                  className={`mt-3 p-4 rounded-lg ${
-                    isDarkMode ? "bg-gray-800" : "bg-gray-100"
-                  } transition-colors duration-500`}
+                  className={`mt-3 p-4 rounded-lg ${isDarkMode ? "bg-gray-800" : "bg-gray-100"
+                    } transition-colors duration-500`}
                 >
                   {isRatingLoading ? (
                     <div className="flex items-center gap-2">
@@ -1665,9 +1710,8 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                         />
                       </svg>
                       <span
-                        className={`text-sm ${
-                          isDarkMode ? "text-gray-200" : "text-gray-600"
-                        }`}
+                        className={`text-sm ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                          }`}
                       >
                         Evaluating post...
                       </span>
@@ -1677,26 +1721,22 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <span
-                            className={`text-sm font-medium ${
-                              isDarkMode ? "text-gray-200" : "text-gray-600"
-                            }`}
+                            className={`text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                              }`}
                           >
                             Overall Rating:
                           </span>
                           <span
-                            className={`text-sm font-medium px-3 py-1 rounded-full ${
-                              getRatingStyles(contentRating.rating).bgColor
-                            } ${
-                              getRatingStyles(contentRating.rating).textColor
-                            }`}
+                            className={`text-sm font-medium px-3 py-1 rounded-full ${getRatingStyles(contentRating.rating).bgColor
+                              } ${getRatingStyles(contentRating.rating).textColor
+                              }`}
                           >
                             {contentRating.rating}/10
                           </span>
                         </div>
                         <p
-                          className={`text-sm ${
-                            isDarkMode ? "text-gray-400" : "text-gray-500"
-                          }`}
+                          className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
                         >
                           <span className="font-medium">Explanation:</span>{" "}
                           {contentRating.explanation}
@@ -1714,25 +1754,22 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                 id="isAnonymous"
                 checked={formData.isAnonymous}
                 onChange={handleChange}
-                className={`h-5 w-5 text-red-600 focus:ring-red-500 ${
-                  isDarkMode ? "border-gray-700" : "border-gray-300"
-                } rounded`}
+                className={`h-5 w-5 text-red-600 focus:ring-red-500 ${isDarkMode ? "border-gray-700" : "border-gray-300"
+                  } rounded`}
                 aria-label="Post anonymously"
               />
               <label
                 htmlFor="isAnonymous"
-                className={`ml-2 text-sm font-medium ${
-                  isDarkMode ? "text-gray-200" : "text-gray-600"
-                }`}
+                className={`ml-2 text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                  }`}
               >
                 Post Anonymously
               </label>
             </div>
             <div>
               <label
-                className={`block text-sm font-medium ${
-                  isDarkMode ? "text-gray-200" : "text-gray-600"
-                } mb-1`}
+                className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                  } mb-1`}
               >
                 Category
               </label>
@@ -1740,13 +1777,11 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className={`w-full p-3 ${
-                  isDarkMode
-                    ? "bg-gray-800 text-gray-100"
-                    : "bg-gray-50 text-gray-900"
-                } border ${
-                  isDarkMode ? "border-gray-700" : "border-gray-200"
-                } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300`}
+                className={`w-full p-3 ${isDarkMode
+                  ? "bg-gray-800 text-gray-100"
+                  : "bg-gray-50 text-gray-900"
+                  } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
+                  } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300`}
                 aria-label="Post category"
               >
                 <option value="General">General</option>
@@ -1776,9 +1811,8 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
             </div>
             <div>
               <label
-                className={`block text-sm font-medium ${
-                  isDarkMode ? "text-gray-200" : "text-gray-600"
-                } mb-1`}
+                className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                  } mb-1`}
               >
                 Media (Image or Video)
               </label>
@@ -1788,17 +1822,14 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                   type="file"
                   accept="image/jpeg,image/png,image/gif,video/mp4,video/webm"
                   onChange={handleFileChange}
-                  className={`w-full p-3 ${
-                    isDarkMode
-                      ? "bg-gray-800 text-gray-100"
-                      : "bg-gray-50 text-gray-900"
-                  } border ${
-                    isDarkMode ? "border-gray-700" : "border-gray-200"
-                  } rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold ${
-                    isDarkMode
+                  className={`w-full p-3 ${isDarkMode
+                    ? "bg-gray-800 text-gray-100"
+                    : "bg-gray-50 text-gray-900"
+                    } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
+                    } rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold ${isDarkMode
                       ? "file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600"
                       : "file:bg-red-100 file:text-red-700 hover:file:bg-red-200"
-                  } transition-all duration-300`}
+                    } transition-all duration-300`}
                   aria-label="Upload image or video"
                 />
               </div>
@@ -1806,20 +1837,18 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                 <div className="mt-4">
                   <div className="flex justify-between items-center mb-2">
                     <p
-                      className={`text-sm ${
-                        isDarkMode ? "text-gray-200" : "text-gray-600"
-                      }`}
+                      className={`text-sm ${isDarkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
                     >
                       Preview:
                     </p>
                     <button
                       type="button"
                       onClick={clearFile}
-                      className={`text-sm ${
-                        isDarkMode
-                          ? "text-red-400 hover:underline"
-                          : "text-red-600 hover:underline"
-                      }`}
+                      className={`text-sm ${isDarkMode
+                        ? "text-red-400 hover:underline"
+                        : "text-red-600 hover:underline"
+                        }`}
                       aria-label="Clear uploaded media"
                     >
                       Clear
@@ -1845,11 +1874,10 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full py-3 rounded-lg font-semibold text-white transition-all duration-300 ${
-                isSubmitting
-                  ? "bg-red-400 cursor-not-allowed"
-                  : "bg-red-600 hover:bg-red-700"
-              } flex items-center justify-center space-x-2`}
+              className={`w-full py-3 rounded-lg font-semibold text-white transition-all duration-300 ${isSubmitting
+                ? "bg-red-400 cursor-not-allowed"
+                : "bg-red-600 hover:bg-red-700"
+                } flex items-center justify-center space-x-2`}
               aria-label={isSubmitting ? "Creating post" : "Create post"}
             >
               {isSubmitting ? (
@@ -1882,8 +1910,56 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
             </button>
           </form>
         </div>
-      </div>
-    </div>
+      </div >
+      {/* Custom Table Modal */}
+      {showTableModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className={`p-6 rounded-lg shadow-xl w-80 ${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
+            <h3 className="text-lg font-bold mb-4">Insert Table</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Rows</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="20"
+                  value={tableDimensions.rows}
+                  onChange={(e) => setTableDimensions({ ...tableDimensions, rows: e.target.value })}
+                  className={`w-full p-2 rounded border ${isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300"}`}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Columns</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={tableDimensions.cols}
+                  onChange={(e) => setTableDimensions({ ...tableDimensions, cols: e.target.value })}
+                  className={`w-full p-2 rounded border ${isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300"}`}
+                />
+              </div>
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowTableModal(false)}
+                  className={`px-4 py-2 rounded text-sm font-medium ${isDarkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmInsertTable}
+                  className="px-4 py-2 rounded text-sm font-medium bg-red-600 text-white hover:bg-red-700"
+                >
+                  Insert
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div >
   );
 };
 

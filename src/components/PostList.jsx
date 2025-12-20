@@ -133,11 +133,31 @@
 //               : null,
 //         }));
 //         setPosts(sanitizedPosts);
-//         const uniqueCategories = [
-//           "All",
-//           ...new Set(sanitizedPosts.map((post) => post.category || "General")),
-//         ];
-//         setCategories(uniqueCategories);
+// const fixedCategories = [
+//   "All",
+//   "General",
+//   "Tech News",
+//   "Film Reviews & Trailers",
+//   "Entertainment News",
+//   "Celebrity News",
+//   "Tollywood",
+//   "Bollywood",
+//   "Kollywood",
+//   "Mollywood",
+//   "Hollywood",
+//   "Upcoming Movies",
+//   "Music & Soundtracks",
+//   "TV & Web Series",
+//   "Awards & Events",
+//   "Lifestyle & Fashion",
+//   "Sports",
+//   "Interviews",
+//   "Political",
+//   "News",
+//   "Global News",
+//   "Actress",
+// ];
+// setCategories(fixedCategories);
 
 //         if (isAuthenticated) {
 //           setUser(userRes);
@@ -5438,7 +5458,7 @@ import {
   useRef,
   useCallback,
 } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
@@ -5483,8 +5503,34 @@ const UpcomingMovies = lazy(() => import("./UpcomingMovies"));
 const ActressSection = lazy(() => import("./ActressSection"));
 const PopularSection = lazy(() => import("./PopularSection"));
 
+const FIXED_CATEGORIES = [
+  "All",
+  "General",
+  "Tech News",
+  "Film Reviews & Trailers",
+  "Entertainment News",
+  "Celebrity News",
+  "Tollywood",
+  "Bollywood",
+  "Kollywood",
+  "Mollywood",
+  "Hollywood",
+  "Upcoming Movies",
+  "Music & Soundtracks",
+  "TV & Web Series",
+  "Awards & Events",
+  "Lifestyle & Fashion",
+  "Sports",
+  "Interviews",
+  "Political",
+  "News",
+  "Global News",
+  "Actress",
+];
+
 const PostList = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [posts, setPosts] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
   const [reviewPosts, setReviewPosts] = useState([]);
@@ -5498,10 +5544,27 @@ const PostList = () => {
   const [loadingMovies, setLoadingMovies] = useState(false);
   const [upcomingMovies, setUpcomingMovies] = useState([]);
   const [loadingActressPosts, setLoadingActressPosts] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    try {
+      const hash = window.location.hash.replace("#", "");
+      if (hash) {
+        const decodedHash = decodeURIComponent(hash);
+        const matched = FIXED_CATEGORIES.find(
+          (c) => c.toLowerCase() === decodedHash.toLowerCase()
+        );
+        return matched || "All";
+      }
+    } catch (e) {
+      console.error("Error parsing hash:", e);
+    }
+    return "All";
+  });
   const [selectedHashtag, setSelectedHashtag] = useState("");
-  const [categories, setCategories] = useState(["All"]);
-  const [page, setPage] = useState(1);
+  const [categories, setCategories] = useState(FIXED_CATEGORIES);
+  const [page, setPage] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return parseInt(params.get("page")) || 1;
+  });
   const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -5628,6 +5691,23 @@ const PostList = () => {
     updateDimensions();
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
+
+  // Sync category with URL hash
+  useEffect(() => {
+    const hash = decodeURIComponent(location.hash.replace("#", ""));
+    if (hash) {
+      const matchedCategory = categories.find(
+        (c) => c.toLowerCase() === hash.toLowerCase()
+      );
+      if (matchedCategory && matchedCategory !== selectedCategory) {
+        setSelectedCategory(matchedCategory);
+      }
+    } else if (selectedCategory !== "All") {
+      setSelectedCategory("All");
+    }
+  }, [location.hash, categories]);
+
+
   useEffect(() => {
     fetchReviewPosts();
     fetchActressPosts();
@@ -5663,6 +5743,7 @@ const PostList = () => {
             limit,
             hashtag: selectedHashtag,
             search,
+            category: selectedCategory !== "All" ? selectedCategory : undefined,
           });
         }
         const sanitizedPosts = (postsRes.posts || []).map((post) => ({
@@ -5688,11 +5769,31 @@ const PostList = () => {
           });
         }
         setTotalPages(postsRes.totalPages || 1);
-        const uniqueCategories = [
+        const fixedCategories = [
           "All",
-          ...new Set(sanitizedPosts.map((post) => post.category || "General")),
+          "General",
+          "Tech News",
+          "Film Reviews & Trailers",
+          "Entertainment News",
+          "Celebrity News",
+          "Tollywood",
+          "Bollywood",
+          "Kollywood",
+          "Mollywood",
+          "Hollywood",
+          "Upcoming Movies",
+          "Music & Soundtracks",
+          "TV & Web Series",
+          "Awards & Events",
+          "Lifestyle & Fashion",
+          "Sports",
+          "Interviews",
+          "Political",
+          "News",
+          "Global News",
+          "Actress",
         ];
-        setCategories(uniqueCategories);
+        setCategories(fixedCategories);
         if (isAuthenticated) {
           const userId = localStorage.getItem("userId");
           const reactions = {};
@@ -5803,12 +5904,21 @@ const PostList = () => {
         }
       }
     },
-    [isAuthenticated, selectedHashtag, limit]
+    [isAuthenticated, selectedHashtag, limit, selectedCategory]
   );
+  // Sync page with URL query param source of truth
   useEffect(() => {
-    // Initial fetch with reset
-    fetchPosts(1, searchQuery, true);
-  }, [selectedHashtag, fetchPosts]);
+    const params = new URLSearchParams(location.search);
+    const pageParam = parseInt(params.get("page")) || 1;
+    if (pageParam !== page) {
+      setPage(pageParam);
+    }
+  }, [location.search]);
+
+  useEffect(() => {
+    // Initial fetch or page/category change
+    fetchPosts(page, searchQuery, true);
+  }, [selectedHashtag, fetchPosts, page]);
   const handleReaction = async (postId, type) => {
     if (!isAuthenticated) {
       toast.error("Please sign in to add a reaction");
@@ -5899,12 +6009,7 @@ const PostList = () => {
       setIsReacting(null);
     }
   };
-  const filteredPosts =
-    selectedCategory === "All"
-      ? posts
-      : posts.filter(
-        (post) => (post.category || "General") === selectedCategory
-      );
+  const filteredPosts = posts;
   const videoPosts = filteredPosts
     .filter(
       (post) =>
@@ -6074,9 +6179,8 @@ const PostList = () => {
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
-      // Call fetchPosts directly for pagination, bypassing debounce
-      fetchPosts(newPage, searchQuery, false);
       window.scrollTo({ top: 0, behavior: "smooth" });
+      navigate({ search: `?page=${newPage}`, hash: location.hash });
     }
   };
   return (
@@ -6519,10 +6623,18 @@ const PostList = () => {
               <motion.button
                 key={category}
                 onClick={() => {
-                  setSelectedCategory(category);
+                  const newCategory = category;
+                  setSelectedCategory(newCategory);
                   setSelectedHashtag("");
                   setPage(1);
-                  fetchPosts(1, searchQuery, true);
+                  setPosts([]);
+                  setAllPosts([]);
+                  // Update URL hash and reset page query
+                  if (newCategory === "All") {
+                    navigate("/");
+                  } else {
+                    navigate({ search: "", hash: `#${newCategory}` });
+                  }
                 }}
                 className={`px-3 py-1 text-sm font-medium uppercase tracking-wide rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 whitespace-nowrap ${selectedCategory === category
                   ? "bg-red-600 text-white"

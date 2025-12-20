@@ -116,7 +116,6 @@
 //           url: postUrl,
 //         };
 
-//         console.log("Sharing data:", shareData); // Debug log
 
 //         if (postMedia && !isVideo) {
 //           try {
@@ -23222,17 +23221,13 @@ const PostDetails = () => {
                                 role="region"
                                 aria-label="Post description"
                             >
-                                {post.description?.split("\n").map((paragraph, pIdx) => (
-                                    <motion.div
-                                        key={pIdx}
-                                        className="mb-4 last:mb-0"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.5 }}
-                                        dangerouslySetInnerHTML={{ __html: paragraph }}
-                                    />
-                                ))}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5 }}
+                                    dangerouslySetInnerHTML={{ __html: post.description }}
+                                />
                                 {descriptionImages.length > 0 && (
                                     <ImageCarousel
                                         images={descriptionImages}

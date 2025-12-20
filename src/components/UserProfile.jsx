@@ -9228,11 +9228,9 @@ const UserProfile = () => {
   const fetchShorts = useCallback(async () => {
     try {
       setShortsLoading(true);
-      console.log("Fetching shorts for userId:", dataCache.current.user?._id);
       const userId = dataCache.current.user?._id;
       if (!userId) return;
       const shortsRes = await getShorts({ page: 1, limit: 10 });
-      console.log("Shorts API response:", shortsRes);
       const shortsArray = Array.isArray(shortsRes.shorts)
         ? shortsRes.shorts
         : [];
@@ -9246,7 +9244,6 @@ const UserProfile = () => {
         setHasMoreShorts(shortsArray.length === 10);
       }
     } catch (err) {
-      console.error("Shorts fetch error:", err);
       toast.error("Failed to load shorts");
     } finally {
       setShortsLoading(false);
@@ -9344,7 +9341,6 @@ const UserProfile = () => {
         setShortsLoading(true);
         const nextPage = pageShorts + 1;
         const shortsRes = await getShorts({ page: nextPage, limit: 10 });
-        console.log("More shorts API response:", shortsRes);
         const shortsArray = Array.isArray(shortsRes.shorts)
           ? shortsRes.shorts
           : [];
@@ -9633,7 +9629,7 @@ const UserProfile = () => {
       achieved:
         user &&
         new Date(user.createdAt) <
-          new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+        new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
       icon: "🏆",
     },
     ...(user?.streakRewards || []).map((reward) => ({
@@ -9655,16 +9651,14 @@ const UserProfile = () => {
   if (userLoading) {
     return (
       <div
-        className={`flex justify-center items-center h-screen ${
-          isDarkMode ? "bg-gray-900" : "bg-gray-50"
-        }`}
+        className={`flex justify-center items-center h-screen ${isDarkMode ? "bg-gray-900" : "bg-gray-50"
+          }`}
       >
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1.2 }}
-          className={`text-2xl font-medium ${
-            isDarkMode ? "text-white" : "text-red-600"
-          }`}
+          className={`text-2xl font-medium ${isDarkMode ? "text-white" : "text-red-600"
+            }`}
         >
           <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -9680,9 +9674,8 @@ const UserProfile = () => {
 
   return (
     <div
-      className={`min-h-screen ${
-        isDarkMode ? "bg-gray-900" : "bg-gray-50"
-      } pt-16 pb-8 px-4 sm:px-6 lg:px-8 font-[Inter,sans-serif] transition-colors duration-300`}
+      className={`min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-gray-50"
+        } pt-16 pb-8 px-4 sm:px-6 lg:px-8 font-[Inter,sans-serif] transition-colors duration-300`}
     >
       <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 shadow-lg py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
@@ -9717,9 +9710,8 @@ const UserProfile = () => {
       </div>
       <div className="max-w-5xl mx-auto">
         <div
-          className={`${
-            isDarkMode ? "bg-gray-800" : "bg-white"
-          } rounded-lg p-2 shadow-md sticky top-14 z-40 transition-colors duration-300`}
+          className={`${isDarkMode ? "bg-gray-800" : "bg-white"
+            } rounded-lg p-2 shadow-md sticky top-14 z-40 transition-colors duration-300`}
         >
           <div className="flex space-x-1">
             {[
@@ -9731,13 +9723,12 @@ const UserProfile = () => {
               <motion.button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none ${
-                  activeTab === tab
+                className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none ${activeTab === tab
                     ? "text-red-600"
                     : isDarkMode
-                    ? "text-gray-300 hover:text-white"
-                    : "text-gray-600 hover:text-red-600"
-                }`}
+                      ? "text-gray-300 hover:text-white"
+                      : "text-gray-600 hover:text-red-600"
+                  }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label={`View ${tab} section`}
@@ -9759,9 +9750,8 @@ const UserProfile = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className={`${
-              isDarkMode ? "bg-gray-800" : "bg-white"
-            } rounded-lg shadow-lg mt-4 overflow-hidden transition-colors duration-300`}
+            className={`${isDarkMode ? "bg-gray-800" : "bg-white"
+              } rounded-lg shadow-lg mt-4 overflow-hidden transition-colors duration-300`}
             role="region"
             aria-label="User profile"
           >
@@ -9771,11 +9761,10 @@ const UserProfile = () => {
             <div className="relative -mt-20 px-6 pb-6">
               <div className="flex justify-center">
                 <div
-                  className={`relative ${
-                    user?.reactionStreak > 0
+                  className={`relative ${user?.reactionStreak > 0
                       ? "p-1 bg-gradient-to-r from-red-600 to-orange-500 rounded-full"
                       : ""
-                  }`}
+                    }`}
                 >
                   <img
                     src={
@@ -9803,37 +9792,33 @@ const UserProfile = () => {
               <div className="text-center mt-4">
                 <div className="flex justify-center items-center gap-2">
                   <h2
-                    className={`text-xl font-semibold ${
-                      isDarkMode ? "text-white" : "text-gray-900"
-                    }`}
+                    className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-gray-900"
+                      }`}
                   >
                     {user?.username || user?.email}
                   </h2>
                   <span
-                    className={`text-xs font-medium px-2 py-1 rounded-full ${
-                      isDarkMode
+                    className={`text-xs font-medium px-2 py-1 rounded-full ${isDarkMode
                         ? "bg-red-900/50 text-red-300"
                         : "bg-red-100 text-red-600"
-                    }`}
+                      }`}
                   >
                     Level {user?.level || 1}
                   </span>
                 </div>
                 <p
-                  className={`mt-1 text-sm ${
-                    isDarkMode ? "text-gray-300" : "text-gray-600"
-                  } max-w-md mx-auto`}
+                  className={`mt-1 text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                    } max-w-md mx-auto`}
                 >
                   {user?.bio || "No bio yet."}
                 </p>
                 <div className="flex justify-center gap-6 mt-2 text-sm">
                   <button
                     onClick={() => setShowFollowers(true)}
-                    className={`font-medium ${
-                      isDarkMode
+                    className={`font-medium ${isDarkMode
                         ? "text-gray-300 hover:text-white"
                         : "text-gray-600 hover:text-red-600"
-                    }`}
+                      }`}
                     aria-label="View followers"
                   >
                     <span className="font-semibold">
@@ -9843,11 +9828,10 @@ const UserProfile = () => {
                   </button>
                   <button
                     onClick={() => setShowFollowing(true)}
-                    className={`font-medium ${
-                      isDarkMode
+                    className={`font-medium ${isDarkMode
                         ? "text-gray-300 hover:text-white"
                         : "text-gray-600 hover:text-red-600"
-                    }`}
+                      }`}
                     aria-label="View following"
                   >
                     <span className="font-semibold">
@@ -9900,9 +9884,8 @@ const UserProfile = () => {
                   <div>
                     <label
                       htmlFor="username"
-                      className={`block text-sm font-medium ${
-                        isDarkMode ? "text-gray-300" : "text-gray-700"
-                      }`}
+                      className={`block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"
+                        }`}
                     >
                       Username
                     </label>
@@ -9914,20 +9897,18 @@ const UserProfile = () => {
                       onChange={handleInputChange}
                       minLength={3}
                       maxLength={20}
-                      className={`mt-1 w-full p-2 rounded-md border ${
-                        isDarkMode
+                      className={`mt-1 w-full p-2 rounded-md border ${isDarkMode
                           ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-200 text-gray-900"
-                      } focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors duration-200`}
+                        } focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors duration-200`}
                       aria-label="Username input"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="bio"
-                      className={`block text-sm font-medium ${
-                        isDarkMode ? "text-gray-300" : "text-gray-700"
-                      }`}
+                      className={`block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"
+                        }`}
                     >
                       Bio
                     </label>
@@ -9937,20 +9918,18 @@ const UserProfile = () => {
                       value={formData.bio}
                       onChange={handleInputChange}
                       maxLength={200}
-                      className={`mt-1 w-full p-2 rounded-md border ${
-                        isDarkMode
+                      className={`mt-1 w-full p-2 rounded-md border ${isDarkMode
                           ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-200 text-gray-900"
-                      } focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors duration-200 resize-none h-20`}
+                        } focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors duration-200 resize-none h-20`}
                       aria-label="Bio input"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="profilePicture"
-                      className={`block text-sm font-medium ${
-                        isDarkMode ? "text-gray-300" : "text-gray-700"
-                      }`}
+                      className={`block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"
+                        }`}
                     >
                       Profile Picture
                     </label>
@@ -9960,11 +9939,10 @@ const UserProfile = () => {
                       name="profilePicture"
                       accept="image/jpeg,image/png"
                       onChange={handleInputChange}
-                      className={`mt-1 w-full p-2 rounded-md border ${
-                        isDarkMode
+                      className={`mt-1 w-full p-2 rounded-md border ${isDarkMode
                           ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-200 text-gray-900"
-                      } focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors duration-200`}
+                        } focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors duration-200`}
                       aria-label="Profile picture upload"
                     />
                     {preview && (
@@ -9974,18 +9952,17 @@ const UserProfile = () => {
                           alt="Profile picture preview"
                           className="w-12 h-12 rounded-md object-cover"
                           onError={(e) =>
-                            (e.target.src =
-                              "https://avatar.iran.liara.run/public/26")
+                          (e.target.src =
+                            "https://avatar.iran.liara.run/public/26")
                           }
                         />
                         <button
                           type="button"
                           onClick={clearProfilePicture}
-                          className={`text-xs font-medium ${
-                            isDarkMode
+                          className={`text-xs font-medium ${isDarkMode
                               ? "text-red-400 hover:underline"
                               : "text-red-600 hover:underline"
-                          }`}
+                            }`}
                           aria-label="Clear profile picture"
                         >
                           Clear
@@ -10007,9 +9984,8 @@ const UserProfile = () => {
             </AnimatePresence>
             <div className="px-6 pb-6">
               <h3
-                className={`text-lg font-semibold ${
-                  isDarkMode ? "text-white" : "text-gray-900"
-                } mb-3`}
+                className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"
+                  } mb-3`}
               >
                 Achievements
               </h3>
@@ -10018,34 +9994,30 @@ const UserProfile = () => {
                   <motion.div
                     key={badge.name}
                     whileHover={{ scale: 1.03 }}
-                    className={`p-3 rounded-lg ${
-                      badge.achieved
+                    className={`p-3 rounded-lg ${badge.achieved
                         ? isDarkMode
                           ? "bg-red-900/50"
                           : "bg-red-100"
                         : isDarkMode
-                        ? "bg-gray-700/50 opacity-50"
-                        : "bg-gray-200/50 opacity-50"
-                    } flex items-center gap-3 transition-colors duration-200`}
+                          ? "bg-gray-700/50 opacity-50"
+                          : "bg-gray-200/50 opacity-50"
+                      } flex items-center gap-3 transition-colors duration-200`}
                     role="button"
-                    aria-label={`${badge.name} badge: ${badge.description}, ${
-                      badge.achieved ? "achieved" : "not achieved"
-                    }`}
+                    aria-label={`${badge.name} badge: ${badge.description}, ${badge.achieved ? "achieved" : "not achieved"
+                      }`}
                     tabIndex={0}
                   >
                     <span className="text-lg">{badge.icon}</span>
                     <div>
                       <p
-                        className={`text-sm font-medium ${
-                          isDarkMode ? "text-white" : "text-gray-900"
-                        }`}
+                        className={`text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-900"
+                          }`}
                       >
                         {badge.name}
                       </p>
                       <p
-                        className={`text-xs ${
-                          isDarkMode ? "text-gray-300" : "text-gray-600"
-                        }`}
+                        className={`text-xs ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                          }`}
                       >
                         {badge.description}
                       </p>
@@ -10061,16 +10033,14 @@ const UserProfile = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className={`${
-              isDarkMode ? "bg-gray-800" : "bg-white"
-            } rounded-lg p-6 shadow-lg mt-4 transition-colors duration-300`}
+            className={`${isDarkMode ? "bg-gray-800" : "bg-white"
+              } rounded-lg p-6 shadow-lg mt-4 transition-colors duration-300`}
             role="region"
             aria-label="User posts history"
           >
             <h3
-              className={`text-lg font-semibold ${
-                isDarkMode ? "text-white" : "text-gray-900"
-              } mb-3`}
+              className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"
+                } mb-3`}
             >
               Your Posts
             </h3>
@@ -10085,9 +10055,8 @@ const UserProfile = () => {
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ repeat: Infinity, duration: 1.2 }}
-                    className={`text-2xl font-medium ${
-                      isDarkMode ? "text-white" : "text-red-600"
-                    }`}
+                    className={`text-2xl font-medium ${isDarkMode ? "text-white" : "text-red-600"
+                      }`}
                   >
                     <svg
                       className="w-8 h-8"
@@ -10107,9 +10076,8 @@ const UserProfile = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className={`text-center ${
-                    isDarkMode ? "text-gray-300" : "text-gray-600"
-                  } text-sm`}
+                  className={`text-center ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                    } text-sm`}
                 >
                   No posts yet. Share your first gossip!
                 </motion.p>
@@ -10135,15 +10103,15 @@ const UserProfile = () => {
                         >
                           {post.media ? (
                             post.media.endsWith(".mp4") ||
-                            post.media.includes("video") ? (
+                              post.media.includes("video") ? (
                               <video
                                 src={post.media}
                                 className="w-full h-auto object-cover"
                                 muted
                                 aria-label="Post video thumbnail"
                                 onError={(e) =>
-                                  (e.target.src =
-                                    "https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif")
+                                (e.target.src =
+                                  "https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif")
                                 }
                               />
                             ) : (
@@ -10152,18 +10120,17 @@ const UserProfile = () => {
                                 alt="Post media"
                                 className="w-full h-auto object-cover"
                                 onError={(e) =>
-                                  (e.target.src =
-                                    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
+                                (e.target.src =
+                                  "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                                 }
                               />
                             )
                           ) : (
                             <div
-                              className={`w-full h-48 flex items-center justify-center ${
-                                isDarkMode
+                              className={`w-full h-48 flex items-center justify-center ${isDarkMode
                                   ? "bg-gray-700 text-gray-300"
                                   : "bg-gray-100 text-gray-600"
-                              }`}
+                                }`}
                             >
                               <span className="text-sm text-center p-2">
                                 {post.title}
@@ -10208,9 +10175,8 @@ const UserProfile = () => {
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: -10 }}
                                 transition={{ duration: 0.2 }}
-                                className={`absolute top-8 right-0 ${
-                                  isDarkMode ? "bg-gray-800/90" : "bg-white/90"
-                                } backdrop-blur-md rounded-lg shadow-lg py-1 w-28 z-20 transition-colors duration-200`}
+                                className={`absolute top-8 right-0 ${isDarkMode ? "bg-gray-800/90" : "bg-white/90"
+                                  } backdrop-blur-md rounded-lg shadow-lg py-1 w-28 z-20 transition-colors duration-200`}
                               >
                                 <motion.button
                                   whileHover={{
@@ -10219,11 +10185,10 @@ const UserProfile = () => {
                                       : "#fee2e2",
                                   }}
                                   onClick={() => openEditPost(post._id)}
-                                  className={`w-full text-left px-3 py-1.5 text-xs font-medium ${
-                                    isDarkMode
+                                  className={`w-full text-left px-3 py-1.5 text-xs font-medium ${isDarkMode
                                       ? "text-blue-400 hover:bg-gray-700"
                                       : "text-blue-600 hover:bg-blue-100"
-                                  }`}
+                                    }`}
                                   aria-label={`Edit post ${post.title}`}
                                 >
                                   Edit
@@ -10235,11 +10200,10 @@ const UserProfile = () => {
                                       : "#fee2e2",
                                   }}
                                   onClick={() => openDeleteModal(post, "post")}
-                                  className={`w-full text-left px-3 py-1.5 text-xs font-medium ${
-                                    isDarkMode
+                                  className={`w-full text-left px-3 py-1.5 text-xs font-medium ${isDarkMode
                                       ? "text-red-400 hover:bg-gray-700"
                                       : "text-red-600 hover:bg-red-100"
-                                  }`}
+                                    }`}
                                   aria-label={`Delete post ${post.title}`}
                                 >
                                   Delete
@@ -10262,9 +10226,8 @@ const UserProfile = () => {
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ repeat: Infinity, duration: 1.2 }}
-                        className={`text-2xl font-medium ${
-                          isDarkMode ? "text-white" : "text-red-600"
-                        }`}
+                        className={`text-2xl font-medium ${isDarkMode ? "text-white" : "text-red-600"
+                          }`}
                       >
                         <svg
                           className="w-8 h-8"
@@ -10284,9 +10247,8 @@ const UserProfile = () => {
                     <motion.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className={`text-center text-sm ${
-                        isDarkMode ? "text-gray-300" : "text-gray-600"
-                      } mt-4`}
+                      className={`text-center text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                        } mt-4`}
                     >
                       No more posts to load.
                     </motion.p>
@@ -10301,16 +10263,14 @@ const UserProfile = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className={`${
-              isDarkMode ? "bg-gray-800" : "bg-white"
-            } rounded-lg p-6 shadow-lg mt-4 transition-colors duration-300`}
+            className={`${isDarkMode ? "bg-gray-800" : "bg-white"
+              } rounded-lg p-6 shadow-lg mt-4 transition-colors duration-300`}
             role="region"
             aria-label="User shorts history"
           >
             <h3
-              className={`text-lg font-semibold ${
-                isDarkMode ? "text-white" : "text-gray-900"
-              } mb-3`}
+              className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"
+                } mb-3`}
             >
               Your Shorts
             </h3>
@@ -10325,9 +10285,8 @@ const UserProfile = () => {
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ repeat: Infinity, duration: 1.2 }}
-                    className={`text-2xl font-medium ${
-                      isDarkMode ? "text-white" : "text-red-600"
-                    }`}
+                    className={`text-2xl font-medium ${isDarkMode ? "text-white" : "text-red-600"
+                      }`}
                   >
                     <svg
                       className="w-8 h-8"
@@ -10347,9 +10306,8 @@ const UserProfile = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className={`text-center ${
-                    isDarkMode ? "text-gray-300" : "text-gray-600"
-                  } text-sm`}
+                  className={`text-center ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                    } text-sm`}
                 >
                   No shorts yet. Upload your first short!
                 </motion.p>
@@ -10382,17 +10340,16 @@ const UserProfile = () => {
                                 muted
                                 aria-label="Short video thumbnail"
                                 onError={(e) =>
-                                  (e.target.src =
-                                    "https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif")
+                                (e.target.src =
+                                  "https://d2uolguxr56s4e.cloudfront.net/img/kartrapages/video_player_placeholder.gif")
                                 }
                               />
                             ) : (
                               <div
-                                className={`w-full h-48 flex items-center justify-center ${
-                                  isDarkMode
+                                className={`w-full h-48 flex items-center justify-center ${isDarkMode
                                     ? "bg-gray-700 text-gray-300"
                                     : "bg-gray-100 text-gray-600"
-                                }`}
+                                  }`}
                               >
                                 <span className="text-sm text-center p-2">
                                   {short.caption || "No caption"}
@@ -10435,11 +10392,10 @@ const UserProfile = () => {
                                   animate={{ opacity: 1, scale: 1, y: 0 }}
                                   exit={{ opacity: 0, scale: 0.95, y: -10 }}
                                   transition={{ duration: 0.2 }}
-                                  className={`absolute top-8 right-0 ${
-                                    isDarkMode
+                                  className={`absolute top-8 right-0 ${isDarkMode
                                       ? "bg-gray-800/90"
                                       : "bg-white/90"
-                                  } backdrop-blur-md rounded-lg shadow-lg py-1 w-28 z-20 transition-colors duration-200`}
+                                    } backdrop-blur-md rounded-lg shadow-lg py-1 w-28 z-20 transition-colors duration-200`}
                                 >
                                   <motion.button
                                     whileHover={{
@@ -10448,11 +10404,10 @@ const UserProfile = () => {
                                         : "#fee2e2",
                                     }}
                                     onClick={() => openEditShort(short._id)}
-                                    className={`w-full text-left px-3 py-1.5 text-xs font-medium ${
-                                      isDarkMode
+                                    className={`w-full text-left px-3 py-1.5 text-xs font-medium ${isDarkMode
                                         ? "text-blue-400 hover:bg-gray-700"
                                         : "text-blue-600 hover:bg-blue-100"
-                                    }`}
+                                      }`}
                                     aria-label={`Edit short ${short.caption}`}
                                   >
                                     Edit
@@ -10466,11 +10421,10 @@ const UserProfile = () => {
                                     onClick={() =>
                                       openDeleteModal(short, "short")
                                     }
-                                    className={`w-full text-left px-3 py-1.5 text-xs font-medium ${
-                                      isDarkMode
+                                    className={`w-full text-left px-3 py-1.5 text-xs font-medium ${isDarkMode
                                         ? "text-red-400 hover:bg-gray-700"
                                         : "text-red-600 hover:bg-red-100"
-                                    }`}
+                                      }`}
                                     aria-label={`Delete short ${short.caption}`}
                                   >
                                     Delete
@@ -10494,9 +10448,8 @@ const UserProfile = () => {
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ repeat: Infinity, duration: 1.2 }}
-                        className={`text-2xl font-medium ${
-                          isDarkMode ? "text-white" : "text-red-600"
-                        }`}
+                        className={`text-2xl font-medium ${isDarkMode ? "text-white" : "text-red-600"
+                          }`}
                       >
                         <svg
                           className="w-8 h-8"
@@ -10516,9 +10469,8 @@ const UserProfile = () => {
                     <motion.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className={`text-center text-sm ${
-                        isDarkMode ? "text-gray-300" : "text-gray-600"
-                      } mt-4`}
+                      className={`text-center text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                        } mt-4`}
                     >
                       No more shorts to load.
                     </motion.p>
@@ -10533,23 +10485,20 @@ const UserProfile = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className={`${
-              isDarkMode ? "bg-gray-800" : "bg-white"
-            } rounded-lg p-6 shadow-lg mt-4 transition-colors duration-300`}
+            className={`${isDarkMode ? "bg-gray-800" : "bg-white"
+              } rounded-lg p-6 shadow-lg mt-4 transition-colors duration-300`}
             role="region"
             aria-label="Admin dashboard"
           >
             <h3
-              className={`text-lg font-semibold ${
-                isDarkMode ? "text-white" : "text-gray-900"
-              } mb-3`}
+              className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"
+                } mb-3`}
             >
               Admin Dashboard
             </h3>
             <p
-              className={`text-sm ${
-                isDarkMode ? "text-gray-300" : "text-gray-600"
-              }`}
+              className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                }`}
             >
               Admin features (analytics, reports, sponsored ads) are not
               implemented in this version. Please check back later.
@@ -10572,14 +10521,12 @@ const UserProfile = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className={`${
-                  isDarkMode ? "bg-gray-800/90" : "bg-white/90"
-                } backdrop-blur-md rounded-lg p-5 w-full max-w-sm shadow-lg transition-colors duration-300`}
+                className={`${isDarkMode ? "bg-gray-800/90" : "bg-white/90"
+                  } backdrop-blur-md rounded-lg p-5 w-full max-w-sm shadow-lg transition-colors duration-300`}
               >
                 <h3
-                  className={`text-lg font-semibold ${
-                    isDarkMode ? "text-white" : "text-gray-900"
-                  } mb-3`}
+                  className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"
+                    } mb-3`}
                 >
                   Followers ({user?.followersCount || 0})
                 </h3>
@@ -10588,9 +10535,8 @@ const UserProfile = () => {
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ repeat: Infinity, duration: 1.2 }}
-                      className={`text-center ${
-                        isDarkMode ? "text-white" : "text-red-600"
-                      }`}
+                      className={`text-center ${isDarkMode ? "text-white" : "text-red-600"
+                        }`}
                     >
                       <svg
                         className="w-6 h-6 mx-auto"
@@ -10606,9 +10552,8 @@ const UserProfile = () => {
                     </motion.div>
                   ) : followers.length === 0 ? (
                     <p
-                      className={`text-sm ${
-                        isDarkMode ? "text-gray-300" : "text-gray-600"
-                      }`}
+                      className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                        }`}
                     >
                       No followers yet.
                     </p>
@@ -10616,9 +10561,8 @@ const UserProfile = () => {
                     followers.map((follower) => (
                       <div
                         key={follower._id}
-                        className={`flex items-center justify-between gap-3 py-2 border-b ${
-                          isDarkMode ? "border-gray-700" : "border-gray-200"
-                        }`}
+                        className={`flex items-center justify-between gap-3 py-2 border-b ${isDarkMode ? "border-gray-700" : "border-gray-200"
+                          }`}
                       >
                         <Link
                           to={`/profile/${follower._id}`}
@@ -10633,14 +10577,13 @@ const UserProfile = () => {
                             alt={`${follower.username}'s profile picture`}
                             className="w-8 h-8 rounded-full object-cover"
                             onError={(e) =>
-                              (e.target.src =
-                                "https://avatar.iran.liara.run/public/41")
+                            (e.target.src =
+                              "https://avatar.iran.liara.run/public/41")
                             }
                           />
                           <p
-                            className={`text-sm font-medium ${
-                              isDarkMode ? "text-white" : "text-gray-900"
-                            }`}
+                            className={`text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-900"
+                              }`}
                           >
                             {follower.username}
                           </p>
@@ -10666,11 +10609,10 @@ const UserProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowFollowers(false)}
-                    className={`${
-                      isDarkMode
+                    className={`${isDarkMode
                         ? "bg-gray-700/90 text-gray-200"
                         : "bg-gray-200/90 text-gray-900"
-                    } px-4 py-1.5 rounded-full hover:bg-gray-300/90 transition-colors duration-200 text-sm font-medium`}
+                      } px-4 py-1.5 rounded-full hover:bg-gray-300/90 transition-colors duration-200 text-sm font-medium`}
                     aria-label="Close followers modal"
                   >
                     Close
@@ -10696,14 +10638,12 @@ const UserProfile = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className={`${
-                  isDarkMode ? "bg-gray-800/90" : "bg-white/90"
-                } backdrop-blur-md rounded-lg p-5 w-full max-w-sm shadow-lg transition-colors duration-300`}
+                className={`${isDarkMode ? "bg-gray-800/90" : "bg-white/90"
+                  } backdrop-blur-md rounded-lg p-5 w-full max-w-sm shadow-lg transition-colors duration-300`}
               >
                 <h3
-                  className={`text-lg font-semibold ${
-                    isDarkMode ? "text-white" : "text-gray-900"
-                  } mb-3`}
+                  className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"
+                    } mb-3`}
                 >
                   Following ({user?.followingCount || 0})
                 </h3>
@@ -10712,9 +10652,8 @@ const UserProfile = () => {
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ repeat: Infinity, duration: 1.2 }}
-                      className={`text-center ${
-                        isDarkMode ? "text-white" : "text-red-600"
-                      }`}
+                      className={`text-center ${isDarkMode ? "text-white" : "text-red-600"
+                        }`}
                     >
                       <svg
                         className="w-6 h-6 mx-auto"
@@ -10730,9 +10669,8 @@ const UserProfile = () => {
                     </motion.div>
                   ) : following.length === 0 ? (
                     <p
-                      className={`text-sm ${
-                        isDarkMode ? "text-gray-300" : "text-gray-600"
-                      }`}
+                      className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                        }`}
                     >
                       Not following anyone yet.
                     </p>
@@ -10740,9 +10678,8 @@ const UserProfile = () => {
                     following.map((followedUser) => (
                       <div
                         key={followedUser._id}
-                        className={`flex items-center justify-between gap-3 py-2 border-b ${
-                          isDarkMode ? "border-gray-700" : "border-gray-200"
-                        }`}
+                        className={`flex items-center justify-between gap-3 py-2 border-b ${isDarkMode ? "border-gray-700" : "border-gray-200"
+                          }`}
                       >
                         <Link
                           to={`/profile/${followedUser._id}`}
@@ -10757,14 +10694,13 @@ const UserProfile = () => {
                             alt={`${followedUser.username}'s profile picture`}
                             className="w-8 h-8 rounded-full object-cover"
                             onError={(e) =>
-                              (e.target.src =
-                                "https://avatar.iran.liara.run/public/17")
+                            (e.target.src =
+                              "https://avatar.iran.liara.run/public/17")
                             }
                           />
                           <p
-                            className={`text-sm font-medium ${
-                              isDarkMode ? "text-white" : "text-gray-900"
-                            }`}
+                            className={`text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-900"
+                              }`}
                           >
                             {followedUser.username}
                           </p>
@@ -10789,11 +10725,10 @@ const UserProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowFollowing(false)}
-                    className={`${
-                      isDarkMode
+                    className={`${isDarkMode
                         ? "bg-gray-700/90 text-gray-200"
                         : "bg-gray-200/90 text-gray-900"
-                    } px-4 py-1.5 rounded-full hover:bg-gray-300/90 transition-colors duration-200 text-sm font-medium`}
+                      } px-4 py-1.5 rounded-full hover:bg-gray-300/90 transition-colors duration-200 text-sm font-medium`}
                     aria-label="Close following modal"
                   >
                     Close
@@ -10819,21 +10754,18 @@ const UserProfile = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className={`${
-                  isDarkMode ? "bg-gray-800/90" : "bg-white/90"
-                } backdrop-blur-md rounded-lg p-5 w-full max-w-sm shadow-lg transition-colors duration-300`}
+                className={`${isDarkMode ? "bg-gray-800/90" : "bg-white/90"
+                  } backdrop-blur-md rounded-lg p-5 w-full max-w-sm shadow-lg transition-colors duration-300`}
               >
                 <h3
-                  className={`text-lg font-semibold ${
-                    isDarkMode ? "text-white" : "text-gray-900"
-                  } mb-3`}
+                  className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"
+                    } mb-3`}
                 >
                   Delete {itemToDelete.type === "post" ? "Post" : "Short"}?
                 </h3>
                 <p
-                  className={`text-sm ${
-                    isDarkMode ? "text-gray-300" : "text-gray-600"
-                  } mb-4`}
+                  className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"
+                    } mb-4`}
                 >
                   "{itemToDelete?.title || itemToDelete?.caption}" will be
                   permanently deleted.
@@ -10843,11 +10775,10 @@ const UserProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={closeDeleteModal}
-                    className={`${
-                      isDarkMode
+                    className={`${isDarkMode
                         ? "bg-gray-700/90 text-gray-200"
                         : "bg-gray-200/90 text-gray-900"
-                    } px-4 py-1.5 rounded-full hover:bg-gray-300/90 transition-colors duration-200 text-sm font-medium`}
+                      } px-4 py-1.5 rounded-full hover:bg-gray-300/90 transition-colors duration-200 text-sm font-medium`}
                     aria-label="Cancel deletion"
                   >
                     Cancel
