@@ -1,7 +1,7 @@
 // import { useState, useEffect, useCallback, useRef } from "react";
 // import { useParams, Link } from "react-router-dom";
 // import { motion, AnimatePresence } from "framer-motion";
-// import { Helmet } from "react-helmet";
+// import { Helmet } from "react-helmet-async";
 // import { toast } from "react-toastify";
 // import { getPostsByCategory } from "../utils/api";
 
@@ -429,7 +429,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Helmet } from "react-helmet";
+
 import { toast } from "react-toastify";
 import { getPostsByCategory } from "../utils/api";
 
@@ -581,8 +581,7 @@ const CategoryPosts = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <Helmet>
-        <meta charSet="utf-8" />
+      <>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
         <meta name="keywords" content={keywords} />
@@ -609,7 +608,7 @@ const CategoryPosts = () => {
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
         </script>
-      </Helmet>
+      </>
 
       <header className="fixed top-0 left-0 right-0 z-50 bg-red-600/90 backdrop-blur-md text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">

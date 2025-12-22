@@ -5459,7 +5459,6 @@ import {
   useCallback,
 } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -6312,7 +6311,7 @@ const PostList = () => {
           })}
         </script>
       </Helmet> */}
-      <Helmet>
+      <>
         <title>
           {selectedCategory === "All"
             ? "Gossiphub.in – Telugu Movie News, Celebrity Gossips, Trending Tollywood & Bollywood Entertainment"
@@ -6322,10 +6321,15 @@ const PostList = () => {
           name="description"
           content={
             selectedCategory === "All"
-              ? "Latest Telugu movie news, trending celebrity gossips, Tollywood and Bollywood film reviews, viral entertainment & OTT updates only on Gossiphub.in."
-              : `Hot ${selectedCategory} news, movie updates, celebrity gossips, trending stories & viral entertainment for Telugu audience on Gossiphub.in.`
+              ? "Stay updated with the latest Telugu movie news, celebrity gossips, and trending entertainment stories from Tollywood, Bollywood, and Hollywood on Gossiphub.in."
+              : `Get the latest ${selectedCategory} news, reviews, and detailed analysis. Follow trending updates on Gossiphub.in.`
           }
         />
+        <meta
+          name="keywords"
+          content="Telugu, Movies, Gossip, Tollywood, Bollywood, Entertainment, News, Reviews, Celebrity, Updates"
+        />
+        <link rel="canonical" href="https://gossiphub.in" />
         <meta name="robots" content="index, follow" />
         <meta name="author" content="GossipHub Team" />
         <meta
@@ -6374,16 +6378,7 @@ const PostList = () => {
               : `Freshest ${selectedCategory} news, viral stories & entertainment buzz for fans on Gossiphub.in.`
           }
         />
-        <meta
-          name="twitter:image"
-          content={
-            featuredPost?.media || "/images/telugu-entertainment-default.jpg"
-          }
-        />
-        <meta
-          name="twitter:image:alt"
-          content={featuredPost?.title || "Latest Telugu Entertainment News"}
-        />
+        <meta name="twitter:image" content={Logo} />
         <link rel="canonical" href="https://gossiphub.in/" />
         <link rel="alternate" href="https://gossiphub.in/" hreflang="en-in" />
         <script type="application/ld+json">
@@ -6446,7 +6441,7 @@ const PostList = () => {
             },
           })}
         </script>
-      </Helmet>
+      </>
 
       <header
         ref={headerRef}
@@ -7583,7 +7578,7 @@ const PostList = () => {
           )}
         </Link>
       </nav>
-    </div>
+    </div >
   );
 };
 export default PostList;

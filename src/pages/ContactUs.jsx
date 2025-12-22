@@ -630,8 +630,8 @@ const ContactUs = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   className={`w-full p-3 rounded-lg ${isDarkMode
-                      ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
-                      : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
+                    ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
+                    : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
                     } border focus:ring-2 focus:outline-none`}
                   placeholder="Your name"
                   required
@@ -653,8 +653,8 @@ const ContactUs = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`w-full p-3 rounded-lg ${isDarkMode
-                      ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
-                      : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
+                    ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
+                    : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
                     } border focus:ring-2 focus:outline-none`}
                   placeholder="Your email"
                   required
@@ -675,8 +675,8 @@ const ContactUs = () => {
                   value={formData.message}
                   onChange={handleInputChange}
                   className={`w-full p-3 rounded-lg ${isDarkMode
-                      ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
-                      : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
+                    ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-red-400"
+                    : "bg-gray-100 border-gray-200 text-gray-900 focus:ring-red-500"
                     } border focus:ring-2 focus:outline-none resize-none h-32`}
                   placeholder="Your message"
                   required
@@ -687,8 +687,8 @@ const ContactUs = () => {
                 type="submit"
                 disabled={isLoading}
                 className={`w-full md:w-auto px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-full transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center ${isLoading
-                    ? "opacity-70 cursor-not-allowed"
-                    : "hover:bg-red-700"
+                  ? "opacity-70 cursor-not-allowed"
+                  : "hover:bg-red-700"
                   }`}
               >
                 {isLoading ? (

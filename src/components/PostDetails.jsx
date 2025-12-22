@@ -22046,7 +22046,6 @@ import {
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
-import { Helmet } from "react-helmet";
 import confetti from "canvas-confetti";
 import debounce from "lodash/debounce";
 import { franc } from "franc";
@@ -22783,13 +22782,22 @@ const PostDetails = () => {
         };
     };
     const analytics = reactionAnalytics();
-    const postUrl = `${window.location.origin}/posts/${postId}`;
+    const postUrl = `${window.location.origin}/posts/${post?.slug || postId}`;
     const postTitle = post?.title || "Check out this post on GossipHub!";
     const seoTitle =
         postTitle.length > 60 ? `${postTitle.slice(0, 57)}...` : postTitle;
-    const postDescription =
-        post?.description?.replace(/<[^>]+>/g, "") ||
-        "Discover the latest gossip and stories on GossipHub!";
+
+    // Get first paragraph for description
+    const getFirstParagraph = (html) => {
+        if (!html) return "";
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        const firstP = tempDiv.querySelector("p");
+        return firstP ? firstP.textContent : tempDiv.textContent.split("\n")[0];
+    };
+
+    const postDescription = getFirstParagraph(post?.description) || "Discover the latest gossip and stories on GossipHub!";
+
     const seoDescription =
         postDescription.length > 160
             ? `${postDescription.slice(0, 157)}...`
@@ -22828,7 +22836,7 @@ const PostDetails = () => {
 
     const authorName = post?.isAnonymous
         ? "Anonymous"
-        : post?.author?.username || "Unknown";
+        : post?.postedBy?.username || post?.author?.username || "GossipHub User";
     const datePublished = post?.createdAt
         ? new Date(post.createdAt).toISOString()
         : new Date().toISOString();
@@ -23064,34 +23072,39 @@ const PostDetails = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
         >
-            <Helmet>
-                <meta charSet="utf-8" />
-                <title>{seoTitle}</title>
-                <meta name="description" content={seoDescription} />
-                <meta name="keywords" content={keywords} />
-                <meta name="author" content={authorName} />
-                <meta name="publisher" content={publisherName} />
-                <meta name="robots" content="index, follow" />
-                <link rel="canonical" href={postUrl} />
-                <link rel="alternate" href={postUrl} hreflang="en-in" />
-                <meta property="og:title" content={postTitle} />
-                <meta property="og:description" content={seoDescription} />
-                <meta property="og:url" content={postUrl} />
-                <meta property="og:type" content="article" />
-                <meta property="og:site_name" content="GossipHub" />
-                {isVideo && <meta property="og:video" content={postMedia} />}
-                {isVideo && <meta property="og:video:type" content="video/mp4" />}
-                <meta property="og:image" content={shareImage} />
-                <meta property="og:image:alt" content={postTitle} />
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={postTitle} />
-                <meta name="twitter:description" content={seoDescription} />
-                <meta name="twitter:image" content={shareImage} />
-                <meta name="twitter:image:alt" content={postTitle} />
-                <script type="application/ld+json">
-                    {JSON.stringify(structuredData)}
-                </script>
-            </Helmet>
+            <meta charSet="utf-8" />
+            <title>{seoTitle}</title>
+            <meta name="description" content={seoDescription} />
+            <meta name="keywords" content={keywords} />
+            {/* SEO Metadata - React 19 Native Hoisting */}
+            <title>{seoTitle}</title>
+            <meta name="description" content={seoDescription} />
+            <meta name="keywords" content={keywords} />
+            <link rel="canonical" href={postUrl} />
+            <meta name="author" content={authorName} />
+            <meta name="publisher" content={publisherName} />
+            <meta name="robots" content="index, follow" />
+
+            {/* Open Graph / Facebook */}
+            <meta property="og:type" content="article" />
+            <meta property="og:url" content={postUrl} />
+            <meta property="og:title" content={seoTitle} />
+            <meta property="og:description" content={seoDescription} />
+            <meta property="og:image" content={shareImage} />
+            <meta property="og:site_name" content="GossipHub" />
+
+            {/* Twitter */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:url" content={postUrl} />
+            <meta name="twitter:title" content={seoTitle} />
+            <meta name="twitter:description" content={seoDescription} />
+            <meta name="twitter:image" content={shareImage} />
+            <meta name="twitter:creator" content="@GossipHub" />
+
+            {/* Schema.org JSON-LD */}
+            <script type="application/ld+json">
+                {JSON.stringify(structuredData)}
+            </script>
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 z-50 bg-red-600/90 backdrop-blur-md text-white shadow-lg">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">

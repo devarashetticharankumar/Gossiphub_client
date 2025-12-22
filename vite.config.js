@@ -9,5 +9,8 @@ export default defineConfig({
     minify: true,
     sourcemap: false,
   },
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
 });
