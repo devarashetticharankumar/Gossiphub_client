@@ -23072,14 +23072,10 @@ const PostDetails = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
         >
-            <meta charSet="utf-8" />
-            <title>{seoTitle}</title>
-            <meta name="description" content={seoDescription} />
-            <meta name="keywords" content={keywords} />
             {/* SEO Metadata - React 19 Native Hoisting */}
             <title>{seoTitle}</title>
-            <meta name="description" content={seoDescription} />
-            <meta name="keywords" content={keywords} />
+            <meta name="description" content={seoDescription} key="description" />
+            <meta name="keywords" content={keywords} key="keywords" />
             <link rel="canonical" href={postUrl} />
             <meta name="author" content={authorName} />
             <meta name="publisher" content={publisherName} />
