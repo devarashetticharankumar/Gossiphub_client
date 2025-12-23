@@ -108,6 +108,15 @@
   line-height: 1.6;
 }
 
+.post-description img {
+  height: auto !important;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  margin: 1rem auto;
+  display: block;
+}
+
 .post-description h1 {
   font-size: 1.875rem;
   /* 30px */

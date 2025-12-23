@@ -33,11 +33,7 @@ import Footer from "./components/Footer";
 function App() {
   return (
     <Router>
-      <title>GossipHub - Latest Celebrity News & Entertainment</title>
-      <meta
-        name="description"
-        content="Get the latest celebrity news, gossips, trending entertainment stories, and viral videos on GossipHub. Your daily dose of entertainment!"
-      />
+
       <ToastContainer />
       <Routes>
         <Route path="/login" element={<Login />} />
