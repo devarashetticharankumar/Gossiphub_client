@@ -7,8 +7,8 @@ const SocialEmbed = ({ url }) => {
     // X (Twitter)
     if (/^(https?:\/\/)?(www\.)?(twitter|x)\.com\/.+/i.test(url)) {
         return (
-            <div className="my-4 flex justify-center w-full">
-                <TwitterEmbed url={url} />
+            <div className="my-4 flex justify-center items-center w-full">
+                <TwitterEmbed url={url} width="100%" />
             </div>
         );
     }
@@ -16,8 +16,8 @@ const SocialEmbed = ({ url }) => {
     // Instagram
     if (/^(https?:\/\/)?(www\.)?instagram\.com\/.+/i.test(url)) {
         return (
-            <div className="my-4 flex justify-center w-full">
-                <InstagramEmbed url={url} />
+            <div className="my-4 flex justify-center items-center w-full">
+                <InstagramEmbed url={url} width="100%" />
             </div>
         );
     }
