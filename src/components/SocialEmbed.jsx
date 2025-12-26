@@ -25,8 +25,8 @@ const SocialEmbed = ({ url }) => {
     // YouTube
     if (/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+/i.test(url)) {
         return (
-            <div className="my-4 w-full aspect-video">
-                <YouTubeEmbed url={url} width="100%" height="100%" />
+            <div className="my-4 flex justify-center items-center w-full">
+                <YouTubeEmbed url={url} width="100%" />
             </div>
         );
     }

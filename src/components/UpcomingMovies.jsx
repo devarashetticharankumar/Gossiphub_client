@@ -10,22 +10,19 @@ const UpcomingMovies = ({ upcomingMovies, isDarkMode }) => {
       transition={{ duration: 0.6, delay: 0.5 }}
     >
       <h2
-        className={`text-2xl font-bold mb-4 ${
-          isDarkMode ? "text-gray-100" : "text-white"
-        } flex items-center`}
+        className={`text-2xl font-bold mb-4 ${isDarkMode ? "text-gray-100" : "text-white"
+          } flex items-center`}
       >
         <span className="mr-2">🎬</span> Upcoming Movies
       </h2>
       {upcomingMovies.length === 0 ? (
         <div
-          className={`${
-            isDarkMode ? "bg-gray-900" : "bg-white"
-          } rounded-xl shadow-md p-6 text-center transition-colors duration-500`}
+          className={`${isDarkMode ? "bg-gray-900" : "bg-white"
+            } rounded-xl shadow-md p-6 text-center transition-colors duration-500`}
         >
           <p
-            className={`text-sm ${
-              isDarkMode ? "text-gray-400" : "text-gray-600"
-            }`}
+            className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"
+              }`}
           >
             No upcoming movies available yet. Check back soon!
           </p>
@@ -41,9 +38,8 @@ const UpcomingMovies = ({ upcomingMovies, isDarkMode }) => {
           {upcomingMovies.map((movie, index) => (
             <motion.div
               key={movie._id}
-              className={`${
-                isDarkMode ? "bg-gray-800" : "bg-white"
-              } rounded-xl shadow-lg overflow-hidden transition-colors duration-500`}
+              className={`${isDarkMode ? "bg-gray-800" : "bg-white"
+                } rounded-xl shadow-lg overflow-hidden transition-colors duration-500`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -59,8 +55,8 @@ const UpcomingMovies = ({ upcomingMovies, isDarkMode }) => {
                       loop
                       loading="lazy"
                       onError={(e) =>
-                        (e.target.src =
-                          "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+                      (e.target.src =
+                        "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
                       }
                     />
                   ) : (
@@ -70,16 +66,15 @@ const UpcomingMovies = ({ upcomingMovies, isDarkMode }) => {
                       className="w-full h-40 object-cover"
                       loading="lazy"
                       onError={(e) =>
-                        (e.target.src =
-                          "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
+                      (e.target.src =
+                        "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png")
                       }
                     />
                   ))}
                 <div className="p-4">
                   <h3
-                    className={`text-lg font-semibold ${
-                      isDarkMode ? "text-gray-100" : "text-gray-900"
-                    } line-clamp-2`}
+                    className={`text-lg font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                      } line-clamp-2`}
                   >
                     {movie.title}
                   </h3>
