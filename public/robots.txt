@@ -4,4 +4,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://backendserver.gossiphub.in/sitemap.xml
+Sitemap: https://gossiphub.in/sitemap.xml
