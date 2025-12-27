@@ -68,39 +68,40 @@ const Disclaimer = () => {
                 >
                     <section className="mb-8">
                         <h2 className={`text-2xl font-semibold mb-4 ${isDarkMode ? "text-red-500" : "text-red-600"}`}>
-                            General Disclaimer
+                            No Warranties
                         </h2>
-                        <p className={`text-base ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
-                            The information provided on GossipHub (gossiphub.in) is for general informational and entertainment purposes only.
-                            All information on the site is provided in good faith; however, we make no representation or warranty of any kind,
-                            express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any
-                            information on the site.
+                        <p className={`text-base ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed mb-4`}>
+                            GossipHub makes no representations about the suitability, reliability, availability, timeliness, and accuracy of the information, products, services and related graphics contained on the GossipHub website for any purpose. We are not responsible for any errors, omissions or representations on any of our pages or on any links on any of our pages. All such information, software, products, services and related graphics are provided “as is” without warranty of any kind. GossipHub hereby disclaim all warranties and conditions with regard to this information, software, products, services and related graphics, including all implied warranties and conditions of merchantability, fitness for a particular purpose, title and non-infringement.
                         </p>
                     </section>
 
                     <section className="mb-8">
                         <h2 className={`text-2xl font-semibold mb-4 ${isDarkMode ? "text-red-500" : "text-red-600"}`}>
-                            External Links Disclaimer
+                            Limitation of Liability
                         </h2>
-                        <p className={`text-base ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
-                            The site may contain (or you may be sent through the site to) links to other websites or content belonging to or
-                            originating from third parties or links to websites and features in banners or other advertising. Such external links
-                            are not investigated, monitored, or checked for accuracy, adequacy, validity, reliability, availability, or completeness
-                            by us. We do not warrant, endorse, guarantee, or assume responsibility for the accuracy or reliability of any information
-                            offered by third-party websites linked through the site.
+                        <p className={`text-base ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed mb-4`}>
+                            In no event shall GossipHub be liable for any direct, indirect, punitive, incidental, special, consequential damages or any damages whatsoever including, without limitation, damages for loss of use, data or profits, arising out of or in any way connected with the use or performance of the GossipHub websites, with the delay or inability to use the GossipHub website or related services, the provision of or failure to provide services, or for any information, software, products, services and related graphics obtained through the GossipHub websites, or otherwise arising out of the use of the GossipHub website, whether based on contract, negligence, strict liability or otherwise, even if GossipHub or any of its suppliers has been advised of the possibility of damages.
                         </p>
                     </section>
 
                     <section className="mb-8">
                         <h2 className={`text-2xl font-semibold mb-4 ${isDarkMode ? "text-red-500" : "text-red-600"}`}>
-                            Professional Disclaimer
+                            Links and Advertisers
                         </h2>
+                        <p className={`text-base ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed mb-4`}>
+                            We do not endorse, in any way, any advertisers on our web pages. Please verify the veracity of all information on your own before undertaking any reliance. The linked sites are not under our control and we are not responsible for the contents of any linked site or any link contained in a linked site, or any changes or updates to such sites. We are providing these links to you only as a convenience, and the inclusion of any link does not imply endorsement by us of the site.
+                        </p>
+                    </section>
+
+                    <section className="mb-8">
+                        <h2 className={`text-2xl font-semibold mb-4 ${isDarkMode ? "text-red-500" : "text-red-600"}`}>
+                            Jurisdiction and Terms
+                        </h2>
+                        <p className={`text-base ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed mb-4`}>
+                            We hereby expressly disclaim any implied warranties imputed by the laws of any jurisdiction. We consider ourselves and intend to be subject to the jurisdiction only of the courts of the state of Telangana, India. We would also like to make it clear that by visiting GossipHub you are giving us permission to edit or delete your comments posted for reasons best known to us.
+                        </p>
                         <p className={`text-base ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
-                            The site cannot and does not contain medical/legal/financial advice. The entertainment information is provided for
-                            general informational and educational purposes only and is not a substitute for professional advice. Accordingly,
-                            before taking any actions based upon such information, we encourage you to consult with the appropriate professionals.
-                            We do not provide any kind of medical/legal/financial advice. The use or reliance of any information contained on the
-                            site is solely at your own risk.
+                            At any stage if you are dissatisfied with any portion of the GossipHub website, or with any of these terms of use, your sole and exclusive remedy is to discontinue using the GossipHub website.
                         </p>
                     </section>
 
