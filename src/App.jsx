@@ -17,7 +17,10 @@ import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import EditorialGuidelines from "./pages/EditorialGuidelines";
+import Disclaimer from "./pages/Disclaimer";
 import PublicUserProfile from "./components/PublicUserProfile";
+
 // import ChatContainer from "./components/ChatContainer";
 // import ChatClient from "./components/ChatClient";
 import UpdatePostForm from "./components/UpdatePostForm";
@@ -44,7 +47,8 @@ function App() {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/editorial-guidelines" element={<EditorialGuidelines />} />
+        <Route path="/disclaimer" element={<Disclaimer />} />
         <Route path="/profile/:userId" element={<PublicUserProfile />} />
         <Route path="/shorts/:Id" element={<ShortsFeed />} />
         <Route path="/shorts/" element={<ShortsFeed />} />

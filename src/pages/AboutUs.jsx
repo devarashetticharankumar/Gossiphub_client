@@ -252,6 +252,35 @@ const AboutUs = () => {
               you love cinema, celebrity stories, and trending culture — you’re
               at the right place!
             </p>
+
+            <div className="mb-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+              <h2 className={`text-2xl font-bold ${isDarkMode ? "text-red-500" : "text-red-600"} mb-4`}>
+                Meet the Author
+              </h2>
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-700 shadow-md shrink-0">
+                  <img
+                    src="https://ui-avatars.com/api/?name=Charan+Kumar+Devarashetti&background=EF4444&color=fff&size=128&bold=true"
+                    alt="Charan Kumar Devarashetti"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"}`}>
+                    Charan Kumar Devarashetti
+                  </h3>
+                  <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"} mb-3`}>
+                    Founder & Content Editor
+                  </p>
+                  <p className={`text-base ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
+                    Charan is a passionate tech enthusiast and movie buff with a keen eye for trending stories.
+                    With a vision to create a platform that brings people together through entertainment, he founded GossipHub.
+                    He loves exploring new technologies, analyzing cinema, and sharing engaging content with the world.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}

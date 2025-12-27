@@ -145,6 +145,22 @@ const Footer = () => {
                             </li>
                             <li>
                                 <Link
+                                    to="/editorial-guidelines"
+                                    className="text-gray-400 hover:text-red-500 transition-colors text-sm"
+                                >
+                                    Editorial Guidelines
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/disclaimer"
+                                    className="text-gray-400 hover:text-red-500 transition-colors text-sm"
+                                >
+                                    Disclaimer
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
                                     to="/terms"
                                     className="text-gray-400 hover:text-red-500 transition-colors text-sm"
                                 >
