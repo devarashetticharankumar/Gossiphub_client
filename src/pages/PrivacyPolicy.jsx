@@ -241,10 +241,14 @@ const PrivacyPolicy = () => {
         <div>
           <h1
             className={`text-3xl md:text-4xl font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-6 transition-colors duration-500`}
+              } mb-2 transition-colors duration-500`}
           >
             Privacy Policy
           </h1>
+          <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"} mb-6`}>
+            Last Updated: January 2026
+          </p>
+
           <div
             className={`${isDarkMode ? "bg-gray-900" : "bg-white"
               } rounded-2xl p-6 shadow-xl transition-colors duration-500`}
@@ -253,150 +257,283 @@ const PrivacyPolicy = () => {
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              <span className="font-semibold text-red-600">GossipHub</span> is fully committed to protecting the privacy of all visitors to its website. The following discloses the information gathering and dissemination practices for our Web and mobile site.
+              At GossipHub (accessible at{" "}
+              <a href="https://gossiphub.in" className="text-red-600 hover:underline">
+                https://gossiphub.in
+              </a>
+              ), we value the privacy of our visitors. This Privacy Policy document outlines the types of information that are collected and recorded by GossipHub and how we use it.
+            </p>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              By using our website, you hereby consent to our Privacy Policy and agree to its terms.
             </p>
 
+            {/* 1. Information We Collect */}
             <h2
               className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-                } mb-2 transition-colors duration-500`}
+                } mt-6 mb-2 transition-colors duration-500`}
             >
-              1. User Data Handling
+              1. Information We Collect
+            </h2>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-2 leading-relaxed transition-colors duration-500`}
+            >
+              We do not require users to provide personal information to browse GossipHub.
+            </p>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-2 leading-relaxed transition-colors duration-500`}
+            >
+              However, we may collect limited information in the following cases:
+            </p>
+            <ul className={`list-disc pl-5 mb-4 ${isDarkMode ? "text-gray-200" : "text-gray-700"}`}>
+              <li>When users contact us directly via email or contact forms (such as name and email address)</li>
+              <li>When users voluntarily submit comments or feedback</li>
+              <li>Automatically collected data such as IP address, browser type, pages visited, date and time of visit, and referring URLs</li>
+            </ul>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              This information is used only to improve user experience and site performance.
+            </p>
+
+            {/* 2. How We Use Your Information */}
+            <h2
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mt-6 mb-2 transition-colors duration-500`}
+            >
+              2. How We Use Your Information
+            </h2>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-2 leading-relaxed transition-colors duration-500`}
+            >
+              The information we collect is used to:
+            </p>
+            <ul className={`list-disc pl-5 mb-4 ${isDarkMode ? "text-gray-200" : "text-gray-700"}`}>
+              <li>Operate and maintain our website</li>
+              <li>Improve content quality and user experience</li>
+              <li>Understand user behavior and traffic patterns</li>
+              <li>Respond to user inquiries and feedback</li>
+              <li>Detect and prevent spam or abuse</li>
+            </ul>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              We do not sell, trade, or rent users’ personal information to third parties.
+            </p>
+
+            {/* 3. Cookies and Web Beacons */}
+            <h2
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mt-6 mb-2 transition-colors duration-500`}
+            >
+              3. Cookies and Web Beacons
+            </h2>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-2 leading-relaxed transition-colors duration-500`}
+            >
+              GossipHub uses cookies to:
+            </p>
+            <ul className={`list-disc pl-5 mb-4 ${isDarkMode ? "text-gray-200" : "text-gray-700"}`}>
+              <li>Store visitor preferences</li>
+              <li>Optimize content based on visitors’ browser types or behavior</li>
+              <li>Serve relevant advertisements</li>
+            </ul>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              Users can choose to disable cookies through their individual browser options.
+            </p>
+
+            {/* 4. Google AdSense & Advertising Partners */}
+            <h2
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mt-6 mb-2 transition-colors duration-500`}
+            >
+              4. Google AdSense & Advertising Partners
             </h2>
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              If you have registered on GossipHub, you have voluntarily provided information about yourself and this information is predominantly collected and used in an anonymized or pseudonymized form which includes:
-              <ul className="list-disc pl-5 mt-2">
-                <li>The first name, last name, and title</li>
-                <li>Address, Contact information (e.g. email, phone)</li>
-                <li>Personal Photos of users for identification</li>
-                <li>Marital Status</li>
-              </ul>
+              GossipHub displays advertisements provided by third-party advertising partners, including Google AdSense.
+            </p>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              Google uses cookies (including the DoubleClick cookie) to serve ads based on users’ visits to this and other websites. This allows Google to show ads that are relevant to users’ interests.
+            </p>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              Users may opt out of personalized advertising by visiting Google’s Ads Settings.
+            </p>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              👉 Google’s advertising policies can be reviewed on Google’s official privacy pages.
             </p>
 
+            {/* 5. Third-Party Privacy Policies */}
             <h2
               className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-                } mb-2 transition-colors duration-500`}
+                } mt-6 mb-2 transition-colors duration-500`}
             >
-              2. How secure is your Personal Information?
+              5. Third-Party Privacy Policies
             </h2>
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              We store all the personal data of registration for contest purposes. All the above said data used by GossipHub like the forms, emails, and data is completely deleted once they have been handled. We will not disclose any personal information to any third party for any reason. Since we do not maintain any personal information, we will never send you any advertisements or unsolicited information about this site.
+              GossipHub’s Privacy Policy does not apply to other advertisers or websites.
+            </p>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              We encourage users to review the Privacy Policies of third-party ad servers or websites for more detailed information about their practices and instructions on how to opt out of certain options.
             </p>
 
+            {/* 6. External Links */}
             <h2
               className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-                } mb-2 transition-colors duration-500`}
+                } mt-6 mb-2 transition-colors duration-500`}
             >
-              3. Third Party Analytics Details
+              6. External Links
             </h2>
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              GossipHub uses the third party analytics tools. When you open or use one of our services the information collected by third parties includes:
-              <ul className="list-disc pl-5 mt-2">
-                <li>The type of browser you are using</li>
-                <li>The pages you have visited on our website</li>
-                <li>The operating system</li>
-                <li>Your IP address or shortened IP address</li>
-                <li>User behavior (e.g. mouse movements, click behavior, session duration, etc.)</li>
-                <li>The number of user visits, duration of visits, first-time visit details and also where the user comes from.</li>
-              </ul>
+              Our website may contain links to external websites for reference or additional information. GossipHub is not responsible for the privacy practices, content, or policies of third-party websites.
             </p>
 
+            {/* 7. Children’s Information */}
             <h2
               className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-                } mb-2 transition-colors duration-500`}
+                } mt-6 mb-2 transition-colors duration-500`}
             >
-              4. Advertising
+              7. Children’s Information
             </h2>
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              GossipHub uses a few third-party advertising companies to serve ads when you visit our Web site. These companies may use information (not including your name, address, email address or telephone number) about your visits to this and other Web sites in order to provide advertisements on this site about goods and services that may be of interest to you.
-              <br /><br />
-              In the course of serving advertisements to this site, our third-party advertisers may place or recognize a unique “cookie” on your browser.
-              <br /><br />
-              Google, as a third party vendor, uses cookies to serve ads on your site. Google’s use of the DART cookie enables it to serve ads to your users based on their visit to your sites and other sites on the Internet. Users may opt out of the use of the DART cookie by visiting the Google ad and content network privacy policy.
+              Protecting children’s privacy is important to us.
+            </p>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              GossipHub does not knowingly collect any Personal Identifiable Information from children under the age of 13. If you believe that your child has provided such information on our website, please contact us immediately, and we will promptly remove it from our records.
             </p>
 
+            {/* 8. Data Security */}
             <h2
               className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-                } mb-2 transition-colors duration-500`}
+                } mt-6 mb-2 transition-colors duration-500`}
             >
-              5. External Links
+              8. Data Security
             </h2>
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              Our site contains links to other websites. These external links are not endorsements of those organizations and GossipHub is not responsible for the privacy practices or the content of such Web sites.
+              We take reasonable measures to protect user information from unauthorized access, alteration, or disclosure. However, no method of transmission over the Internet is 100% secure, and we cannot guarantee absolute security.
             </p>
 
+            {/* 9. Content & Gossip Disclaimer */}
             <h2
               className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-                } mb-2 transition-colors duration-500`}
+                } mt-6 mb-2 transition-colors duration-500`}
             >
-              6. Public Forums
+              9. Content & Gossip Disclaimer
+            </h2>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-2 leading-relaxed transition-colors duration-500`}
+            >
+              GossipHub publishes entertainment news, celebrity updates, and gossip-related content for informational and entertainment purposes only.
+            </p>
+            <ul className={`list-disc pl-5 mb-4 ${isDarkMode ? "text-gray-200" : "text-gray-700"}`}>
+              <li>Rumors or unverified information are clearly labeled as such</li>
+              <li>Readers are advised not to treat gossip or rumors as confirmed facts</li>
+            </ul>
+
+            {/* 10. Consent */}
+            <h2
+              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
+                } mt-6 mb-2 transition-colors duration-500`}
+            >
+              10. Consent
             </h2>
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              GossipHub makes opinion polls available to its users. Please note that these polls are only done just to know the public pulse regarding the upcoming films and the actors starring in it. This is not done to degrade and takes sides of any party.
+              By using our website, you hereby consent to our Privacy Policy and agree to its terms.
             </p>
 
+            {/* 11. Updates to This Policy */}
             <h2
               className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-                } mb-2 transition-colors duration-500`}
+                } mt-6 mb-2 transition-colors duration-500`}
             >
-              7. Security
+              11. Updates to This Policy
             </h2>
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              This site has security measures in place to protect the loss, misuse, and alteration of the information provided by us. We make every effort to maintain the quality of service and prevent misuse.
+              We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date.
             </p>
 
+            {/* 12. Contact Us */}
             <h2
               className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-                } mb-2 transition-colors duration-500`}
+                } mt-6 mb-2 transition-colors duration-500`}
             >
-              8. Policy Updates
+              12. Contact Us
             </h2>
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
                 } mb-4 leading-relaxed transition-colors duration-500`}
             >
-              We reserve the right to change or update this policy at any time. Such changes shall be posted to the user and other places we deem appropriate.
+              If you have any questions or concerns about this Privacy Policy, you may contact us at:
             </p>
-
-            <h2
-              className={`text-xl font-semibold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-                } mb-2 transition-colors duration-500`}
-            >
-              9. Grievance Redressal
-            </h2>
             <p
               className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
-                } mb-4 leading-relaxed transition-colors duration-500`}
+                } mb-2 leading-relaxed transition-colors duration-500`}
             >
-              Our users may report a violation of breach of privacy, information or content theft in accordance with this Policy to the given email id – {" "}
+              📧 Email:{" "}
               <a
                 href="mailto:gossiphub@gmail.com"
-                className={`${isDarkMode
-                  ? "text-red-400 hover:text-red-300"
-                  : "text-red-600 hover:text-red-700"
-                  } hover:underline transition-colors duration-200`}
+                className="text-red-600 hover:underline"
               >
                 gossiphub@gmail.com
+              </a>
+            </p>
+            <p
+              className={`text-base ${isDarkMode ? "text-gray-200" : "text-gray-700"
+                } mb-4 leading-relaxed transition-colors duration-500`}
+            >
+              🌐 Website:{" "}
+              <a
+                href="https://gossiphub.in"
+                className="text-red-600 hover:underline"
+              >
+                https://gossiphub.in
               </a>
             </p>
           </div>
