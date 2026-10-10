@@ -1,342 +1,412 @@
-// import React, { useState } from "react";
-// import { createShort } from "../utils/api";
-
-// const ShortVideoForm = () => {
-//   const [videoFile, setVideoFile] = useState(null);
-//   const [caption, setCaption] = useState("");
-//   const [message, setMessage] = useState("");
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   const handleFileChange = (e) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       if (!file.type.startsWith("video/") || !file.type.includes("mp4")) {
-//         setMessage("Please upload an MP4 video file.");
-//         setVideoFile(null);
-//         return;
-//       }
-//       if (file.size > 50 * 1024 * 1024) {
-//         // 50MB limit
-//         setMessage("Video size must be less than 50MB.");
-//         setVideoFile(null);
-//         return;
-//       }
-//       setMessage("");
-//       setVideoFile(file);
-//     }
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!videoFile || !caption.trim()) {
-//       setMessage("Please upload a video and add a caption.");
-//       return;
-//     }
-
-//     setIsLoading(true);
-//     setMessage("");
-
-//     const formData = new FormData();
-//     formData.append("video", videoFile);
-//     formData.append("caption", caption);
-
-//     try {
-//       await createShort(formData);
-//       setMessage("Video uploaded successfully!");
-//       setVideoFile(null);
-//       setCaption("");
-//     } catch (err) {
-//       setMessage(`Upload failed: ${err.message}`);
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gray-100 p-2 sm:p-4">
-//       <form
-//         onSubmit={handleSubmit}
-//         className="max-w-md mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md"
-//       >
-//         <h2 className="text-lg sm:text-xl font-bold mb-4 text-center">
-//           Upload Short Video
-//         </h2>
-
-//         <div className="mb-4">
-//           <label
-//             htmlFor="video"
-//             className="block text-sm sm:text-base font-medium text-gray-700"
-//           >
-//             Video File (MP4, max 50MB)
-//           </label>
-//           <input
-//             type="file"
-//             id="video"
-//             accept="video/mp4"
-//             onChange={handleFileChange}
-//             className="mt-1 block w-full text-sm sm:text-base text-gray-900 border border-gray-300 rounded-lg p-2 sm:p-3"
-//           />
-//         </div>
-
-//         <div className="mb-4">
-//           <label
-//             htmlFor="caption"
-//             className="block text-sm sm:text-base font-medium text-gray-700"
-//           >
-//             Caption
-//           </label>
-//           <input
-//             type="text"
-//             id="caption"
-//             value={caption}
-//             onChange={(e) => setCaption(e.target.value)}
-//             placeholder="Add a caption..."
-//             className="mt-1 block w-full text-sm sm:text-base border border-gray-300 rounded-lg p-2 sm:p-3"
-//             maxLength={100} // YouTube Shorts caption limit
-//           />
-//         </div>
-
-//         <button
-//           type="submit"
-//           disabled={isLoading}
-//           className="w-full bg-blue-500 text-white text-sm sm:text-base py-2 sm:py-3 rounded-lg hover:bg-blue-600 disabled:bg-blue-300"
-//         >
-//           {isLoading ? "Uploading..." : "Upload"}
-//         </button>
-
-//         {message && (
-//           <p className="mt-4 text-sm sm:text-base text-center text-red-500">
-//             {message}
-//           </p>
-//         )}
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default ShortVideoForm;
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  FaCloudUploadAlt,
+  FaFilm,
+  FaHashtag,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaChevronLeft,
+  FaPlay,
+  FaPause,
+  FaTrash,
+} from "react-icons/fa";
 import { createShort } from "../utils/api";
 
+const QUICK_HASHTAGS = [
+  "gossip",
+  "trending",
+  "viral",
+  "tollywood",
+  "bollywood",
+  "cinema",
+  "reviews",
+  "celebrity",
+];
+
 const ShortVideoForm = () => {
-  const [videoFile, setVideoFile] = useState(null);
-  const [caption, setCaption] = useState("");
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
 
-  // Persistent dark mode
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
+  const [caption, setCaption] = useState("");
+  const [message, setMessage] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  const fileInputRef = useRef(null);
+  const previewVideoRef = useRef(null);
+
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
-    if (saved) setIsDarkMode(JSON.parse(saved));
+    if (saved !== null) setIsDarkMode(JSON.parse(saved));
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
+  const handleFileSelect = (file) => {
+    if (!file) return;
 
-  const handleFileChange = (e) => {
+    if (!file.type.startsWith("video/") && !file.name.toLowerCase().endsWith(".mp4")) {
+      setErrorMsg("Please select a valid MP4 video file.");
+      setVideoFile(null);
+      setVideoPreviewUrl(null);
+      return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      setErrorMsg("Video size must be less than 50MB.");
+      setVideoFile(null);
+      setVideoPreviewUrl(null);
+      return;
+    }
+
+    setErrorMsg("");
+    setMessage("");
+    setVideoFile(file);
+    const url = URL.createObjectURL(file);
+    setVideoPreviewUrl(url);
+  };
+
+  const handleFileInputChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith("video/") || !file.type.includes("mp4")) {
-        setMessage("Please upload an MP4 video file.");
-        setVideoFile(null);
-        return;
-      }
-      if (file.size > 50 * 1024 * 1024) {
-        // 50MB limit
-        setMessage("Video size must be less than 50MB.");
-        setVideoFile(null);
-        return;
-      }
-      setMessage("");
-      setVideoFile(file);
+    handleFileSelect(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileSelect(e.dataTransfer.files[0]);
+    }
+  };
+
+  const removeSelectedFile = () => {
+    setVideoFile(null);
+    if (videoPreviewUrl) {
+      URL.revokeObjectURL(videoPreviewUrl);
+      setVideoPreviewUrl(null);
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const addHashtag = (tag) => {
+    const formatted = `#${tag}`;
+    if (!caption.includes(formatted) && caption.length + formatted.length + 1 <= 100) {
+      setCaption((prev) => (prev ? `${prev} ${formatted}` : formatted));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!videoFile || !caption.trim()) {
-      setMessage("Please upload a video and add a caption.");
+    if (!videoFile) {
+      setErrorMsg("Please select a video file to upload.");
       return;
     }
+    if (!caption.trim()) {
+      setErrorMsg("Please add a caption for your Short.");
+      return;
+    }
+
     setIsLoading(true);
+    setErrorMsg("");
     setMessage("");
+
     const formData = new FormData();
     formData.append("video", videoFile);
     formData.append("caption", caption);
+
     try {
       await createShort(formData);
-      setMessage("Video uploaded successfully!");
-      setVideoFile(null);
-      setCaption("");
-      // Redirect to /shorts after successful upload
-      navigate("/shorts");
+      setMessage("Short published successfully! Redirecting...");
+      setTimeout(() => {
+        navigate("/shorts");
+      }, 1200);
     } catch (err) {
-      setMessage(`Upload failed: ${err.message}`);
-    } finally {
+      setErrorMsg(err.message || "Upload failed. Please try again.");
       setIsLoading(false);
     }
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+  const togglePreviewPlayback = () => {
+    if (previewVideoRef.current) {
+      if (isPreviewPlaying) {
+        previewVideoRef.current.pause();
+      } else {
+        previewVideoRef.current.play();
+      }
+      setIsPreviewPlaying(!isPreviewPlaying);
+    }
   };
 
   return (
     <div
       className={`min-h-screen ${
-        isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
-      } transition-colors duration-500 font-poppins`}
+        isDarkMode ? "bg-slate-950 text-white" : "bg-gray-50 text-gray-900"
+      } font-sans transition-colors duration-300 pb-16`}
     >
-      <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      {/* Top Header Navigation */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-white/10 px-6 py-4 shadow-xl">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-white hover:text-gray-200 transition-colors"
-            aria-label="Back to previous page"
+            className="flex items-center space-x-2 text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full transition-all border border-white/10 text-xs font-semibold"
           >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 000 1.414l7 7a1 1 0 001.414-1.414L5.414 11H17a1 1 0 000-2H5.414l5.293-5.293a1 1 0 000-1.414z" />
-            </svg>
-            Back
+            <FaChevronLeft />
+            <span>Back</span>
           </button>
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-200"
-            aria-label={
-              isDarkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {isDarkMode ? (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-            )}
-          </button>
+
+          <div className="flex items-center space-x-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></div>
+            <h1 className="text-base font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-pink-500 to-purple-400">
+              Shorts Creator Studio
+            </h1>
+          </div>
+
+          <div className="text-xs font-semibold px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">
+            Publish Reel
+          </div>
         </div>
       </header>
-      <div className="max-w-7xl mx-auto px-4 lg:pt-50 pt-20 pb-12 flex justify-center">
-        <div
-          className={`w-full max-w-2xl ${
-            isDarkMode ? "bg-gray-900" : "bg-white"
-          } rounded-lg p-6 shadow-lg transition-colors duration-500`}
-        >
-          <h2
-            className={`text-3xl font-bold ${
-              isDarkMode ? "text-gray-100" : "text-gray-900"
-            } mb-6 text-center`}
-          >
-            Upload Short Video
+
+      {/* Main Studio Container */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-8">
+        <div className="mb-8 text-center sm:text-left">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+            Create New Short
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                className={`block text-sm font-medium ${
-                  isDarkMode ? "text-gray-200" : "text-gray-600"
-                } mb-1`}
-              >
-                Video File (MP4, max 50MB)
+          <p className="text-sm text-gray-400">
+            Upload vertical 9:16 MP4 videos to share quick gossip, trailers & video highlights with your audience.
+          </p>
+        </div>
+
+        {/* 2-Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Left Column: Upload & Metadata Form (7 Cols) */}
+          <div className="lg:col-span-7 space-y-6">
+            
+            {/* Drag & Drop Box */}
+            <div className="space-y-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400">
+                1. Select Video File
               </label>
-              <input
-                type="file"
-                accept="video/mp4"
-                onChange={handleFileChange}
-                className={`w-full p-3 ${
-                  isDarkMode
-                    ? "bg-gray-800 text-gray-100"
-                    : "bg-gray-50 text-gray-900"
-                } border ${
-                  isDarkMode ? "border-gray-700" : "border-gray-200"
-                } rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold ${
-                  isDarkMode
-                    ? "file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600"
-                    : "file:bg-red-100 file:text-red-700 hover:file:bg-red-200"
-                } transition-all duration-300`}
-                aria-label="Upload video file"
-              />
+
+              {!videoFile ? (
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-3xl p-8 sm:p-12 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center space-y-4 ${
+                    isDragging
+                      ? "border-red-500 bg-red-500/10 scale-[1.01]"
+                      : isDarkMode
+                      ? "border-slate-800 bg-slate-900/60 hover:border-red-500/60 hover:bg-slate-900"
+                      : "border-gray-300 bg-white hover:border-red-500 hover:bg-red-50/50 shadow-lg"
+                  }`}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="video/mp4,video/*"
+                    onChange={handleFileInputChange}
+                    className="hidden"
+                  />
+
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-red-600 via-pink-600 to-purple-600 flex items-center justify-center text-white text-2xl shadow-xl shadow-red-600/30 animate-pulse">
+                    <FaCloudUploadAlt />
+                  </div>
+
+                  <div>
+                    <p className="text-base font-bold text-gray-200 mb-1">
+                      Drag & Drop your video here, or <span className="text-red-500 underline">Browse</span>
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Supports MP4 vertical videos up to 50MB (max 60 seconds)
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                /* Selected File Card */
+                <div className="p-4 rounded-2xl bg-slate-900 border border-white/10 flex items-center justify-between shadow-xl">
+                  <div className="flex items-center space-x-3 truncate">
+                    <div className="w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-xl flex-shrink-0">
+                      <FaFilm />
+                    </div>
+                    <div className="truncate">
+                      <p className="text-sm font-bold truncate text-white">
+                        {videoFile.name}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {(videoFile.size / (1024 * 1024)).toFixed(2)} MB • MP4 Video
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={removeSelectedFile}
+                    className="p-2.5 rounded-full hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-all ml-2"
+                    title="Remove File"
+                  >
+                    <FaTrash className="text-sm" />
+                  </button>
+                </div>
+              )}
             </div>
-            <div>
-              <label
-                className={`block text-sm font-medium ${
-                  isDarkMode ? "text-gray-200" : "text-gray-600"
-                } mb-1`}
-              >
-                Caption
-              </label>
-              <input
-                type="text"
+
+            {/* Caption Input Box */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-400">
+                  2. Short Caption
+                </label>
+                <span className={`text-xs font-bold ${caption.length >= 90 ? "text-amber-400" : "text-gray-500"}`}>
+                  {caption.length} / 100
+                </span>
+              </div>
+
+              <textarea
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
-                placeholder="Add a caption..."
-                className={`w-full p-3 ${
-                  isDarkMode
-                    ? "bg-gray-800 text-gray-100"
-                    : "bg-gray-50 text-gray-900"
-                } border ${
-                  isDarkMode ? "border-gray-700" : "border-gray-200"
-                } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-500`}
+                placeholder="Write a catchy caption... e.g. Sreeleela's bold look setting internet on fire! 🔥 #tollywood #gossip"
                 maxLength={100}
-                aria-label="Video caption"
+                rows={3}
+                className={`w-full p-4 rounded-2xl text-sm outline-none transition-all ${
+                  isDarkMode
+                    ? "bg-slate-900 border border-slate-800 focus:border-red-500 text-white placeholder-gray-500"
+                    : "bg-white border border-gray-200 focus:border-red-500 text-gray-900 placeholder-gray-400 shadow-md"
+                }`}
               />
+
+              {/* Quick Hashtags */}
+              <div>
+                <p className="text-xs text-gray-400 font-semibold mb-2 flex items-center space-x-1">
+                  <FaHashtag className="text-red-500 text-xs" />
+                  <span>Quick Trending Hashtags:</span>
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {QUICK_HASHTAGS.map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => addHashtag(tag)}
+                      className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 hover:bg-red-600/20 hover:text-red-400 border border-white/5 transition-all text-gray-300"
+                    >
+                      #{tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
+
+            {/* Notifications */}
+            {errorMsg && (
+              <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center space-x-3">
+                <FaExclamationTriangle className="text-base flex-shrink-0" />
+                <span>{errorMsg}</span>
+              </div>
+            )}
+
+            {message && (
+              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center space-x-3">
+                <FaCheckCircle className="text-base flex-shrink-0" />
+                <span>{message}</span>
+              </div>
+            )}
+
+            {/* Submit Button */}
             <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full py-3 rounded-lg font-semibold text-white transition-all duration-300 ${
-                isLoading
-                  ? "bg-red-400 cursor-not-allowed"
-                  : "bg-red-600 hover:bg-red-700"
-              } flex items-center justify-center space-x-2`}
-              aria-label={isLoading ? "Uploading video" : "Upload video"}
+              onClick={handleSubmit}
+              disabled={isLoading || !videoFile}
+              className={`w-full py-4 rounded-2xl font-bold text-sm text-white transition-all duration-300 shadow-xl flex items-center justify-center space-x-2 ${
+                isLoading || !videoFile
+                  ? "bg-slate-800 text-gray-500 cursor-not-allowed border border-white/5"
+                  : "bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 hover:opacity-90 shadow-red-600/30 active:scale-[0.99]"
+              }`}
             >
               {isLoading ? (
                 <>
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                  <span>Uploading...</span>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span>Uploading to GossipHub...</span>
                 </>
               ) : (
-                <span>Upload</span>
+                <>
+                  <FaCloudUploadAlt className="text-base" />
+                  <span>Publish Short Video</span>
+                </>
               )}
             </button>
-            {message && (
-              <p
-                className={`mt-4 text-sm text-center ${
-                  isDarkMode ? "text-gray-400" : "text-gray-600"
-                }`}
-              >
-                {message}
-              </p>
-            )}
-          </form>
+          </div>
+
+          {/* Right Column: Live 9:16 Video Mobile Preview (5 Cols) */}
+          <div className="lg:col-span-5 flex flex-col items-center justify-center">
+            <div className="w-full max-w-[320px] bg-slate-900 border border-slate-800 rounded-3xl p-4 shadow-2xl space-y-3">
+              <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1.5">
+                  <FaFilm className="text-red-500" />
+                  <span>Live 9:16 Preview</span>
+                </span>
+                {videoPreviewUrl && (
+                  <button
+                    onClick={togglePreviewPlayback}
+                    className="text-xs text-red-400 font-semibold flex items-center space-x-1 hover:underline"
+                  >
+                    {isPreviewPlaying ? <FaPause /> : <FaPlay />}
+                    <span>{isPreviewPlaying ? "Pause" : "Play"}</span>
+                  </button>
+                )}
+              </div>
+
+              {/* 9:16 Mobile Card Box */}
+              <div className="w-full aspect-[9/16] rounded-2xl bg-black relative overflow-hidden border border-white/10 shadow-2xl flex items-center justify-center">
+                {videoPreviewUrl ? (
+                  <>
+                    <video
+                      ref={previewVideoRef}
+                      src={videoPreviewUrl}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/30 pointer-events-none" />
+
+                    {/* Overlay Text Preview */}
+                    <div className="absolute bottom-4 left-3 right-3 text-white pointer-events-none">
+                      <p className="text-xs font-bold mb-1">@YourChannel</p>
+                      <p className="text-xs text-gray-200 line-clamp-2 leading-tight">
+                        {caption || "Your caption will appear here..."}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center p-6 text-gray-600 space-y-2">
+                    <FaFilm className="text-4xl text-gray-700 mx-auto animate-bounce" />
+                    <p className="text-xs font-medium">No video selected</p>
+                    <p className="text-[10px] text-gray-600">Select an MP4 file to see real-time preview</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
+      </main>
     </div>
   );
 };

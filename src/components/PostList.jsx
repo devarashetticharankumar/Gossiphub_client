@@ -5501,6 +5501,7 @@ const ReviewsSection = lazy(() => import("./ReviewsSection"));
 const UpcomingMovies = lazy(() => import("./UpcomingMovies"));
 const ActressSection = lazy(() => import("./ActressSection"));
 const PopularSection = lazy(() => import("./PopularSection"));
+const ShortsSection = lazy(() => import("./ShortsSection"));
 
 const FIXED_CATEGORIES = [
   "All",
@@ -7209,6 +7210,10 @@ const PostList = () => {
                     Next
                   </motion.button>
                 </div>
+
+                <Suspense fallback={<LoadingFallback />}>
+                  <ShortsSection isDarkMode={isDarkMode} />
+                </Suspense>
                 <Suspense fallback={<LoadingFallback />}>
                   {loadingMovies ? (
                     <motion.section
@@ -7392,36 +7397,6 @@ const PostList = () => {
                   ) : (
                     <PhotosSection
                       photoPosts={photoPosts}
-                      isDarkMode={isDarkMode}
-                    />
-                  )}
-                </Suspense>
-                <Suspense fallback={<LoadingFallback />}>
-                  {loadingPosts && posts.length === 0 ? (
-                    <motion.section
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: 0.6 }}
-                      className="mt-12"
-                    >
-                      <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                        {[...Array(5)].map((_, index) => (
-                          <div
-                            key={index}
-                            className="relative rounded-lg overflow-hidden shadow-md animate-pulse"
-                          >
-                            <div className="w-full h-32 bg-gray-200"></div>
-                            <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-2">
-                              <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.section>
-                  ) : (
-                    <VideosSection
-                      videoPosts={videoPosts}
                       isDarkMode={isDarkMode}
                     />
                   )}

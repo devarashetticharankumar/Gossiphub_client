@@ -1,10 +1,23 @@
-﻿import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createPost } from "../utils/api";
 import ReactQuill from "react-quill-new";
 import "quill/dist/quill.snow.css";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import {
+  FaChevronLeft,
+  FaMagic,
+  FaCloudUploadAlt,
+  FaHashtag,
+  FaTrash,
+  FaTable,
+  FaSun,
+  FaMoon,
+  FaStar,
+  FaUserSecret,
+  FaCheckCircle,
+} from "react-icons/fa";
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -14,35 +27,35 @@ const PostForm = () => {
     description: "",
     isAnonymous: false,
     category: "General",
-    hashtags: "", // Added hashtags field
+    hashtags: "",
   });
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [contentRating, setContentRating] = useState(null);
   const [isRatingLoading, setIsRatingLoading] = useState(false);
   const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
   const [mediaSuggestions, setMediaSuggestions] = useState([]);
   const navigate = useNavigate();
-  const quillRef = useRef(null); // Ref for ReactQuill instance
+  const quillRef = useRef(null);
 
   // Persistent dark mode
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
-    if (saved) setIsDarkMode(JSON.parse(saved));
+    if (saved !== null) setIsDarkMode(JSON.parse(saved));
   }, []);
 
-  // Function to insert a table into the editor
+  useEffect(() => {
+    localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
+
+  // Table modal state
   const [showTableModal, setShowTableModal] = useState(false);
   const [tableDimensions, setTableDimensions] = useState({ rows: 3, cols: 3 });
 
-  // Function to open the custom table modal
-  const insertTable = () => {
-    setShowTableModal(true);
-  };
+  const insertTable = () => setShowTableModal(true);
 
-  // Function to confirm table insertion from modal
   const confirmInsertTable = () => {
     if (quillRef.current) {
       const quill = quillRef.current.getEditor();
@@ -56,7 +69,6 @@ const PostForm = () => {
     }
   };
 
-  // Table editing functions
   const insertRowAbove = () => quillRef.current?.getEditor().getModule("table").insertRowAbove();
   const insertRowBelow = () => quillRef.current?.getEditor().getModule("table").insertRowBelow();
   const insertColumnLeft = () => quillRef.current?.getEditor().getModule("table").insertColumnLeft();
@@ -65,16 +77,6 @@ const PostForm = () => {
   const deleteColumn = () => quillRef.current?.getEditor().getModule("table").deleteColumn();
   const deleteTable = () => quillRef.current?.getEditor().getModule("table").deleteTable();
 
-  useEffect(() => {
-    localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
-
-  // ... (rest of the component)
-
-
-
-
-  // Debounce function to limit API calls
   const debounce = (func, delay) => {
     let timeoutId;
     return (...args) => {
@@ -83,7 +85,6 @@ const PostForm = () => {
     };
   };
 
-  // Function to convert file to base64
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -93,59 +94,34 @@ const PostForm = () => {
     });
   };
 
-  // Function to generate a fallback explanation based on the rating
   const generateFallbackExplanation = (rating) => {
     if (rating >= 7) {
-      return "The gossip post excels in humor, engagement, originality, and appropriateness, making it highly enjoyable and suitable for sharing.";
+      return "Excellent post! High engagement, humor, and strong appeal.";
     } else if (rating >= 4) {
-      return "The gossip post is moderately engaging and original but may lack in humor or have minor appropriateness concerns.";
+      return "Good post! Moderately engaging, consider adding images or AI enhancement.";
     } else {
-      return "The gossip post struggles with humor, engagement, originality, or contains inappropriate elements that make it less suitable.";
+      return "Low engagement rating. Try adding a more descriptive title or image.";
     }
   };
 
-  // Function to detect the language of the title using Gemini API
   const detectLanguageWithGemini = async (title) => {
-    if (!GEMINI_API_KEY) {
-      return "English";
-    }
-
+    if (!GEMINI_API_KEY) return "English";
     try {
       const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-      const prompt = `Detect the language of the following text and return only the language name (e.g., "Telugu", "Hindi", "English"). Do not include any additional text or explanation.
-
-Text: ${title}`;
-
+      const prompt = `Detect the language of the following text and return only the language name (e.g., "Telugu", "Hindi", "English"). Text: ${title}`;
       const result = await model.generateContent([prompt]);
       const detectedLanguage = result.response.text().trim();
-
-      const supportedLanguages = [
-        "Telugu",
-        "Hindi",
-        "English",
-        "Tamil",
-        "Kannada",
-        "Malayalam",
-        "Bengali",
-        "Marathi",
-        "Gujarati",
-        "Punjabi",
-      ];
-      return supportedLanguages.includes(detectedLanguage)
-        ? detectedLanguage
-        : "English";
+      const supportedLanguages = ["Telugu", "Hindi", "English", "Tamil", "Kannada", "Malayalam", "Bengali", "Marathi", "Gujarati", "Punjabi"];
+      return supportedLanguages.includes(detectedLanguage) ? detectedLanguage : "English";
     } catch (error) {
-      console.error("Error detecting language with Gemini API:", error);
+      console.error("Error detecting language:", error);
       return "English";
     }
   };
 
-  // Function to extract media suggestions from the description
   const extractMediaSuggestions = (description) => {
-    const suggestionRegex =
-      /<!--\s*(Suggested Image|Suggested Video):\s*([^--]+)-->/g;
+    const suggestionRegex = /<!--\s*(Suggested Image|Suggested Video):\s*([^--]+)-->/g;
     const suggestions = [];
     let match;
     while ((match = suggestionRegex.exec(description)) !== null) {
@@ -157,161 +133,98 @@ Text: ${title}`;
     return suggestions;
   };
 
-  // Function to rate content using Gemini API
   const rateContentWithGemini = async (title, description, file, hashtags) => {
     if (!title.trim() && !description.trim() && !file && !hashtags.trim()) {
       setContentRating(null);
       return;
     }
-
     if (!GEMINI_API_KEY) {
-      toast.error(
-        "Gemini API key is missing. Please check your environment configuration."
-      );
-      setContentRating({
-        rating: 0,
-        explanation: "Error: Gemini API key is not configured.",
-      });
+      setContentRating({ rating: 0, explanation: "Gemini API key is not configured." });
       setIsRatingLoading(false);
       return;
     }
-
     setIsRatingLoading(true);
-    setContentRating(null);
-
     try {
       const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-      let prompt = `You are an AI content evaluation specialist. Evaluate a gossip post across humor, engagement, originality, and appropriateness. Provide an overall rating on a scale of 0 to 10, with an explanation addressing each aspect.
-
-Gossip Post Title: ${title}
-Gossip Post Description: ${description}
-Gossip Post Hashtags: ${hashtags}
-${file && file.type.startsWith("image/")
-          ? "\nGossip Post Image: [Attached Image]"
-          : ""
-        }`;
+      let prompt = `You are an AI content specialist. Evaluate a gossip post across humor, engagement, originality, and appropriateness on a 0 to 10 scale.
+Title: ${title}
+Description: ${description}
+Hashtags: ${hashtags}`;
 
       const requestParts = [prompt];
-
       if (file && file.type.startsWith("image/")) {
         const base64Data = await fileToBase64(file);
-        requestParts.push({
-          inlineData: {
-            data: base64Data,
-            mimeType: file.type,
-          },
-        });
+        requestParts.push({ inlineData: { data: base64Data, mimeType: file.type } });
       }
-
-      requestParts.push(`
-Respond in the following format:
+      requestParts.push(`Respond in format:
 Rating: X/10
-Explanation: [Your detailed explanation addressing humor, engagement, originality, and appropriateness]
-
-Ensure the explanation is at least two sentences long.`);
+Explanation: [Your 2-sentence explanation]`);
 
       const result = await model.generateContent(requestParts);
       const responseText = result.response.text().trim();
-
       const ratingMatch = responseText.match(/Rating:\s*(\d+)\/10/);
       let explanationMatch = responseText.match(/Explanation:\s*(.+)/s);
 
-      const rating = ratingMatch ? parseInt(ratingMatch[1], 10) : 5;
-      let explanation =
-        explanationMatch && explanationMatch[1].trim().length > 10
-          ? explanationMatch[1].trim()
-          : generateFallbackExplanation(rating);
-
+      const rating = ratingMatch ? parseInt(ratingMatch[1], 10) : 6;
+      let explanation = explanationMatch && explanationMatch[1].trim().length > 10 ? explanationMatch[1].trim() : generateFallbackExplanation(rating);
       setContentRating({ rating, explanation });
     } catch (error) {
-      console.error("Error rating content with Gemini API:", error);
-      toast.error("Failed to evaluate the post. Please try again.");
-      setContentRating({
-        rating: 0,
-        explanation: "Error: Unable to analyze the post due to an API issue.",
-      });
+      console.error("Error rating content:", error);
+      setContentRating({ rating: 0, explanation: "Unable to evaluate post." });
     } finally {
       setIsRatingLoading(false);
     }
   };
 
-  // Function to generate description using Gemini API
   const generateDescriptionWithGemini = async () => {
     if (!formData.title.trim()) {
-      toast.error("Please enter a title before generating a description.");
+      toast.error("Please enter a title first!");
       return;
     }
-
     if (!GEMINI_API_KEY) {
-      toast.error(
-        "Gemini API key is missing. Please check your environment configuration."
-      );
+      toast.error("Gemini API key is missing.");
       return;
     }
-
     setIsGeneratingDescription(true);
     setMediaSuggestions([]);
-
     try {
       const detectedLanguage = await detectLanguageWithGemini(formData.title);
       const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const prompt = `You are an expert AI gossip columnist. Generate a spicy, engaging post in "${detectedLanguage}" for:
+Title: ${formData.title}
 
-      const prompt = `You are an expert AI gossip columnist. Using the provided title, generate a spicy, engaging, and informative post in the language "${detectedLanguage}".
-
-**Structure your post as follows:**
-
+Structure as HTML:
 <h2>1. Attention-Grabbing Headline & Introduction</h2>
-<p>Start with a bold, catchy headline and a lively introduction that hooks the reader and sets the tone for the post.</p>
+<p>Lively intro hooking the reader.</p>
 
-<h2>2. The Facts (Official Statements & Latest Updates)</h2>
-<p>Clearly present the main facts of the story, using direct quotes, official statements, and the latest updates from credible sources. Use bullet points for clarity:</p>
+<h2>2. The Facts & Updates</h2>
 <ul>
-  <li>Direct quotes from producers, actors, or official spokespeople (if available)</li>
-  <li>Specific events, dates, and actions from the latest news</li>
-  <li>Current status of the project or issue (confirmed, shelved, in development, etc.)</li>
-  <li>Any official denials, confirmations, or clarifications</li>
+  <li>Latest updates from credible sources</li>
+  <li>Current status of project or event</li>
 </ul>
-<p>Only include information that is accurate, up-to-date, and from reliable sources. Make sure to reflect the most recent statements and developments.</p>
 
-<h2>3. The Juicy Speculation (Rumors & Wild Theories)</h2>
-<p>Add a section for spicy gossip, rumors, or wild theories. Clearly label this section as â€œRumors & Wild Theoriesâ€ or â€œJuicy Speculationâ€ so readers know it is not confirmed. Keep it playful, entertaining, and conversation-sparking.</p>
+<h2>3. Juicy Speculation</h2>
+<p>Playful theories and entertainment buzz.</p>
 
 <h2>4. Reader Engagement</h2>
-<p>End with a question or call-to-action to encourage comments, sharing, and lively discussion.</p>
+<p>Question for comments.</p>
 
-<!-- Suggested Image: [Description of a relevant image, e.g., main actors or producers together] -->
-<!-- Suggested Video: [Description of a relevant video, e.g., interview or teaser footage] -->
-
-The description must be at least 150 words, with at least one subheading and one bullet list.
-
-Gossip Post Title: ${formData.title}
-
-Respond only with the HTML content, ready for use in a rich text editor. Do not include <html> or <body> tags. The entire description must be in "${detectedLanguage}".`;
+<!-- Suggested Image: [Image description] -->
+Return ONLY HTML content ready for text editor.`;
 
       const result = await model.generateContent([prompt]);
       const generatedDescription = result.response.text().trim();
-
       const suggestions = extractMediaSuggestions(generatedDescription);
       setMediaSuggestions(suggestions);
 
-      setFormData((prev) => ({
-        ...prev,
-        description: generatedDescription,
-      }));
-
-      debouncedRateContent(
-        formData.title,
-        generatedDescription,
-        file,
-        formData.hashtags
-      );
-      toast.success("Description generated successfully!");
+      setFormData((prev) => ({ ...prev, description: generatedDescription }));
+      debouncedRateContent(formData.title, generatedDescription, file, formData.hashtags);
+      toast.success("AI Description generated successfully!");
     } catch (error) {
-      console.error("Error generating description with Gemini API:", error);
-      toast.error("Failed to generate description. Please try again.");
+      console.error("Error generating description:", error);
+      toast.error("Failed to generate AI description.");
     } finally {
       setIsGeneratingDescription(false);
     }
@@ -327,87 +240,31 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => {
-      const updatedFormData = {
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      };
+      const updated = { ...prev, [name]: type === "checkbox" ? checked : value };
       if (name === "title" || name === "hashtags") {
-        debouncedRateContent(
-          updatedFormData.title,
-          prev.description,
-          file,
-          updatedFormData.hashtags
-        );
+        debouncedRateContent(updated.title, prev.description, file, updated.hashtags);
       }
-      return updatedFormData;
+      return updated;
     });
   };
 
   const handleDescriptionChange = (value) => {
     setFormData((prev) => {
-      const updatedFormData = { ...prev, description: value };
+      const updated = { ...prev, description: value };
       const suggestions = extractMediaSuggestions(value);
       setMediaSuggestions(suggestions);
       debouncedRateContent(prev.title, value, file, prev.hashtags);
-      return updatedFormData;
+      return updated;
     });
   };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    if (!selectedFile) {
-      setFile(null);
-      setFilePreview(null);
-      debouncedRateContent(
-        formData.title,
-        formData.description,
-        null,
-        formData.hashtags
-      );
-      return;
-    }
+    if (!selectedFile) return;
 
-    const validTypes = [
-      "image/jpeg",
-      "image/webp",
-      "image/png",
-      "image/gif",
-      "video/mp4",
-      "video/webm",
-    ];
+    const validTypes = ["image/jpeg", "image/webp", "image/png", "image/gif", "video/mp4", "video/webm"];
     if (!validTypes.includes(selectedFile.type)) {
-      toast.error(
-        "Please upload an image (JPEG, PNG, GIF) or video (MP4, WebM)"
-      );
-      e.target.value = null;
-      setFile(null);
-      setFilePreview(null);
-      debouncedRateContent(
-        formData.title,
-        formData.description,
-        null,
-        formData.hashtags
-      );
-      return;
-    }
-
-    const maxSize = selectedFile.type.startsWith("image/")
-      ? 10 * 1024 * 1024
-      : 200 * 1024 * 1024;
-    if (selectedFile.size > maxSize) {
-      toast.error(
-        `File size exceeds the limit (${selectedFile.type.startsWith("image/") ? "10MB" : "500MB"
-        }).`
-      );
-      e.target.value = null;
-      setFile(null);
-      setFilePreview(null);
-      debouncedRateContent(
-        formData.title,
-        formData.description,
-        null,
-        formData.hashtags
-      );
+      toast.error("Please upload a valid image (JPEG/PNG/GIF/WEBP) or video (MP4/WEBM)");
       return;
     }
 
@@ -415,30 +272,16 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
     const reader = new FileReader();
     reader.onload = () => setFilePreview(reader.result);
     reader.readAsDataURL(selectedFile);
-
-    debouncedRateContent(
-      formData.title,
-      formData.description,
-      selectedFile,
-      formData.hashtags
-    );
+    debouncedRateContent(formData.title, formData.description, selectedFile, formData.hashtags);
   };
 
   const clearFile = () => {
     setFile(null);
     setFilePreview(null);
-    document.getElementById("media-upload").value = null;
-    debouncedRateContent(
-      formData.title,
-      formData.description,
-      null,
-      formData.hashtags
-    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.title.trim()) {
       toast.error("Title cannot be empty");
       return;
@@ -448,24 +291,18 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
       return;
     }
 
-    if (contentRating?.rating <= 3) {
-      toast.warn(
-        "The gossip post has a low overall rating. Are you sure you want to proceed?"
-      );
-    }
-
     setIsSubmitting(true);
     const data = new FormData();
     data.append("title", formData.title);
     data.append("description", formData.description);
     data.append("isAnonymous", formData.isAnonymous);
     data.append("category", formData.category);
-    data.append("hashtags", formData.hashtags); // Added hashtags
+    data.append("hashtags", formData.hashtags);
     if (file) data.append("media", file);
 
     try {
       await createPost(data);
-      toast.success("Post created successfully");
+      toast.success("Post created successfully!");
       navigate("/");
     } catch (err) {
       toast.error(err.message || "Failed to create post");
@@ -474,75 +311,94 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
     }
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  const getRatingStyles = (rating) => {
-    if (rating >= 7) {
-      return { bgColor: "bg-green-500", textColor: "text-white" };
-    } else if (rating >= 4) {
-      return { bgColor: "bg-orange-500", textColor: "text-white" };
-    } else {
-      return { bgColor: "bg-red-500", textColor: "text-white" };
-    }
-  };
-
   return (
-    <div
-      className={`min-h-screen ${isDarkMode ? "bg-gray-950" : "bg-gradient-to-b from-gray-50 to-gray-100"
-        } transition-colors duration-500 font-poppins`}
-    >
-      <header className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <div className={`min-h-screen ${isDarkMode ? "bg-slate-950 text-white" : "bg-gray-50 text-gray-900"} font-sans transition-colors duration-300 pb-20`}>
+      {/* Dynamic ReactQuill Theme Styles */}
+      <style>{`
+        .ql-toolbar.ql-snow {
+          border-color: ${isDarkMode ? "#1e293b" : "#e2e8f0"} !important;
+          background-color: ${isDarkMode ? "#0f172a" : "#ffffff"} !important;
+          border-top-left-radius: 1rem;
+          border-top-right-radius: 1rem;
+        }
+        .ql-container.ql-snow {
+          border-color: ${isDarkMode ? "#1e293b" : "#e2e8f0"} !important;
+          background-color: ${isDarkMode ? "#0f172a" : "#ffffff"} !important;
+          color: ${isDarkMode ? "#ffffff" : "#0f172a"} !important;
+          border-bottom-left-radius: 1rem;
+          border-bottom-right-radius: 1rem;
+        }
+        ${!isDarkMode ? `
+          .ql-stroke { stroke: #334155 !important; }
+          .ql-fill { fill: #334155 !important; }
+          .ql-picker { color: #334155 !important; }
+          .ql-editor.ql-blank::before { color: #94a3b8 !important; }
+        ` : `
+          .ql-stroke { stroke: #cbd5e1 !important; }
+          .ql-fill { fill: #cbd5e1 !important; }
+          .ql-picker { color: #cbd5e1 !important; }
+          .ql-editor.ql-blank::before { color: #64748b !important; }
+        `}
+      `}</style>
+
+      {/* Top Header Navbar */}
+      <header className={`sticky top-0 z-50 backdrop-blur-xl border-b px-6 py-4 shadow-xl transition-colors ${
+        isDarkMode ? "bg-slate-900/80 border-white/10 text-white" : "bg-white/90 border-gray-200 text-gray-900"
+      }`}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-white hover:text-gray-200 transition-colors"
-            aria-label="Back to previous page"
+            className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all border text-xs font-semibold ${
+              isDarkMode
+                ? "text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border-white/10"
+                : "text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 border-gray-200"
+            }`}
           >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 000 1.414l7 7a1 1 0 001.414-1.414L5.414 11H17a1 1 0 000-2H5.414l5.293-5.293a1 1 0 000-1.414z" />
-            </svg>
-            Back
+            <FaChevronLeft />
+            <span>Back</span>
           </button>
+
+          <div className="flex items-center space-x-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></div>
+            <h1 className="text-base font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-red-600 via-pink-600 to-purple-600">
+              GossipHub Article Studio
+            </h1>
+          </div>
+
           <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-200"
-            aria-label={
-              isDarkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className={`p-2.5 rounded-full transition-all border ${
+              isDarkMode
+                ? "bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border-white/10"
+                : "bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 border-gray-200"
+            }`}
           >
-            {isDarkMode ? (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-            )}
+            {isDarkMode ? <FaSun className="text-amber-400" /> : <FaMoon className="text-indigo-600" />}
           </button>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 pt-20 pb-12 flex justify-center">
-        <div
-          className={`w-full max-w-2xl ${isDarkMode ? "bg-gray-900" : "bg-white"
-            } rounded-lg p-6 shadow-lg transition-colors duration-500`}
-        >
-          <h2
-            className={`text-3xl font-bold ${isDarkMode ? "text-gray-100" : "text-gray-900"
-              } mb-6 text-center`}
-          >
-            Share Your Gossip
+      {/* Main Studio Container */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
+        <div className="mb-8">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+            Share Your Gossip & Stories
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                  } mb-1`}
-              >
-                Title
+          <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+            Publish entertainment news, celebrity updates, trailers & exclusive gossip to thousands of readers.
+          </p>
+        </div>
+
+        {/* 2-Column Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Left Column: Post Form (8 Cols) */}
+          <div className="lg:col-span-8 space-y-6">
+            
+            {/* Title Field */}
+            <div className="space-y-2">
+              <label className={`block text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-700"}`}>
+                1. Article Title *
               </label>
               <input
                 type="text"
@@ -550,481 +406,409 @@ Respond only with the HTML content, ready for use in a rich text editor. Do not 
                 value={formData.title}
                 onChange={handleChange}
                 required
-                className={`w-full p-3 ${isDarkMode
-                  ? "bg-gray-800 text-gray-100"
-                  : "bg-gray-50 text-gray-900"
-                  } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
-                  } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-500`}
-                placeholder="What's the juicy gossip?"
-                aria-label="Post title"
+                placeholder="What's the latest juicy gossip? (e.g., Sreeleela's bold look setting social media on fire!)"
+                className={`w-full p-4 rounded-2xl text-sm font-semibold outline-none transition-all ${
+                  isDarkMode
+                    ? "bg-slate-900 border border-slate-800 focus:border-red-500 text-white placeholder-gray-500"
+                    : "bg-white border border-gray-300 focus:border-red-500 text-gray-900 placeholder-gray-400 shadow-sm"
+                }`}
               />
             </div>
-            <div>
-              <label
-                className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                  } mb-1`}
-              >
-                Hashtags (comma-separated, e.g., tech,news)
-              </label>
-              <input
-                type="text"
-                name="hashtags"
-                value={formData.hashtags}
-                onChange={handleChange}
-                className={`w-full p-3 ${isDarkMode
-                  ? "bg-gray-800 text-gray-100"
-                  : "bg-gray-50 text-gray-900"
-                  } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
-                  } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-500`}
-                placeholder="Enter hashtags, e.g., tech,news"
-                aria-label="Post hashtags"
-              />
-            </div>
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label
-                  className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                    }`}
+
+            {/* Category & Hashtags Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className={`block text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-700"}`}>
+                  Category
+                </label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className={`w-full p-3.5 rounded-2xl text-sm font-semibold outline-none transition-all ${
+                    isDarkMode
+                      ? "bg-slate-900 border border-slate-800 focus:border-red-500 text-white"
+                      : "bg-white border border-gray-300 focus:border-red-500 text-gray-900 shadow-sm"
+                  }`}
                 >
-                  Description
+                  <option value="General">General</option>
+                  <option value="Tech News">Tech News</option>
+                  <option value="Film Reviews & Trailers">Film Reviews & Trailers</option>
+                  <option value="Entertainment News">Entertainment News</option>
+                  <option value="Celebrity News">Celebrity News</option>
+                  <option value="Tollywood">Tollywood</option>
+                  <option value="Bollywood">Bollywood</option>
+                  <option value="Kollywood">Kollywood</option>
+                  <option value="Mollywood">Mollywood</option>
+                  <option value="Hollywood">Hollywood</option>
+                  <option value="Upcoming Movies">Upcoming Movies</option>
+                  <option value="Music & Soundtracks">Music & Soundtracks</option>
+                  <option value="TV & Web Series">TV & Web Series</option>
+                  <option value="Awards & Events">Awards & Events</option>
+                  <option value="Lifestyle & Fashion">Lifestyle & Fashion</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Interviews">Interviews</option>
+                  <option value="Actress">Actress</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className={`block text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-700"}`}>
+                  Hashtags (Comma-separated)
+                </label>
+                <div className="relative">
+                  <FaHashtag className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
+                  <input
+                    type="text"
+                    name="hashtags"
+                    value={formData.hashtags}
+                    onChange={handleChange}
+                    placeholder="tollywood, sreeleela, viral"
+                    className={`w-full pl-9 pr-4 py-3.5 rounded-2xl text-sm font-medium outline-none transition-all ${
+                      isDarkMode
+                        ? "bg-slate-900 border border-slate-800 focus:border-red-500 text-white placeholder-gray-500"
+                        : "bg-white border border-gray-300 focus:border-red-500 text-gray-900 placeholder-gray-400 shadow-sm"
+                    }`}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* AI Generator Banner Button */}
+            <div className={`p-4 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 border transition-colors ${
+              isDarkMode
+                ? "bg-gradient-to-r from-red-600/20 via-pink-600/20 to-purple-600/20 border-red-500/30"
+                : "bg-gradient-to-r from-red-50 via-pink-50 to-purple-50 border-red-200 shadow-sm"
+            }`}>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center text-white text-lg shadow-lg animate-pulse">
+                  <FaMagic />
+                </div>
+                <div>
+                  <h4 className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>AI Article Writer</h4>
+                  <p className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Generate spicy, formatted article descriptions using Gemini AI.</p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={generateDescriptionWithGemini}
+                disabled={isGeneratingDescription || !formData.title.trim()}
+                className={`px-5 py-2.5 rounded-full font-bold text-xs text-white transition-all shadow-lg flex items-center space-x-2 ${
+                  isGeneratingDescription || !formData.title.trim()
+                    ? "bg-gray-400 text-gray-200 cursor-not-allowed border border-white/5"
+                    : "bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 active:scale-95 shadow-red-600/30"
+                }`}
+              >
+                {isGeneratingDescription ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <span>Generating Story...</span>
+                  </>
+                ) : (
+                  <>
+                    <FaMagic className="text-xs" />
+                    <span>Generate with AI</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Description Editor Box - SECTION 2 */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className={`block text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-700"}`}>
+                  2. Article Content / Description *
                 </label>
                 <button
                   type="button"
-                  onClick={generateDescriptionWithGemini}
-                  disabled={isGeneratingDescription || !formData.title.trim()}
-                  className={`flex items-center space-x-2 px-3 py-1 rounded-lg font-medium text-sm transition-all duration-300 ${isGeneratingDescription || !formData.title.trim()
-                    ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                    : isDarkMode
-                      ? "bg-red-600 text-white hover:bg-red-700"
-                      : "bg-red-500 text-white hover:bg-red-600"
-                    }`}
-                  aria-label="Generate description with AI"
-                >
-                  {isGeneratingDescription ? (
-                    <>
-                      <svg
-                        className="animate-spin h-4 w-4 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      <span>Generating...</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        className="h-4 w-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M10 15l-5-5h10l-5 5zm0-10l5 5H5l5-5zm-8 5h16v2H2v-2z" />
-                      </svg>
-                      <span>Generate with AI</span>
-                    </>
-                  )}
-                </button>
-                <button
-                  type="button"
                   onClick={insertTable}
-                  className={`flex items-center space-x-2 px-3 py-1 rounded-lg font-medium text-sm transition-all duration-300 ${isDarkMode
-                    ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    }`}
-                  aria-label="Insert table"
+                  className="flex items-center space-x-1 text-xs font-bold text-red-500 hover:text-red-600 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20"
                 >
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
+                  <FaTable className="text-[10px]" />
                   <span>Insert Table</span>
                 </button>
               </div>
 
-              {/* Table Tools */}
-              <div className={`flex flex-wrap gap-2 mb-2 p-2 rounded-lg border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-200"}`}>
-                <span className={`text-xs font-semibold ${isDarkMode ? "text-gray-400" : "text-gray-500"} flex items-center mr-2`}>Table Tools:</span>
-                <button type="button" onClick={insertRowAbove} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200" title="Insert Row Above">+ Row â†‘</button>
-                <button type="button" onClick={insertRowBelow} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200" title="Insert Row Below">+ Row â†“</button>
-                <button type="button" onClick={insertColumnLeft} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200" title="Insert Column Left">+ Col â†</button>
-                <button type="button" onClick={insertColumnRight} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200" title="Insert Column Right">+ Col â†’</button>
-                <button type="button" onClick={deleteRow} className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" title="Delete Row">Del Row</button>
-                <button type="button" onClick={deleteColumn} className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" title="Delete Column">Del Col</button>
-                <button type="button" onClick={deleteTable} className="text-xs px-2 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300" title="Delete Table">Del Table</button>
+              {/* Table Tools Ribbon */}
+              <div className={`flex flex-wrap gap-2 p-2 rounded-xl border text-xs transition-colors ${
+                isDarkMode
+                  ? "bg-slate-900 border-slate-800 text-white"
+                  : "bg-white border-gray-200 text-gray-800 shadow-sm"
+              }`}>
+                <span className={`font-semibold self-center mr-1 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Table Tools:</span>
+                <button type="button" onClick={insertRowAbove} className="px-2 py-1 bg-blue-500/20 text-blue-400 font-medium rounded hover:bg-blue-500/30">+ Row Above</button>
+                <button type="button" onClick={insertRowBelow} className="px-2 py-1 bg-blue-500/20 text-blue-400 font-medium rounded hover:bg-blue-500/30">+ Row Below</button>
+                <button type="button" onClick={insertColumnLeft} className="px-2 py-1 bg-purple-500/20 text-purple-400 font-medium rounded hover:bg-purple-500/30">+ Col Left</button>
+                <button type="button" onClick={insertColumnRight} className="px-2 py-1 bg-purple-500/20 text-purple-400 font-medium rounded hover:bg-purple-500/30">+ Col Right</button>
+                <button type="button" onClick={deleteRow} className="px-2 py-1 bg-red-500/20 text-red-400 font-medium rounded hover:bg-red-500/30">Del Row</button>
+                <button type="button" onClick={deleteColumn} className="px-2 py-1 bg-red-500/20 text-red-400 font-medium rounded hover:bg-red-500/30">Del Col</button>
+                <button type="button" onClick={deleteTable} className={`px-2 py-1 rounded font-medium ${isDarkMode ? "bg-gray-700 text-gray-300 hover:bg-gray-600" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}>Del Table</button>
               </div>
-              <ReactQuill
-                ref={quillRef}
-                value={formData.description}
-                onChange={handleDescriptionChange}
-                placeholder="Spill the details... Use formatting options to enhance your post."
-                className={`${isDarkMode
-                  ? "bg-gray-800 text-gray-100"
-                  : "bg-gray-50 text-gray-900"
-                  } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
-                  } rounded-lg focus-within:ring-2 focus-within:ring-red-500 focus-within:border-transparent transition-all duration-300`}
-                modules={{
-                  toolbar: [
-                    [{ header: [1, 2, 3, false] }],
-                    ["bold", "italic", "underline", "strike"],
-                    [{ list: "ordered" }, { list: "bullet" }],
-                    [{ color: [] }, { background: [] }],
-                    ["link", "image", "video"],
-                    ["clean"], // Add table option here if available in standard quill toolbar, but standard quill usually needs extended modules.
-                    // For now, I will just leave it attempting to use the default or just rely on 'table' module being active.
-                  ],
-                  // Explicitly enable table module
-                  table: true,
-                }}
-                formats={[
-                  "header",
-                  "bold",
-                  "italic",
-                  "underline",
-                  "strike",
-                  "list",
-                  "bullet",
-                  "link",
-                  "image",
-                  "video",
-                  "color",
-                  "background",
-                  "table",
-                ]}
-                aria-label="Post description editor"
-              />
-              <p className={`mt-2 text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
-                💡 <strong>Tip:</strong> To embed a social media post (Instagram, X, YouTube), simply paste the <strong>direct URL</strong> into the description. It will automatically convert to an embed when viewing the post.
-              </p>
-              {mediaSuggestions.length > 0 && (
-                <div
-                  className={`mt-3 p-4 rounded-lg ${isDarkMode ? "bg-gray-800" : "bg-gray-100"
-                    } transition-colors duration-500`}
-                >
-                  <p
-                    className={`text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                      } mb-2`}
-                  >
-                    Suggested Media for Your Post:
-                  </p>
-                  <ul className="space-y-1">
-                    {mediaSuggestions.map((suggestion, index) => (
-                      <li
-                        key={index}
-                        className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"
-                          } flex items-center gap-2`}
-                      >
-                        <span className="font-medium">
-                          {suggestion.type === "Suggested Image"
-                            ? "ðŸ“· Image:"
-                            : "ðŸŽ¥ Video:"}
-                        </span>
-                        {suggestion.description}
-                      </li>
-                    ))}
-                  </ul>
+
+              {/* ReactQuill Editor */}
+              <div className={`rounded-2xl overflow-hidden border transition-all ${
+                isDarkMode
+                  ? "border-slate-800 bg-slate-900 text-white"
+                  : "border-gray-200 bg-white text-gray-900 shadow-sm"
+              }`}>
+                <ReactQuill
+                  ref={quillRef}
+                  value={formData.description}
+                  onChange={handleDescriptionChange}
+                  placeholder="Spill the juicy details here..."
+                  className="min-h-[220px]"
+                  modules={{
+                    toolbar: [
+                      [{ header: [1, 2, 3, false] }],
+                      ["bold", "italic", "underline", "strike"],
+                      [{ list: "ordered" }, { list: "bullet" }],
+                      [{ color: [] }, { background: [] }],
+                      ["link", "image", "video"],
+                      ["clean"],
+                    ],
+                    table: true,
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Media Upload Area */}
+            <div className="space-y-2">
+              <label className={`block text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-700"}`}>
+                3. Attach Image or Video (Optional)
+              </label>
+
+              {!filePreview ? (
+                <div className={`relative border-2 border-dashed rounded-3xl p-6 text-center hover:border-red-500/60 transition-all ${
+                  isDarkMode ? "border-slate-800 bg-slate-900/50" : "border-gray-300 bg-white shadow-sm"
+                }`}>
+                  <input
+                    id="media-upload"
+                    type="file"
+                    accept="image/*,video/*"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
+                  />
+                  <div className="flex flex-col items-center space-y-2">
+                    <FaCloudUploadAlt className="text-3xl text-red-500 animate-bounce" />
+                    <p className={`text-xs font-bold ${isDarkMode ? "text-gray-200" : "text-gray-700"}`}>
+                      Click or Drag & Drop Image / Video (JPG, PNG, WEBP, MP4)
+                    </p>
+                  </div>
                 </div>
-              )}
-              {(isRatingLoading || contentRating) && (
-                <div
-                  className={`mt-3 p-4 rounded-lg ${isDarkMode ? "bg-gray-800" : "bg-gray-100"
-                    } transition-colors duration-500`}
-                >
-                  {isRatingLoading ? (
-                    <div className="flex items-center gap-2">
-                      <svg
-                        className="animate-spin h-5 w-5 text-red-600"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      <span
-                        className={`text-sm ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                          }`}
-                      >
-                        Evaluating post...
-                      </span>
+              ) : (
+                <div className={`p-4 rounded-2xl flex items-center justify-between border ${
+                  isDarkMode ? "bg-slate-900 border-white/10" : "bg-white border-gray-200 shadow-sm"
+                }`}>
+                  <div className="flex items-center space-x-3">
+                    {file?.type.startsWith("image/") ? (
+                      <img src={filePreview} alt="Preview" className="w-16 h-16 rounded-xl object-cover border border-gray-200" />
+                    ) : (
+                      <video src={filePreview} className="w-16 h-16 rounded-xl object-cover border border-gray-200" />
+                    )}
+                    <div>
+                      <p className={`text-xs font-bold truncate max-w-[200px] ${isDarkMode ? "text-white" : "text-gray-900"}`}>{file?.name}</p>
+                      <p className="text-[10px] text-gray-400">{(file?.size / (1024 * 1024)).toFixed(2)} MB</p>
                     </div>
-                  ) : (
-                    contentRating && (
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                              }`}
-                          >
-                            Overall Rating:
-                          </span>
-                          <span
-                            className={`text-sm font-medium px-3 py-1 rounded-full ${getRatingStyles(contentRating.rating).bgColor
-                              } ${getRatingStyles(contentRating.rating).textColor
-                              }`}
-                          >
-                            {contentRating.rating}/10
-                          </span>
-                        </div>
-                        <p
-                          className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"
-                            }`}
-                        >
-                          <span className="font-medium">Explanation:</span>{" "}
-                          {contentRating.explanation}
-                        </p>
-                      </div>
-                    )
-                  )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={clearFile}
+                    className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-500/10 transition-all"
+                  >
+                    <FaTrash className="text-xs" />
+                  </button>
                 </div>
               )}
             </div>
-            <div className="flex items-center">
+
+            {/* Anonymous Toggle Pill */}
+            <div className={`flex items-center justify-between p-4 rounded-2xl border transition-colors ${
+              isDarkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200 shadow-sm"
+            }`}>
+              <div className="flex items-center space-x-3">
+                <FaUserSecret className="text-red-500 text-lg" />
+                <div>
+                  <h4 className={`text-xs font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Post Anonymously</h4>
+                  <p className={`text-[11px] ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Hide your author username from the public feed.</p>
+                </div>
+              </div>
               <input
                 type="checkbox"
                 name="isAnonymous"
-                id="isAnonymous"
                 checked={formData.isAnonymous}
                 onChange={handleChange}
-                className={`h-5 w-5 text-red-600 focus:ring-red-500 ${isDarkMode ? "border-gray-700" : "border-gray-300"
-                  } rounded`}
-                aria-label="Post anonymously"
+                className="w-5 h-5 rounded accent-red-600 cursor-pointer"
               />
-              <label
-                htmlFor="isAnonymous"
-                className={`ml-2 text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                  }`}
-              >
-                Post Anonymously
-              </label>
             </div>
-            <div>
-              <label
-                className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                  } mb-1`}
-              >
-                Category
-              </label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className={`w-full p-3 ${isDarkMode
-                  ? "bg-gray-800 text-gray-100"
-                  : "bg-gray-50 text-gray-900"
-                  } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
-                  } rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300`}
-                aria-label="Post category"
-              >
-                <option value="General">General</option>
-                <option value="Tech News">Tech News</option>
-                <option value="Film Reviews & Trailers">
-                  Film Reviews & Trailers
-                </option>
-                <option value="Entertainment News">Entertainment News</option>
-                <option value="Celebrity News">Celebrity News</option>
-                <option value="Tollywood">Tollywood</option>
-                <option value="Bollywood">Bollywood</option>
-                <option value="Kollywood">Kollywood</option>
-                <option value="Mollywood">Mollywood</option>
-                <option value="Hollywood">Hollywood</option>
-                <option value="Upcoming Movies">Upcoming Movies</option>
-                <option value="Music & Soundtracks">Music & Soundtracks</option>
-                <option value="TV & Web Series">TV & Web Series</option>
-                <option value="Awards & Events">Awards & Events</option>
-                <option value="Lifestyle & Fashion">Lifestyle & Fashion</option>
-                <option value="Sports">Sports</option>
-                <option value="Interviews">Interviews</option>
-                <option value="Political">Political</option>
-                <option value="News">News</option>
-                <option value="Global News">Global News</option>
-                <option value="Actress">Actress</option>
-              </select>
-            </div>
-            <div>
-              <label
-                className={`block text-sm font-medium ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                  } mb-1`}
-              >
-                Media (Image or Video)
-              </label>
-              <div className="relative">
-                <input
-                  id="media-upload"
-                  type="file"
-                  accept="image/jpeg,image/png,image/gif,video/mp4,video/webm"
-                  onChange={handleFileChange}
-                  className={`w-full p-3 ${isDarkMode
-                    ? "bg-gray-800 text-gray-100"
-                    : "bg-gray-50 text-gray-900"
-                    } border ${isDarkMode ? "border-gray-700" : "border-gray-200"
-                    } rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold ${isDarkMode
-                      ? "file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600"
-                      : "file:bg-red-100 file:text-red-700 hover:file:bg-red-200"
-                    } transition-all duration-300`}
-                  aria-label="Upload image or video"
-                />
-              </div>
-              {filePreview && (
-                <div className="mt-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <p
-                      className={`text-sm ${isDarkMode ? "text-gray-200" : "text-gray-600"
-                        }`}
-                    >
-                      Preview:
-                    </p>
-                    <button
-                      type="button"
-                      onClick={clearFile}
-                      className={`text-sm ${isDarkMode
-                        ? "text-red-400 hover:underline"
-                        : "text-red-600 hover:underline"
-                        }`}
-                      aria-label="Clear uploaded media"
-                    >
-                      Clear
-                    </button>
-                  </div>
-                  {file?.type.startsWith("image/") ? (
-                    <img
-                      src={filePreview}
-                      alt="Media preview"
-                      className="max-w-xs rounded-lg shadow-sm"
-                    />
-                  ) : (
-                    <video
-                      src={filePreview}
-                      controls
-                      className="max-w-xs rounded-lg shadow-sm"
-                      aria-label="Video preview"
-                    />
-                  )}
-                </div>
-              )}
-            </div>
+
+            {/* Submit Button */}
             <button
-              type="submit"
+              onClick={handleSubmit}
               disabled={isSubmitting}
-              className={`w-full py-3 rounded-lg font-semibold text-white transition-all duration-300 ${isSubmitting
-                ? "bg-red-400 cursor-not-allowed"
-                : "bg-red-600 hover:bg-red-700"
-                } flex items-center justify-center space-x-2`}
-              aria-label={isSubmitting ? "Creating post" : "Create post"}
+              className={`w-full py-4 rounded-2xl font-bold text-sm text-white transition-all shadow-xl flex items-center justify-center space-x-2 ${
+                isSubmitting
+                  ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                  : "bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 hover:opacity-90 shadow-red-600/30 active:scale-[0.99]"
+              }`}
             >
               {isSubmitting ? (
                 <>
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                  <span>Creating...</span>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span>Publishing Article...</span>
                 </>
               ) : (
-                <span>Create Post</span>
+                <>
+                  <FaCheckCircle className="text-base" />
+                  <span>Publish Gossip Article</span>
+                </>
               )}
             </button>
-          </form>
+          </div>
+
+          {/* Right Column: AI Score Rating Card & Live Preview (4 Cols) */}
+          <div className="lg:col-span-4 space-y-6">
+            
+            {/* AI Rating Card */}
+            {(isRatingLoading || contentRating) && (
+              <div className={`p-5 rounded-3xl border shadow-xl space-y-3 transition-colors ${
+                isDarkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"
+              }`}>
+                <div className="flex items-center justify-between border-b border-gray-200/20 pb-2">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1.5">
+                    <FaStar className="text-amber-400" />
+                    <span>AI Engagement Rating</span>
+                  </span>
+                </div>
+
+                {isRatingLoading ? (
+                  <div className="flex items-center space-x-2 py-4">
+                    <div className="w-4 h-4 border-2 border-pink-500/30 border-t-pink-500 rounded-full animate-spin"></div>
+                    <span className="text-xs text-gray-400 font-medium">Evaluating viral potential...</span>
+                  </div>
+                ) : (
+                  contentRating && (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Quality Score:</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-extrabold ${
+                          contentRating.rating >= 7
+                            ? "bg-emerald-500/20 text-emerald-500 border border-emerald-500/30"
+                            : contentRating.rating >= 4
+                            ? "bg-amber-500/20 text-amber-500 border border-amber-500/30"
+                            : "bg-red-500/20 text-red-500 border border-red-500/30"
+                        }`}>
+                          {contentRating.rating} / 10
+                        </span>
+                      </div>
+                      <p className={`text-xs leading-relaxed font-normal ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
+                        {contentRating.explanation}
+                      </p>
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+
+            {/* Live Article Preview Box */}
+            <div className={`p-5 rounded-3xl border shadow-2xl space-y-4 transition-colors ${
+              isDarkMode ? "bg-slate-900 border-slate-800" : "bg-white border-gray-200"
+            }`}>
+              <div className="flex items-center justify-between border-b border-gray-200/20 pb-2">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  Live Article Card Preview
+                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-600/20 text-red-500">
+                  {formData.category}
+                </span>
+              </div>
+
+              {/* Card Preview Body */}
+              <div className={`rounded-2xl border p-4 space-y-3 transition-colors ${
+                isDarkMode ? "bg-slate-950 border-white/10" : "bg-gray-50 border-gray-200"
+              }`}>
+                {filePreview && (
+                  <div className="w-full h-36 rounded-xl overflow-hidden bg-black">
+                    {file?.type.startsWith("image/") ? (
+                      <img src={filePreview} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <video src={filePreview} className="w-full h-full object-cover" />
+                    )}
+                  </div>
+                )}
+
+                <h3 className={`text-sm font-bold line-clamp-2 leading-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                  {formData.title || "Your Gossip Article Title..."}
+                </h3>
+
+                <p className={`text-xs line-clamp-3 leading-relaxed ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                  {formData.description ? formData.description.replace(/<[^>]*>?/gm, "") : "Article preview description will appear here..."}
+                </p>
+
+                {formData.hashtags && (
+                  <p className="text-[10px] font-semibold text-pink-500 truncate">
+                    {formData.hashtags.split(",").map((t) => `#${t.trim()}`).join(" ")}
+                  </p>
+                )}
+              </div>
+            </div>
+
+          </div>
+
         </div>
-      </div >
-      {/* Custom Table Modal */}
+      </main>
+
+      {/* Table Insertion Modal */}
       {showTableModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className={`p-6 rounded-lg shadow-xl w-80 ${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-            <h3 className="text-lg font-bold mb-4">Insert Table</h3>
-            <div className="space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="bg-slate-900 border border-white/15 p-6 rounded-3xl w-full max-w-sm shadow-2xl space-y-4">
+            <h3 className="text-base font-bold text-white">Insert Custom Table</h3>
+            <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium mb-1">Rows</label>
+                <label className="block text-xs font-semibold text-gray-400 mb-1">Rows</label>
                 <input
                   type="number"
                   min="1"
                   max="20"
                   value={tableDimensions.rows}
                   onChange={(e) => setTableDimensions({ ...tableDimensions, rows: e.target.value })}
-                  className={`w-full p-2 rounded border ${isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300"}`}
+                  className="w-full p-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm outline-none"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Columns</label>
+                <label className="block text-xs font-semibold text-gray-400 mb-1">Columns</label>
                 <input
                   type="number"
                   min="1"
                   max="10"
                   value={tableDimensions.cols}
                   onChange={(e) => setTableDimensions({ ...tableDimensions, cols: e.target.value })}
-                  className={`w-full p-2 rounded border ${isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300"}`}
+                  className="w-full p-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm outline-none"
                 />
               </div>
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  type="button"
-                  onClick={() => setShowTableModal(false)}
-                  className={`px-4 py-2 rounded text-sm font-medium ${isDarkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={confirmInsertTable}
-                  className="px-4 py-2 rounded text-sm font-medium bg-red-600 text-white hover:bg-red-700"
-                >
-                  Insert
-                </button>
-              </div>
+            </div>
+            <div className="flex items-center justify-end space-x-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowTableModal(false)}
+                className="px-4 py-2 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/20 text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmInsertTable}
+                className="px-4 py-2 rounded-full text-xs font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg"
+              >
+                Insert Table
+              </button>
             </div>
           </div>
         </div>
       )}
-    </div >
+    </div>
   );
 };
 
